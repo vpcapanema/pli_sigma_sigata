@@ -1,0 +1,384 @@
+{% extends "base.html" %}
+
+{% block title %}Upload de Dados - Dicionário PLI-SP{% endblock %}
+
+{% block extra_css %}
+<style>
+    .upload-area {
+        border: 3px dashed #dc3545;
+        border-radius: 12px;
+        padding: 60px 20px;
+        text-align: center;
+        background: linear-gradient(135deg, rgba(220, 53, 69, 0.05) 0%, rgba(0, 0, 0, 0.02) 100%);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .upload-area:hover {
+        border-color: #c82333;
+        background: linear-gradient(135deg, rgba(220, 53, 69, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(220, 53, 69, 0.2);
+    }
+    
+    .upload-area.dragover {
+        border-color: #28a745;
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%);
+    }
+    
+    .upload-icon {
+        font-size: 4rem;
+        color: #dc3545;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .upload-area:hover .upload-icon {
+        transform: scale(1.1);
+        color: #c82333;
+    }
+    
+    .file-info {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 20px;
+        border-left: 4px solid #dc3545;
+    }
+    
+    .format-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 30px;
+    }
+    
+    .format-card {
+        background: white;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s ease;
+        border-left: 4px solid #dc3545;
+    }
+    
+    .format-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border-left-color: #c82333;
+    }
+    
+    .format-icon {
+        font-size: 2.5rem;
+        color: #dc3545;
+        margin-bottom: 10px;
+    }
+    
+    .progress-container {
+        display: none;
+        margin-top: 20px;
+    }
+    
+    .progress-bar-custom {
+        background: linear-gradient(90deg, #dc3545, #c82333);
+        transition: width 0.3s ease;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800">
+                        <i class="fas fa-cloud-upload-alt text-danger me-2"></i>
+                        Upload de Dados
+                    </h1>
+                    <p class="text-muted mb-0">Faça upload de seus arquivos de dados para catalogação no PLI-SP</p>
+                </div>
+                <a href="{{ url_for('dictionary.index') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>
+                    Voltar ao Dicionário
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Form -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow border-0">
+                <div class="card-header bg-gradient-danger text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-upload me-2"></i>
+                        Selecione o Arquivo
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                        <!-- Área de Upload -->
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <h4 class="text-dark mb-3">Arraste seu arquivo aqui</h4>
+                            <p class="text-muted mb-3">ou clique para selecionar um arquivo</p>
+                            <input type="file" name="file" id="fileInput" class="d-none" accept=".csv,.xlsx,.xls,.json,.xml,.shp,.kml,.txt,.dbf,.geojson" required>
+                            <button type="button" class="btn btn-danger btn-lg" onclick="document.getElementById('fileInput').click()">
+                                <i class="fas fa-folder-open me-2"></i>
+                                Selecionar Arquivo
+                            </button>
+                        </div>
+
+                        <!-- Informações do Arquivo -->
+                        <div class="file-info d-none" id="fileInfo">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>Nome:</strong> <span id="fileName"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Tamanho:</strong> <span id="fileSize"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Barra de Progresso -->
+                        <div class="progress-container" id="progressContainer">
+                            <div class="progress mb-3" style="height: 25px;">
+                                <div class="progress-bar progress-bar-custom" role="progressbar" style="width: 0%" id="progressBar">
+                                    <span class="fw-bold">0%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botão de Upload -->
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-success btn-lg d-none" id="uploadBtn">
+                                <i class="fas fa-upload me-2"></i>
+                                Fazer Upload e Catalogar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formatos Suportados -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card shadow border-0">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0 text-dark">
+                        <i class="fas fa-file-alt me-2"></i>
+                        Formatos Suportados
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="format-grid">
+                        <div class="format-card">
+                            <div class="format-icon">
+                                <i class="fas fa-file-csv"></i>
+                            </div>
+                            <h6 class="fw-bold">CSV</h6>
+                            <small class="text-muted">Dados tabulares separados por vírgula</small>
+                        </div>
+                        <div class="format-card">
+                            <div class="format-icon">
+                                <i class="fas fa-file-excel"></i>
+                            </div>
+                            <h6 class="fw-bold">Excel</h6>
+                            <small class="text-muted">Planilhas .xlsx e .xls</small>
+                        </div>
+                        <div class="format-card">
+                            <div class="format-icon">
+                                <i class="fas fa-map"></i>
+                            </div>
+                            <h6 class="fw-bold">Shapefile</h6>
+                            <small class="text-muted">Dados geoespaciais .shp</small>
+                        </div>
+                        <div class="format-card">
+                            <div class="format-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <h6 class="fw-bold">JSON</h6>
+                            <small class="text-muted">Dados estruturados JSON</small>
+                        </div>
+                        <div class="format-card">
+                            <div class="format-icon">
+                                <i class="fas fa-file-code"></i>
+                            </div>
+                            <h6 class="fw-bold">XML</h6>
+                            <small class="text-muted">Dados estruturados XML</small>
+                        </div>
+                        <div class="format-card">
+                            <div class="format-icon">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <h6 class="fw-bold">KML/GeoJSON</h6>
+                            <small class="text-muted">Dados geográficos</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instruções -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow border-0">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Instruções
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-danger">
+                                <i class="fas fa-check-circle me-2"></i>
+                                Antes do Upload:
+                            </h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-chevron-right text-danger me-2"></i>Verifique se o arquivo está completo</li>
+                                <li><i class="fas fa-chevron-right text-danger me-2"></i>Confirme o formato dos dados</li>
+                                <li><i class="fas fa-chevron-right text-danger me-2"></i>Prepare informações sobre a fonte</li>
+                                <li><i class="fas fa-chevron-right text-danger me-2"></i>Tamanho máximo: 500MB</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-danger">
+                                <i class="fas fa-cogs me-2"></i>
+                                Após o Upload:
+                            </h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-chevron-right text-danger me-2"></i>Metadados serão extraídos automaticamente</li>
+                                <li><i class="fas fa-chevron-right text-danger me-2"></i>Complete as informações solicitadas</li>
+                                <li><i class="fas fa-chevron-right text-danger me-2"></i>Revise e publique no catálogo</li>
+                                <li><i class="fas fa-chevron-right text-danger me-2"></i>Dataset ficará disponível para uso</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const fileInfo = document.getElementById('fileInfo');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+    
+    // Drag and drop handlers
+    uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+    
+    uploadArea.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+    });
+    
+    uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            handleFileSelect(files[0]);
+        }
+    });
+    
+    // File input change handler
+    fileInput.addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            handleFileSelect(e.target.files[0]);
+        }
+    });
+    
+    function handleFileSelect(file) {
+        // Validar tipo de arquivo
+        const allowedTypes = ['.csv', '.xlsx', '.xls', '.json', '.xml', '.shp', '.kml', '.txt', '.dbf', '.geojson'];
+        const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+        
+        if (!allowedTypes.includes(fileExtension)) {
+            alert('Tipo de arquivo não suportado. Formatos aceitos: ' + allowedTypes.join(', '));
+            return;
+        }
+        
+        // Validar tamanho (500MB)
+        const maxSize = 500 * 1024 * 1024;
+        if (file.size > maxSize) {
+            alert('Arquivo muito grande. Tamanho máximo: 500MB');
+            return;
+        }
+        
+        // Mostrar informações do arquivo
+        document.getElementById('fileName').textContent = file.name;
+        document.getElementById('fileSize').textContent = formatFileSize(file.size);
+        fileInfo.classList.remove('d-none');
+        uploadBtn.classList.remove('d-none');
+        
+        // Modificar aparência da área de upload
+        uploadArea.style.borderColor = '#28a745';
+        uploadArea.querySelector('.upload-icon i').className = 'fas fa-check-circle';
+        uploadArea.querySelector('.upload-icon').style.color = '#28a745';
+        uploadArea.querySelector('h4').textContent = 'Arquivo selecionado!';
+        uploadArea.querySelector('p').textContent = 'Clique em "Fazer Upload" para continuar';
+    }
+    
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+    
+    // Form submit handler com progresso simulado
+    document.getElementById('uploadForm').addEventListener('submit', function(e) {
+        if (!fileInput.files.length) {
+            e.preventDefault();
+            alert('Por favor, selecione um arquivo');
+            return;
+        }
+        
+        // Mostrar barra de progresso
+        progressContainer.classList.remove('d-none');
+        uploadBtn.disabled = true;
+        uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processando...';
+        
+        // Simular progresso (em uma implementação real, isso seria controlado pelo servidor)
+        let progress = 0;
+        const interval = setInterval(function() {
+            progress += Math.random() * 10;
+            if (progress > 95) progress = 95;
+            
+            progressBar.style.width = progress + '%';
+            progressBar.querySelector('span').textContent = Math.round(progress) + '%';
+            
+            if (progress >= 95) {
+                clearInterval(interval);
+            }
+        }, 200);
+    });
+});
+</script>
+{% endblock %}

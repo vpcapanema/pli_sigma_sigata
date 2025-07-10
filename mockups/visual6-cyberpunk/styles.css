@@ -1,0 +1,279 @@
+/* Cyberpunk Theme */
+:root {
+    --neon-pink: #ff2a6d;
+    --neon-blue: #05d9e8;
+    --neon-purple: #7700ff;
+    --neon-yellow: #ffd700;
+    --dark-bg: #1a1a1a;
+    --darker-bg: #0d0d0d;
+    --text-glow: 0 0 10px currentColor;
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: #fff;
+    font-family: 'Rajdhani', sans-serif;
+    margin: 0;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-image: 
+        linear-gradient(45deg, var(--darker-bg) 25%, transparent 25%),
+        linear-gradient(-45deg, var(--darker-bg) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, var(--darker-bg) 75%),
+        linear-gradient(-45deg, transparent 75%, var(--darker-bg) 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+/* Neon Text Effects */
+.neon-text {
+    color: var(--neon-blue);
+    text-shadow: var(--text-glow);
+    animation: flicker 1.5s infinite alternate;
+}
+
+.neon-text-pink {
+    color: var(--neon-pink);
+    text-shadow: var(--text-glow);
+}
+
+.neon-text-purple {
+    color: var(--neon-purple);
+    text-shadow: var(--text-glow);
+}
+
+/* Cyberpunk Cards */
+.cyber-card {
+    background: rgba(26, 26, 26, 0.8);
+    border: 1px solid var(--neon-blue);
+    border-radius: 5px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(5, 217, 232, 0.2);
+    transition: all 0.3s ease;
+}
+
+.cyber-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--neon-blue));
+    animation: scan 2s linear infinite;
+}
+
+/* Glitch Effects */
+@keyframes glitch {
+    0% {
+        clip-path: inset(71% 0 10% 0);
+        transform: translate(-2px, 2px);
+    }
+    20% {
+        clip-path: inset(29% 0 71% 0);
+        transform: translate(2px, -2px);
+    }
+    40% {
+        clip-path: inset(57% 0 43% 0);
+        transform: translate(1px, 1px);
+    }
+    60% {
+        clip-path: inset(14% 0 86% 0);
+        transform: translate(-1px, -1px);
+    }
+    80% {
+        clip-path: inset(86% 0 14% 0);
+        transform: translate(2px, -2px);
+    }
+    100% {
+        clip-path: inset(43% 0 57% 0);
+        transform: translate(-2px, 2px);
+    }
+}
+
+.glitch {
+    position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.glitch::before {
+    left: 2px;
+    text-shadow: -2px 0 var(--neon-pink);
+    animation: glitch 0.3s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+    left: -2px;
+    text-shadow: 2px 0 var(--neon-blue);
+    animation: glitch 0.3s infinite linear alternate;
+}
+
+/* Neon Buttons */
+.cyber-button {
+    background: transparent;
+    color: var(--neon-blue);
+    border: 1px solid var(--neon-blue);
+    padding: 10px 20px;
+    font-family: 'Rajdhani', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cyber-button:hover {
+    background: var(--neon-blue);
+    color: var(--dark-bg);
+    box-shadow: 0 0 20px var(--neon-blue);
+}
+
+.cyber-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(5, 217, 232, 0.4),
+        transparent
+    );
+    transition: all 0.6s;
+}
+
+.cyber-button:hover::before {
+    left: 100%;
+}
+
+/* Scanner Animation */
+@keyframes scan {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* Flicker Animation */
+@keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        opacity: 0.9;
+        text-shadow: var(--text-glow);
+    }
+    20%, 22%, 24%, 55% {
+        opacity: 0.5;
+        text-shadow: none;
+    }
+}
+
+/* Grid Layout */
+.cyber-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Status Indicators */
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 10px;
+    animation: pulse 2s infinite;
+}
+
+.status-active {
+    background-color: var(--neon-blue);
+    box-shadow: 0 0 10px var(--neon-blue);
+}
+
+.status-warning {
+    background-color: var(--neon-yellow);
+    box-shadow: 0 0 10px var(--neon-yellow);
+}
+
+.status-danger {
+    background-color: var(--neon-pink);
+    box-shadow: 0 0 10px var(--neon-pink);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Navigation */
+.cyber-nav {
+    background: var(--darker-bg);
+    border-bottom: 2px solid var(--neon-blue);
+    padding: 15px;
+}
+
+.cyber-nav a {
+    color: var(--neon-blue);
+    text-decoration: none;
+    margin: 0 15px;
+    position: relative;
+}
+
+.cyber-nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--neon-blue);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.cyber-nav a:hover::after {
+    transform: scaleX(1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .cyber-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .cyber-nav {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .cyber-nav a {
+        display: block;
+        margin: 10px 0;
+    }
+}

@@ -1,0 +1,270 @@
+name: CI/CD Pipeline
+
+'on':
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+
+env:
+  NODE_VERSION: 18.x
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # Job de testes e qualidade de código
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version:
+          - 16.x
+          - 18.x
+          - 20.x
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Executar linter
+        run: npm run lint
+
+      - name: Executar testes
+        run: npm test
+
+      - name: Executar testes de cobertura
+        run: npm run test:coverage
+
+      - name: Upload cobertura para Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: true
+
+  # Job de análise de segurança
+  security:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Auditoria de segurança
+        run: npm audit --audit-level=high
+
+      - name: Análise de código com CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: javascript
+
+      - name: Executar análise CodeQL
+        uses: github/codeql-action/analyze@v2
+
+  # Job de build
+  build:
+    runs-on: ubuntu-latest
+    needs:
+      - test
+      - security
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Build da aplicação
+        run: npm run build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-files
+          path: dist/
+          retention-days: 30
+
+  # Job de build Docker
+  docker-build:
+    runs-on: ubuntu-latest
+    needs:
+      - test
+      - security
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login no Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extrair metadados
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha
+
+      - name: Build e push da imagem Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # Job de deploy para staging
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - docker-build
+    if: github.ref == 'refs/heads/develop'
+
+    environment:
+      name: staging
+      url: https://staging.sigma-pli.com
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Deploy para staging
+        run: |
+          echo "Deploying to staging environment..."
+          # Aqui seria implementado o deploy real
+          # Por exemplo, usando SSH, kubectl, etc.
+
+      - name: Executar testes de integração
+        run: |
+          echo "Running integration tests..."
+          # Executar testes contra ambiente de staging
+
+      - name: Notificar equipe
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          channel: '#deployments'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        if: always()
+
+  # Job de deploy para produção
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - docker-build
+    if: github.ref == 'refs/heads/main'
+
+    environment:
+      name: production
+      url: https://sigma-pli.com
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Aguardar aprovação manual
+        uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: ${{ github.actor }}
+          minimum-approvals: 1
+          issue-title: Deploy para produção
+          issue-body: Por favor, revise as mudanças e aprove o deploy para produção.
+
+      - name: Deploy para produção
+        run: |
+          echo "Deploying to production environment..."
+          # Implementar deploy para produção
+
+      - name: Executar smoke tests
+        run: |
+          echo "Running smoke tests..."
+          # Executar testes básicos de funcionamento
+
+      - name: Notificar equipe
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          channel: '#deployments'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        if: always()
+
+
+  # Job de backup
+  backup:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+      - name: Criar backup
+        run: |
+          echo "Creating backup..."
+          # Implementar lógica de backup
+      - name: Upload backup
+        uses: actions/upload-artifact@v3
+        with:
+          name: backup-${{ github.sha }}
+          path: backups/
+          retention-days: 90
+
+  # Job de limpeza
+  cleanup:
+    runs-on: ubuntu-latest
+    needs:
+      - deploy-staging
+      - deploy-production
+    if: always()
+    steps:
+      - name: Limpeza de recursos
+        run: |
+          echo "Cleaning up resources..."
+          # Implementar limpeza de recursos temporários

@@ -1,0 +1,6 @@
+# Ignorar arquivo base e templates HTML
+src/modules/core/templates/base.html
+src/modules/**/templates/*.html
+
+# Ignore base index.html
+/index.html

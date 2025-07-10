@@ -1,0 +1,558 @@
+{% extends "base.html" %}
+
+{% block title %}Catalogação de Dados - Dicionário PLI-SP{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-section {
+        background: white;
+        border-radius: 12px;
+        border-left: 4px solid #dc3545;
+        margin-bottom: 30px;
+        transition: all 0.3s ease;
+    }
+    
+    .form-section:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .section-header {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 8px 8px 0 0;
+        margin: -1px -1px 20px -1px;
+    }
+    
+    .section-icon {
+        width: 50px;
+        height: 50px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 1.5rem;
+    }
+    
+    .auto-metadata {
+        background: #e8f5e8;
+        border: 1px solid #28a745;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .metadata-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+    
+    .metadata-item {
+        background: white;
+        padding: 10px;
+        border-radius: 6px;
+        border-left: 3px solid #28a745;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+    
+    .required-field::after {
+        content: " *";
+        color: #dc3545;
+        font-weight: bold;
+    }
+    
+    .progress-stepper {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+        padding: 0 20px;
+    }
+    
+    .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        position: relative;
+    }
+    
+    .step:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 25px;
+        left: 60%;
+        width: 80%;
+        height: 2px;
+        background: #e9ecef;
+        z-index: 1;
+    }
+    
+    .step.active:not(:last-child)::after {
+        background: #dc3545;
+    }
+    
+    .step-circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: #6c757d;
+        z-index: 2;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+    
+    .step.active .step-circle {
+        background: #dc3545;
+        color: white;
+    }
+    
+    .step.completed .step-circle {
+        background: #28a745;
+        color: white;
+    }
+    
+    .btn-group-category {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .btn-category {
+        border: 2px solid #e9ecef;
+        background: white;
+        color: #495057;
+        border-radius: 8px;
+        padding: 12px 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-category:hover {
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+    
+    .btn-category.active {
+        border-color: #dc3545;
+        background: #dc3545;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-0 text-gray-800">
+                        <i class="fas fa-edit text-danger me-2"></i>
+                        Catalogação de Dados
+                    </h1>
+                    <p class="text-muted mb-0">Complete as informações do dataset para publicação no dicionário</p>
+                </div>
+                <a href="{{ url_for('dictionary.index') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-times me-1"></i>
+                    Cancelar
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Stepper -->
+    <div class="progress-stepper">
+        <div class="step completed">
+            <div class="step-circle">
+                <i class="fas fa-upload"></i>
+            </div>
+            <small class="mt-2 text-center">Upload</small>
+        </div>
+        <div class="step active">
+            <div class="step-circle">
+                <i class="fas fa-edit"></i>
+            </div>
+            <small class="mt-2 text-center">Catalogação</small>
+        </div>
+        <div class="step">
+            <div class="step-circle">
+                <i class="fas fa-check"></i>
+            </div>
+            <small class="mt-2 text-center">Publicação</small>
+        </div>
+    </div>
+
+    <form method="POST" id="catalogForm">
+        <input type="hidden" name="session_data" value="{{ session_data }}">
+        
+        <!-- Metadados Automáticos -->
+        <div class="auto-metadata">
+            <h5 class="text-success mb-3">
+                <i class="fas fa-magic me-2"></i>
+                Metadados Extraídos Automaticamente
+            </h5>
+            <div class="metadata-grid">
+                <div class="metadata-item">
+                    <strong>Arquivo:</strong><br>
+                    <span>{{ metadata.nome_arquivo }}</span>
+                </div>
+                <div class="metadata-item">
+                    <strong>Formato:</strong><br>
+                    <span>{{ metadata.formato_dados }}</span>
+                </div>
+                <div class="metadata-item">
+                    <strong>Tamanho:</strong><br>
+                    <span>{{ metadata.tamanho_arquivo_mb }} MB</span>
+                </div>
+                {% if metadata.numero_registros %}
+                <div class="metadata-item">
+                    <strong>Registros:</strong><br>
+                    <span>{{ "{:,.0f}".format(metadata.numero_registros) }}</span>
+                </div>
+                {% endif %}
+                {% if metadata.numero_campos %}
+                <div class="metadata-item">
+                    <strong>Campos:</strong><br>
+                    <span>{{ metadata.numero_campos }}</span>
+                </div>
+                {% endif %}
+                {% if metadata.categoria_sugerida %}
+                <div class="metadata-item">
+                    <strong>Categoria Sugerida:</strong><br>
+                    <span class="text-primary">{{ metadata.categoria_sugerida }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Seção 1: Informações Básicas -->
+        <div class="form-section card shadow border-0">
+            <div class="section-header">
+                <div class="d-flex align-items-center">
+                    <div class="section-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0">1. Informações Básicas</h5>
+                        <small class="opacity-75">Nome, categoria e descrição do dataset</small>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="nome_display" class="form-label required-field">Nome do Dataset</label>
+                        <input type="text" class="form-control" id="nome_display" name="nome_display" 
+                               value="{{ form_data.nome_display or metadata.nome_arquivo }}" required>
+                        <div class="form-text">Nome amigável para exibição no catálogo</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="categoria_principal" class="form-label required-field">Categoria Principal</label>
+                        <select class="form-select" id="categoria_principal" name="categoria_principal" required>
+                            <option value="">Selecione uma categoria</option>
+                            {% for categoria in categorias %}
+                            <option value="{{ categoria.nome_categoria }}" 
+                                    {% if form_data.categoria_principal == categoria.nome_categoria or metadata.categoria_sugerida == categoria.nome_categoria %}selected{% endif %}>
+                                {{ categoria.nome_categoria }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="subcategoria" class="form-label">Subcategoria</label>
+                        <input type="text" class="form-control" id="subcategoria" name="subcategoria" 
+                               value="{{ form_data.subcategoria or '' }}">
+                        <div class="form-text">Classificação mais específica (opcional)</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="relevancia_pli" class="form-label required-field">Relevância para PLI</label>
+                        <select class="form-select" id="relevancia_pli" name="relevancia_pli" required>
+                            <option value="alta" {% if form_data.relevancia_pli == 'alta' %}selected{% endif %}>Alta</option>
+                            <option value="media" {% if form_data.relevancia_pli == 'media' or not form_data.relevancia_pli %}selected{% endif %}>Média</option>
+                            <option value="baixa" {% if form_data.relevancia_pli == 'baixa' %}selected{% endif %}>Baixa</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="descricao_geral" class="form-label required-field">Descrição Geral</label>
+                    <textarea class="form-control" id="descricao_geral" name="descricao_geral" rows="4" required>{{ form_data.descricao_geral or '' }}</textarea>
+                    <div class="form-text">Descreva o conteúdo e contexto deste dataset</div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="palavras_chave" class="form-label">Palavras-chave</label>
+                        <input type="text" class="form-control" id="palavras_chave" name="palavras_chave" 
+                               value="{{ form_data.palavras_chave or '' }}">
+                        <div class="form-text">Separadas por vírgula (ex: transporte, logística, SP)</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="finalidade_uso" class="form-label required-field">Finalidade de Uso</label>
+                        <input type="text" class="form-control" id="finalidade_uso" name="finalidade_uso" 
+                               value="{{ form_data.finalidade_uso or '' }}" required>
+                        <div class="form-text">Para que este dataset será utilizado</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção 2: Responsabilidade -->
+        <div class="form-section card shadow border-0">
+            <div class="section-header">
+                <div class="d-flex align-items-center">
+                    <div class="section-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0">2. Responsabilidade e Propriedade</h5>
+                        <small class="opacity-75">Informações sobre origem e responsáveis</small>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="orgao_produtor" class="form-label required-field">Órgão Produtor</label>
+                        <input type="text" class="form-control" id="orgao_produtor" name="orgao_produtor" 
+                               value="{{ form_data.orgao_produtor or '' }}" required>
+                        <div class="form-text">Instituição responsável pelos dados</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="departamento_responsavel" class="form-label">Departamento</label>
+                        <input type="text" class="form-control" id="departamento_responsavel" name="departamento_responsavel" 
+                               value="{{ form_data.departamento_responsavel or '' }}">
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="contato_responsavel" class="form-label">Responsável</label>
+                        <input type="text" class="form-control" id="contato_responsavel" name="contato_responsavel" 
+                               value="{{ form_data.contato_responsavel or '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="email_contato" class="form-label">E-mail</label>
+                        <input type="email" class="form-control" id="email_contato" name="email_contato" 
+                               value="{{ form_data.email_contato or '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="nivel_acesso" class="form-label">Nível de Acesso</label>
+                        <select class="form-select" id="nivel_acesso" name="nivel_acesso">
+                            <option value="publico" {% if form_data.nivel_acesso == 'publico' or not form_data.nivel_acesso %}selected{% endif %}>Público</option>
+                            <option value="restrito" {% if form_data.nivel_acesso == 'restrito' %}selected{% endif %}>Restrito</option>
+                            <option value="confidencial" {% if form_data.nivel_acesso == 'confidencial' %}selected{% endif %}>Confidencial</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="url_fonte_original" class="form-label">URL da Fonte</label>
+                        <input type="url" class="form-control" id="url_fonte_original" name="url_fonte_original" 
+                               value="{{ form_data.url_fonte_original or '' }}">
+                        <div class="form-text">Link para a fonte original dos dados</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="licenca_uso" class="form-label">Licença de Uso</label>
+                        <input type="text" class="form-control" id="licenca_uso" name="licenca_uso" 
+                               value="{{ form_data.licenca_uso or '' }}">
+                        <div class="form-text">Ex: Creative Commons, GPL, etc.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção 3: Contexto Temporal e Territorial -->
+        <div class="form-section card shadow border-0">
+            <div class="section-header">
+                <div class="d-flex align-items-center">
+                    <div class="section-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0">3. Contexto Temporal e Territorial</h5>
+                        <small class="opacity-75">Período e abrangência dos dados</small>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="periodo_referencia_inicio" class="form-label">Período - Início</label>
+                        <input type="date" class="form-control" id="periodo_referencia_inicio" name="periodo_referencia_inicio" 
+                               value="{{ form_data.periodo_referencia_inicio or '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="periodo_referencia_fim" class="form-label">Período - Fim</label>
+                        <input type="date" class="form-control" id="periodo_referencia_fim" name="periodo_referencia_fim" 
+                               value="{{ form_data.periodo_referencia_fim or '' }}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="periodicidade_atualizacao" class="form-label">Periodicidade</label>
+                        <select class="form-select" id="periodicidade_atualizacao" name="periodicidade_atualizacao">
+                            <option value="">Selecione</option>
+                            <option value="diaria" {% if form_data.periodicidade_atualizacao == 'diaria' %}selected{% endif %}>Diária</option>
+                            <option value="semanal" {% if form_data.periodicidade_atualizacao == 'semanal' %}selected{% endif %}>Semanal</option>
+                            <option value="mensal" {% if form_data.periodicidade_atualizacao == 'mensal' %}selected{% endif %}>Mensal</option>
+                            <option value="trimestral" {% if form_data.periodicidade_atualizacao == 'trimestral' %}selected{% endif %}>Trimestral</option>
+                            <option value="anual" {% if form_data.periodicidade_atualizacao == 'anual' %}selected{% endif %}>Anual</option>
+                            <option value="irregular" {% if form_data.periodicidade_atualizacao == 'irregular' %}selected{% endif %}>Irregular</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="abrangencia_territorial" class="form-label">Abrangência Territorial</label>
+                        <select class="form-select" id="abrangencia_territorial" name="abrangencia_territorial">
+                            <option value="">Selecione</option>
+                            <option value="Nacional" {% if form_data.abrangencia_territorial == 'Nacional' %}selected{% endif %}>Nacional</option>
+                            <option value="Regional" {% if form_data.abrangencia_territorial == 'Regional' %}selected{% endif %}>Regional</option>
+                            <option value="Estadual" {% if form_data.abrangencia_territorial == 'Estadual' %}selected{% endif %}>Estadual</option>
+                            <option value="Municipal" {% if form_data.abrangencia_territorial == 'Municipal' %}selected{% endif %}>Municipal</option>
+                            <option value="São Paulo" {% if form_data.abrangencia_territorial == 'São Paulo' %}selected{% endif %}>São Paulo</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="unidade_analise" class="form-label">Unidade de Análise</label>
+                        <input type="text" class="form-control" id="unidade_analise" name="unidade_analise" 
+                               value="{{ form_data.unidade_analise or '' }}">
+                        <div class="form-text">Ex: Município, Pessoa, Empresa, Estabelecimento</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Observações Gerais -->
+        <div class="form-section card shadow border-0">
+            <div class="section-header">
+                <div class="d-flex align-items-center">
+                    <div class="section-icon">
+                        <i class="fas fa-comment-alt"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0">4. Observações Gerais</h5>
+                        <small class="opacity-75">Informações adicionais relevantes</small>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="observacoes_gerais" class="form-label">Observações</label>
+                    <textarea class="form-control" id="observacoes_gerais" name="observacoes_gerais" rows="4">{{ form_data.observacoes_gerais or '' }}</textarea>
+                    <div class="form-text">Qualquer informação adicional importante sobre este dataset</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="d-flex justify-content-between">
+                    <a href="{{ url_for('dictionary.upload_file') }}" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-arrow-left me-2"></i>
+                        Voltar
+                    </a>
+                    <div>
+                        <button type="button" class="btn btn-outline-primary btn-lg me-3" onclick="saveDraft()">
+                            <i class="fas fa-save me-2"></i>
+                            Salvar Rascunho
+                        </button>
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="fas fa-check-circle me-2"></i>
+                            Publicar Dataset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Validação do formulário
+    const form = document.getElementById('catalogForm');
+    const requiredFields = form.querySelectorAll('[required]');
+    
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        let firstInvalidField = null;
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.classList.add('is-invalid');
+                if (!firstInvalidField) {
+                    firstInvalidField = field;
+                }
+                isValid = false;
+            } else {
+                field.classList.remove('is-invalid');
+            }
+        });
+        
+        if (!isValid) {
+            e.preventDefault();
+            firstInvalidField.focus();
+            alert('Por favor, preencha todos os campos obrigatórios marcados com *');
+        }
+    });
+    
+    // Remover classe de erro quando campo for preenchido
+    requiredFields.forEach(field => {
+        field.addEventListener('input', function() {
+            if (this.value.trim()) {
+                this.classList.remove('is-invalid');
+            }
+        });
+    });
+});
+
+function saveDraft() {
+    const form = document.getElementById('catalogForm');
+    const formData = new FormData(form);
+    
+    // Aqui você implementaria a lógica para salvar como rascunho
+    alert('Funcionalidade de rascunho será implementada em breve');
+}
+
+// Auto-sugerir categoria baseada em palavras-chave
+document.getElementById('palavras_chave').addEventListener('input', function() {
+    const keywords = this.value.toLowerCase();
+    const categorySelect = document.getElementById('categoria_principal');
+    
+    if (!categorySelect.value && keywords) {
+        // Lógica simples de sugestão
+        if (keywords.includes('rodoviario') || keywords.includes('estrada')) {
+            categorySelect.value = 'TRANSPORTE RODOVIÁRIO';
+        } else if (keywords.includes('ferroviario') || keywords.includes('trem')) {
+            categorySelect.value = 'TRANSPORTE FERROVIÁRIO';
+        } else if (keywords.includes('porto') || keywords.includes('aquaviario')) {
+            categorySelect.value = 'TRANSPORTE AQUAVIÁRIO';
+        } else if (keywords.includes('rais') || keywords.includes('emprego')) {
+            categorySelect.value = 'DADOS SOCIOECONÔMICOS';
+        }
+    }
+});
+</script>
+{% endblock %}

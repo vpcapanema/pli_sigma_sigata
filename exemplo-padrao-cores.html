@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo - Padrão de Cores SIGMA PLI</title>
+    <link rel="stylesheet" href="src/shared/css/color-scheme.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+        }
+
+        /* Hero section para demonstrar o gradiente */
+        .hero-section {
+            background: var(--bg-hero);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Estilos específicos para esta demonstração */
+        .demo-content {
+            padding: 2rem;
+            max-width: 800px;
+        }
+
+        .color-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .color-sample {
+            padding: 1rem;
+            text-align: center;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .buttons-showcase {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+
+        .form-showcase {
+            margin: 2rem 0;
+        }
+
+        .status-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .status-item {
+            padding: 1rem;
+            text-align: center;
+            border-radius: 0.5rem;
+            color: white;
+            font-weight: bold;
+        }
+
+        .success { background: var(--success); }
+        .warning { background: var(--warning); }
+        .danger { background: var(--danger); }
+        .info { background: var(--info); }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sigma-sidebar">
+        <div style="padding: 2rem 1rem;">
+            <h3 style="color: var(--text-primary); margin-bottom: 2rem;">SIGMA PLI</h3>
+            <nav>
+                <a href="#" class="sigma-nav-link active" style="display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 0.5rem;">🏠 Home</a>
+                <a href="#" class="sigma-nav-link" style="display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 0.5rem;">📦 Produtos</a>
+                <a href="#" class="sigma-nav-link" style="display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 0.5rem;">📊 Relatórios</a>
+                <a href="#" class="sigma-nav-link" style="display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 0.5rem;">⚙️ Configurações</a>
+                <a href="#" class="sigma-nav-link" style="display: block; padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 0.5rem;">✏️ Editor</a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="sigma-main-content">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h1>Padrão de Cores SIGMA PLI</h1>
+            <p>Demonstração completa do sistema de cores e estilos visuais</p>
+        </div>
+
+        <div class="demo-content">
+            <!-- Amostras de Cores -->
+            <h2 class="text-primary">Cores Principais</h2>
+            <div class="color-showcase">
+                <div class="color-sample bg-primary">
+                    <strong>bg-primary</strong><br>
+                    #d8bbbb
+                </div>
+                <div class="color-sample bg-secondary">
+                    <strong>bg-secondary</strong><br>
+                    #c7c7c7
+                </div>
+                <div class="color-sample bg-content">
+                    <strong>bg-content</strong><br>
+                    #f8f5f5
+                </div>
+                <div class="color-sample bg-card">
+                    <strong>bg-card</strong><br>
+                    #ffffff
+                </div>
+            </div>
+
+            <!-- Cards Neumórficos -->
+            <h2 class="text-primary">Cards Neumórficos</h2>
+            <div class="sigma-card">
+                <h3 class="text-accent">Card Principal</h3>
+                <p class="text-secondary">Este é um exemplo de card com efeito neumórfico aplicado. Observe as sombras suaves que criam a sensação de profundidade.</p>
+            </div>
+
+            <div class="sigma-card neumorphic-inset" style="background: var(--bg-content);">
+                <h3 class="text-accent-dark">Card com Efeito Inset</h3>
+                <p class="text-primary">Este card usa o efeito neumórfico invertido (inset) para criar uma sensação de profundidade para dentro.</p>
+            </div>
+
+            <!-- Botões -->
+            <h2 class="text-primary">Botões</h2>
+            <div class="buttons-showcase">
+                <button class="sigma-btn">Botão Principal</button>
+                <button class="sigma-btn" style="background: var(--accent-dark-red);">Botão Escuro</button>
+                <button class="sigma-btn" style="background: var(--accent-light-red);">Botão Claro</button>
+                <button class="sigma-btn" style="background: var(--bg-secondary); color: var(--text-primary);">Botão Secundário</button>
+            </div>
+
+            <!-- Formulários -->
+            <h2 class="text-primary">Formulários</h2>
+            <div class="form-showcase">
+                <div style="margin-bottom: 1rem;">
+                    <label class="text-secondary" style="display: block; margin-bottom: 0.5rem;">Nome:</label>
+                    <input type="text" class="sigma-form-control" placeholder="Digite seu nome">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label class="text-secondary" style="display: block; margin-bottom: 0.5rem;">Email:</label>
+                    <input type="email" class="sigma-form-control" placeholder="Digite seu email">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label class="text-secondary" style="display: block; margin-bottom: 0.5rem;">Mensagem:</label>
+                    <textarea class="sigma-form-control" rows="4" placeholder="Digite sua mensagem"></textarea>
+                </div>
+                <button class="sigma-btn">Enviar</button>
+            </div>
+
+            <!-- Cores de Status -->
+            <h2 class="text-primary">Cores de Status</h2>
+            <div class="status-showcase">
+                <div class="status-item success">Sucesso</div>
+                <div class="status-item warning">Aviso</div>
+                <div class="status-item danger">Erro</div>
+                <div class="status-item info">Informação</div>
+            </div>
+
+            <!-- Tipografia -->
+            <h2 class="text-primary">Tipografia</h2>
+            <div class="sigma-card">
+                <h1 class="text-primary">Título Principal (H1)</h1>
+                <h2 class="text-accent">Título Secundário (H2)</h2>
+                <h3 class="text-accent-dark">Título Terciário (H3)</h3>
+                <p class="text-primary">Texto principal com cor primária para boa legibilidade.</p>
+                <p class="text-secondary">Texto secundário com cor mais suave para informações complementares.</p>
+                <p class="text-accent">Texto de destaque com cor vermelha do SIGMA PLI.</p>
+                <p class="text-accent-light">Texto de destaque com tom mais claro.</p>
+            </div>
+
+            <!-- Efeitos Neumórficos -->
+            <h2 class="text-primary">Efeitos Neumórficos</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0;">
+                <div class="neumorphic" style="padding: 2rem; background: var(--bg-primary); text-align: center;">
+                    <strong>Efeito Elevado</strong><br>
+                    Sombra externa
+                </div>
+                <div class="neumorphic-inset" style="padding: 2rem; background: var(--bg-primary); text-align: center;">
+                    <strong>Efeito Inset</strong><br>
+                    Sombra interna
+                </div>
+            </div>
+
+            <!-- Demonstração Responsiva -->
+            <h2 class="text-primary">Layout Responsivo</h2>
+            <p class="text-secondary">Esta página demonstra o layout responsivo com sidebar que se adapta em dispositivos móveis (largura reduzida).</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<div class="container">
+  <div class="page-header">
+    <h2>Usuários do Sistema</h2>
+    <button class="btn neumorphic-button neumorphic-button-primary" id="addUserBtn">
+      <i class="fas fa-user-plus"></i>
+      Adicionar Usuário
+    </button>
+  </div>
+  
+  <div class="card neumorphic">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table" id="usersTable">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Papel</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Usuários renderizados via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal de usuário -->
+  <div id="userModal" class="modal hidden">
+    <div class="modal-content neumorphic">
+      <div class="modal-header">
+        <h3 class="modal-title">Adicionar/Editar Usuário</h3>
+        <button class="btn-close" type="button">&times;</button>
+      </div>
+      <form id="userForm" class="modal-body">
+        <div class="form-group">
+          <label for="name">Nome:</label>
+          <input type="text" name="name" id="name" class="neumorphic-input" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" name="email" id="email" class="neumorphic-input" required />
+        </div>
+        <div class="form-group">
+          <label for="role">Papel:</label>
+          <select name="role" id="role" class="neumorphic-input">
+            <option value="admin">Administrador</option>
+            <option value="manager">Gerente</option>
+            <option value="user">Usuário</option>
+        </div>
+        <div class="form-group">
+          <label for="status">Status:</label>
+          <select name="status" id="status" class="neumorphic-input">
+            <option value="active">Ativo</option>
+            <option value="inactive">Inativo</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="password">Senha:</label>
+          <input type="password" name="password" id="password" class="neumorphic-input" />
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button type="submit" form="userForm" class="btn neumorphic-button neumorphic-button-primary">
+          <i class="fas fa-save"></i>
+          Salvar
+        </button>
+        <button type="button" id="closeUserModal" class="btn neumorphic-button neumorphic-button-secondary">
+          <i class="fas fa-times"></i>
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

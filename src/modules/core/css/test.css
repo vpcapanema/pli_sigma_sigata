@@ -1,0 +1,350 @@
+/* Test Module Styles - Neumorphic Theme */
+.test-body {
+  font-family: var(--font-family);
+  margin: 0;
+  padding: 2rem;
+  background: var(--background);
+  min-height: 100vh;
+}
+
+.test-container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: var(--surface);
+  padding: 2.5rem;
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--elevation-3);
+  border: none;
+}
+
+.test-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.test-header h1 {
+  color: var(--text-primary);
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+}
+
+.test-header p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.test-status {
+  padding: 1rem 1.5rem;
+  margin: 1rem 0;
+  border-radius: var(--border-radius-sm);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: var(--elevation-1);
+}
+
+.test-status.success {
+  background: #f0fff4;
+  color: #22543d;
+  border-left: 4px solid #48bb78;
+}
+
+.test-status.error {
+  background: #fed7d7;
+  color: #742a2a;
+  border-left: 4px solid #f56565;
+}
+
+.test-status.warning {
+  background: #fef5e7;
+  color: #b7791f;
+  border-left: 4px solid #f6ad55;
+}
+
+.test-status.info {
+  background: #ebf8ff;
+  color: #2a4365;
+  border-left: 4px solid #4299e1;
+}
+
+.test-actions {
+  display: flex;
+  gap: 1rem;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+.test-button,
+.button {
+  background: var(--primary-color);
+  color: var(--text-inverse);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: var(--elevation-2);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.test-button:hover,
+.button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--elevation-3);
+}
+
+.test-button.secondary {
+  background: var(--surface);
+  color: var(--text-primary);
+  box-shadow: var(--elevation-1);
+}
+
+.test-button.secondary:hover {
+  background: var(--surface-hover);
+}
+
+.test-button.danger {
+  background: var(--error-color);
+  color: var(--text-inverse);
+}
+
+.test-button.danger:hover {
+  background: #e53e3e;
+}
+
+.test-button.success {
+  background: var(--success-color);
+  color: var(--text-inverse);
+}
+
+.test-button.success:hover {
+  background: #38a169;
+}
+
+.test-results {
+  background: var(--surface-elevated);
+  padding: 1.5rem;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--elevation-inset);
+  margin: 2rem 0;
+}
+
+.test-results h3 {
+  margin: 0 0 1rem 0;
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.test-result-item {
+  padding: 1rem;
+  background: var(--surface);
+  border-radius: var(--border-radius-sm);
+  box-shadow: var(--elevation-1);
+  margin-bottom: 0.75rem;
+  border-left: 4px solid transparent;
+}
+
+.test-result-item.passed {
+  border-left-color: var(--success-color);
+  background: #f0fff4;
+}
+
+.test-result-item.failed {
+  border-left-color: var(--error-color);
+  background: #fed7d7;
+}
+
+.test-result-item.pending {
+  border-left-color: #f6ad55;
+  background: #fef5e7;
+}
+
+.test-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.test-description {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.test-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.metric-card {
+  background: var(--surface);
+  padding: 1.5rem;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--elevation-2);
+  text-align: center;
+  border: none;
+}
+
+.metric-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  margin: 0;
+}
+
+.metric-label {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin: 0.25rem 0 0 0;
+}
+
+.test-logs {
+  background: #1a1a1a;
+  color: #f8f8f2;
+  padding: 1rem;
+  border-radius: var(--border-radius-sm);
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  max-height: 300px;
+  overflow-y: auto;
+  margin: 1rem 0;
+  box-shadow: var(--elevation-inset);
+}
+
+.test-progress {
+  margin: 2rem 0;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 12px;
+  background: var(--surface);
+  border-radius: var(--border-radius-xs);
+  box-shadow: var(--elevation-inset);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent-gradient);
+  border-radius: var(--border-radius-xs);
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.result-margin-top {
+  margin-top: 1.5rem;
+}
+
+/* Loading state */
+.test-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--surface-elevated);
+  border-top: 3px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Test configuration */
+.test-config {
+  background: var(--surface);
+  padding: 1.5rem;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--elevation-2);
+  margin-bottom: 2rem;
+}
+
+.config-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.config-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.config-group label {
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.config-group input,
+.config-group select {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  background: var(--surface);
+  box-shadow: var(--elevation-inset);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+}
+
+.config-group input:focus,
+.config-group select:focus {
+  outline: none;
+  box-shadow: var(--elevation-inset), 0 0 0 3px var(--accent-color-alpha);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .test-body {
+    padding: 1rem;
+  }
+  
+  .test-container {
+    padding: 1.5rem;
+  }
+  
+  .test-actions {
+    flex-direction: column;
+  }
+  
+  .test-metrics {
+    grid-template-columns: 1fr;
+  }
+  
+  .config-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .test-header h1 {
+    font-size: 1.875rem;
+  }
+}

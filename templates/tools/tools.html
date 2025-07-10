@@ -1,0 +1,1118 @@
+{% extends "base.html" %}
+
+{% block title %}Ferramentas Analíticas - PLI-SP{% endblock %}
+
+{% block content %}
+<style>
+    .tools-hero {
+        background: linear-gradient(135deg, #dc143c 0%, #1a1a1a 100%);
+        color: white;
+        padding: 3rem 0;
+        margin: -2rem -3rem 3rem -3rem;
+        border-radius: 0 0 2rem 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .tools-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            radial-gradient(circle at 30% 40%, rgba(249, 115, 22, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+        z-index: 1;
+    }
+
+    .tools-hero-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+    }
+
+    .tools-hero-icon {
+        width: 70px;
+        height: 70px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin: 0 auto 1.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .stat-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 1.5rem;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+    }
+
+    .stat-card.primary { --gradient: linear-gradient(90deg, #dc143c 0%, #ff6b6b 100%); }
+    .stat-card.success { --gradient: linear-gradient(90deg, #10b981 0%, #34d399 100%); }
+    .stat-card.info { --gradient: linear-gradient(90deg, #0ea5e9 0%, #3b82f6 100%); }
+    .stat-card.warning { --gradient: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%); }
+
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 1.5rem;
+        color: white;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-icon.primary { background: linear-gradient(135deg, #dc143c 0%, #ff6b6b 100%); }
+    .stat-icon.success { background: linear-gradient(135deg, #10b981 0%, #34d399 100%); }
+    .stat-icon.info { background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%); }
+    .stat-icon.warning { background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        background: var(--gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .stat-label {
+        font-size: 1rem;
+        color: #6b7280;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .tools-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+    }
+
+    .tool-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 2rem;
+        padding: 2rem;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .tool-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient);
+    }
+
+    .tool-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+    }
+
+    .tool-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .tool-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        font-size: 1.2rem;
+        color: white;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .tool-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin: 0;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .tool-description {
+        color: #6b7280;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+
+    .tool-features {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 1.5rem;
+    }
+
+    .tool-feature {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.75rem;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .tool-feature:last-child {
+        border-bottom: none;
+    }
+
+    .tool-feature i {
+        color: #10b981;
+        margin-right: 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .tool-actions {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: auto;
+    }
+
+    .tool-btn {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-primary-tool {
+        background: linear-gradient(135deg, #dc143c 0%, #ff6b6b 100%);
+        color: white;
+        box-shadow: 0 8px 25px rgba(220, 20, 60, 0.3);
+    }
+
+    .btn-secondary-tool {
+        background: rgba(107, 114, 128, 0.1);
+        color: #374151;
+        border: 1px solid rgba(107, 114, 128, 0.2);
+    }
+
+    .tool-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+    }
+
+    .category-header {
+        text-align: center;
+        margin: 3rem 0 2rem;
+        padding: 2rem;
+        background: rgba(248, 249, 250, 0.8);
+        border-radius: 1.5rem;
+        border: 2px solid rgba(220, 20, 60, 0.1);
+    }
+
+    .category-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 0.5rem;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .category-description {
+        color: #6b7280;
+        font-size: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .tools-hero {
+            padding: 2rem 0;
+            margin: -1rem -1rem 2rem -1rem;
+        }
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .tools-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<!-- Tools Hero Section -->
+<div class="tools-hero">
+    <div class="container">
+        <div class="tools-hero-content">
+            <div class="tools-hero-icon">
+                <i class="fas fa-tools"></i>
+            </div>
+            <h1 class="display-5 fw-bold mb-3">Ferramentas Analíticas</h1>
+            <p class="lead mb-0">Conjunto completo de ferramentas para análise e processamento de dados logísticos</p>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Grid -->
+<div class="stats-grid">
+    <div class="stat-card primary">
+        <div class="stat-icon primary">
+            <i class="fas fa-code"></i>
+        </div>
+        <div class="stat-number">{{ r_scripts or 15 }}</div>
+        <div class="stat-label">Scripts R</div>
+    </div>
+    <div class="stat-card success">
+        <div class="stat-icon success">
+            <i class="fas fa-database"></i>
+        </div>
+        <div class="stat-number">{{ datasets or 12 }}</div>
+        <div class="stat-label">Datasets</div>
+    </div>
+    <div class="stat-card info">
+        <div class="stat-icon info">
+            <i class="fas fa-chart-bar"></i>
+        </div>
+        <div class="stat-number">{{ dashboards or 8 }}</div>
+        <div class="stat-label">Dashboards</div>
+    </div>
+    <div class="stat-card warning">
+        <div class="stat-icon warning">
+            <i class="fas fa-wrench"></i>
+        </div>
+        <div class="stat-number">{{ utilities or 10 }}</div>
+        <div class="stat-label">Utilitários</div>
+    </div>
+</div>
+
+<!-- R Scripts Category -->
+<div class="category-header">
+    <h2 class="category-title">Scripts de Análise R</h2>
+    <p class="category-description">Ferramentas especializadas para processamento e análise de dados de transporte e logística</p>
+</div>
+
+<div class="tools-grid">
+    <!-- RAIS Analysis -->
+    <div class="tool-card" style="--gradient: linear-gradient(90deg, #dc143c 0%, #ff6b6b 100%);">
+        <div class="tool-header">
+            <div class="tool-icon" style="background: linear-gradient(135deg, #dc143c 0%, #ff6b6b 100%);">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h3 class="tool-title">Análise RAIS</h3>
+        </div>
+        <p class="tool-description">
+            Script especializado para análise dos dados da Relação Anual de Informações Sociais (RAIS),
+            focando em indicadores de emprego e renda no setor logístico.
+        </p>
+        <ul class="tool-features">
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Processamento de dados de emprego</span>
+            </li>
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Análise setorial detalhada</span>
+            </li>
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Visualizações interativas</span>
+            </li>
+        </ul>
+        <div class="tool-actions">
+            <button class="tool-btn btn-primary-tool">
+                <i class="fas fa-play"></i>
+                Executar
+            </button>
+            <button class="tool-btn btn-secondary-tool">
+                <i class="fas fa-download"></i>
+                Download
+            </button>
+        </div>
+    </div>
+
+    <!-- Dashboard RAIS -->
+    <div class="tool-card" style="--gradient: linear-gradient(90deg, #10b981 0%, #34d399 100%);">
+        <div class="tool-header">
+            <div class="tool-icon" style="background: linear-gradient(135deg, #10b981 0%, #34d399 100%);">
+                <i class="fas fa-tachometer-alt"></i>
+            </div>
+            <h3 class="tool-title">Dashboard RAIS</h3>
+        </div>
+        <p class="tool-description">
+            Dashboard interativo construído em Shiny para visualização dinâmica dos dados RAIS,
+            com filtros personalizáveis e exportação de relatórios.
+        </p>
+        <ul class="tool-features">
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Interface interativa</span>
+            </li>
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Filtros personalizáveis</span>
+            </li>
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Exportação de relatórios</span>
+            </li>
+        </ul>
+        <div class="tool-actions">
+            <button class="tool-btn btn-primary-tool">
+                <i class="fas fa-external-link-alt"></i>
+                Abrir
+            </button>
+            <button class="tool-btn btn-secondary-tool">
+                <i class="fas fa-code"></i>
+                Código
+            </button>
+        </div>
+    </div>
+
+    <!-- ETL RAIS -->
+    <div class="tool-card" style="--gradient: linear-gradient(90deg, #0ea5e9 0%, #3b82f6 100%);">
+        <div class="tool-header">
+            <div class="tool-icon" style="background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);">
+                <i class="fas fa-database"></i>
+            </div>
+            <h3 class="tool-title">ETL RAIS</h3>
+        </div>
+        <p class="tool-description">
+            Ferramenta de Extract, Transform, Load (ETL) para processamento automatizado
+            dos arquivos RAIS, com limpeza e padronização dos dados.
+        </p>
+        <ul class="tool-features">
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Processamento automatizado</span>
+            </li>
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Limpeza de dados</span>
+            </li>
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Validação de qualidade</span>
+            </li>
+        </ul>
+        <div class="tool-actions">
+            <button class="tool-btn btn-primary-tool">
+                <i class="fas fa-cog"></i>
+                Configurar
+            </button>
+            <button class="tool-btn btn-secondary-tool">
+                <i class="fas fa-history"></i>
+                Histórico
+            </button>
+        </div>
+    </div>
+
+    <!-- Análise de Cargas -->
+    <div class="tool-card" style="--gradient: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);">
+        <div class="tool-header">
+            <div class="tool-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);">
+                <i class="fas fa-truck"></i>
+            </div>
+            <h3 class="tool-title">Análise de Cargas OD</h3>
+        </div>
+        <p class="tool-description">
+            Script para análise de fluxos de cargas origem-destino, incluindo modelagem
+            de padrões de transporte e identificação de corredores logísticos.
+        </p>
+        <ul class="tool-features">
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Matriz origem-destino</span>
+            </li>
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Análise de corredores</span>
+            </li>
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Mapas de fluxo</span>
+            </li>
+        </ul>
+        <div class="tool-actions">
+            <button class="tool-btn btn-primary-tool">
+                <i class="fas fa-map"></i>
+                Visualizar
+            </button>
+            <button class="tool-btn btn-secondary-tool">
+                <i class="fas fa-file-export"></i>
+                Exportar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Data Processing Category -->
+<div class="category-header">
+    <h2 class="category-title">Processamento de Dados</h2>
+    <p class="category-description">Ferramentas para coleta, processamento e transformação de dados de múltiplas fontes</p>
+</div>
+
+<div class="tools-grid">
+    <!-- FINBRA Extractor -->
+    <div class="tool-card" style="--gradient: linear-gradient(90deg, #8b5cf6 0%, #a78bfa 100%);">
+        <div class="tool-header">
+            <div class="tool-icon" style="background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);">
+                <i class="fas fa-file-invoice-dollar"></i>
+            </div>
+            <h3 class="tool-title">Extrator FINBRA</h3>
+        </div>
+        <p class="tool-description">
+            Ferramenta para extração e processamento de dados financeiros municipais
+            da base FINBRA, com foco em investimentos em infraestrutura.
+        </p>
+        <ul class="tool-features">
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Dados financeiros municipais</span>
+            </li>
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Análise de investimentos</span>
+            </li>
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Séries históricas</span>
+            </li>
+        </ul>
+        <div class="tool-actions">
+            <button class="tool-btn btn-primary-tool">
+                <i class="fas fa-download"></i>
+                Extrair
+            </button>
+            <button class="tool-btn btn-secondary-tool">
+                <i class="fas fa-chart-pie"></i>
+                Analisar
+            </button>
+        </div>
+    </div>
+
+    <!-- SECEX Analyzer -->
+    <div class="tool-card" style="--gradient: linear-gradient(90deg, #ec4899 0%, #f472b6 100%);">
+        <div class="tool-header">
+            <div class="tool-icon" style="background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);">
+                <i class="fas fa-globe-americas"></i>
+            </div>
+            <h3 class="tool-title">Analisador SECEX</h3>
+        </div>
+        <p class="tool-description">
+            Processamento de dados de comércio exterior (exportações e importações)
+            para análise de fluxos logísticos internacionais.
+        </p>
+        <ul class="tool-features">
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Dados de comércio exterior</span>
+            </li>
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Análise de produtos</span>
+            </li>
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Fluxos internacionais</span>
+            </li>
+        </ul>
+        <div class="tool-actions">
+            <button class="tool-btn btn-primary-tool">
+                <i class="fas fa-search"></i>
+                Consultar
+            </button>
+            <button class="tool-btn btn-secondary-tool">
+                <i class="fas fa-table"></i>
+                Tabular
+            </button>
+        </div>
+    </div>
+
+    <!-- Data Converter -->
+    <div class="tool-card" style="--gradient: linear-gradient(90deg, #06b6d4 0%, #22d3ee 100%);">
+        <div class="tool-header">
+            <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%);">
+                <i class="fas fa-exchange-alt"></i>
+            </div>
+            <h3 class="tool-title">Conversor de Dados</h3>
+        </div>
+        <p class="tool-description">
+            Utilitário para conversão entre diferentes formatos de dados (RData, CSV, JSON)
+            e padronização de estruturas de dados.
+        </p>
+        <ul class="tool-features">
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Múltiplos formatos</span>
+            </li>
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Validação automática</span>
+            </li>
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Processamento em lote</span>
+            </li>
+        </ul>
+        <div class="tool-actions">
+            <button class="tool-btn btn-primary-tool">
+                <i class="fas fa-sync"></i>
+                Converter
+            </button>
+            <button class="tool-btn btn-secondary-tool">
+                <i class="fas fa-cogs"></i>
+                Configurar
+            </button>
+        </div>
+    </div>
+
+    <!-- GIS Tools -->
+    <div class="tool-card" style="--gradient: linear-gradient(90deg, #059669 0%, #10b981 100%);">
+        <div class="tool-header">
+            <div class="tool-icon" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%);">
+                <i class="fas fa-map-marked-alt"></i>
+            </div>
+            <h3 class="tool-title">Ferramentas GIS</h3>
+        </div>
+        <p class="tool-description">
+            Conjunto de ferramentas para análise espacial e processamento de dados
+            geográficos, incluindo shapefiles e bases cartográficas.
+        </p>
+        <ul class="tool-features">
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Análise espacial</span>
+            </li>
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Processamento de shapefiles</span>
+            </li>
+            <li class="tool-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Mapas temáticos</span>
+            </li>
+        </ul>
+        <div class="tool-actions">
+            <button class="tool-btn btn-primary-tool">
+                <i class="fas fa-layer-group"></i>
+                Mapear
+            </button>
+            <button class="tool-btn btn-secondary-tool">
+                <i class="fas fa-draw-polygon"></i>
+                Editar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts R -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-code text-primary me-2"></i>Scripts R
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="tool-list">
+                    <div class="tool-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">Análise RAIS</h6>
+                                <small class="text-muted">Processamento de dados da RAIS</small>
+                            </div>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary" title="Executar">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tool-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">Dashboard Vocacional</h6>
+                                <small class="text-muted">Análise de vocação produtiva</small>
+                            </div>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary" title="Executar">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tool-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">Análise Impacto</h6>
+                                <small class="text-muted">Análise de impacto de investimentos</small>
+                            </div>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary" title="Executar">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tool-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">ETL RAIS</h6>
+                                <small class="text-muted">Extração e transformação de dados</small>
+                            </div>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary" title="Executar">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-3">
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newScriptModal">
+                        <i class="fas fa-plus me-2"></i>Novo Script
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-chart-bar text-info me-2"></i>Dashboards
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="tool-list">
+                    <div class="tool-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">Dashboard RAIS</h6>
+                                <small class="text-muted">Visualização de dados RAIS</small>
+                            </div>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-info" title="Abrir">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary" title="Configurar">
+                                    <i class="fas fa-cog"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tool-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">Monitoramento PLI</h6>
+                                <small class="text-muted">Acompanhamento do projeto</small>
+                            </div>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-info" title="Abrir">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary" title="Configurar">
+                                    <i class="fas fa-cog"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tool-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">Análise Modal</h6>
+                                <small class="text-muted">Comparação entre modais</small>
+                            </div>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-info" title="Abrir">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary" title="Configurar">
+                                    <i class="fas fa-cog"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-3">
+                    <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#newDashboardModal">
+                        <i class="fas fa-plus me-2"></i>Novo Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-database text-success me-2"></i>Datasets
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="tool-list">
+                    <div class="tool-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">RAIS 2006-2024</h6>
+                                <small class="text-muted">Série histórica completa</small>
+                            </div>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-success" title="Visualizar">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-outline-primary" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tool-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">FINBRA Municipal</h6>
+                                <small class="text-muted">Finanças municipais</small>
+                            </div>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-success" title="Visualizar">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-outline-primary" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tool-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">SECEX</h6>
+                                <small class="text-muted">Exportações e importações</small>
+                            </div>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-success" title="Visualizar">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-outline-primary" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tool-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">Ferrovia ANTT</h6>
+                                <small class="text-muted">Dados ferroviários</small>
+                            </div>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-success" title="Visualizar">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-outline-primary" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-3">
+                    <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#uploadDataModal">
+                        <i class="fas fa-upload me-2"></i>Upload Dataset
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-tools text-warning me-2"></i>Utilitários e Ferramentas Auxiliares
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="utility-card">
+                            <div class="utility-icon">
+                                <i class="fas fa-file-excel text-success"></i>
+                            </div>
+                            <h6>Conversor de Dados</h6>
+                            <p class="small text-muted">Converte entre formatos CSV, Excel, RData</p>
+                            <button class="btn btn-outline-success btn-sm">Usar Ferramenta</button>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="utility-card">
+                            <div class="utility-icon">
+                                <i class="fas fa-chart-line text-primary"></i>
+                            </div>
+                            <h6>Gerador de Gráficos</h6>
+                            <p class="small text-muted">Cria visualizações personalizadas</p>
+                            <button class="btn btn-outline-primary btn-sm">Usar Ferramenta</button>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="utility-card">
+                            <div class="utility-icon">
+                                <i class="fas fa-map text-info"></i>
+                            </div>
+                            <h6>Visualizador GIS</h6>
+                            <p class="small text-muted">Mapas e análises espaciais</p>
+                            <button class="btn btn-outline-info btn-sm">Usar Ferramenta</button>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="utility-card">
+                            <div class="utility-icon">
+                                <i class="fas fa-calculator text-warning"></i>
+                            </div>
+                            <h6>Calculadora de Impacto</h6>
+                            <p class="small text-muted">Calcula impactos socioeconômicos</p>
+                            <button class="btn btn-outline-warning btn-sm">Usar Ferramenta</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Novo Script -->
+<div class="modal fade" id="newScriptModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Novo Script R</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="scriptName" class="form-label">Nome do Script</label>
+                        <input type="text" class="form-control" id="scriptName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="scriptDescription" class="form-label">Descrição</label>
+                        <textarea class="form-control" id="scriptDescription" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="scriptTemplate" class="form-label">Template Base</label>
+                        <select class="form-select" id="scriptTemplate">
+                            <option value="">Script em branco</option>
+                            <option value="analysis">Análise de dados</option>
+                            <option value="dashboard">Dashboard interativo</option>
+                            <option value="etl">ETL/Processamento</option>
+                            <option value="visualization">Visualização</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary">Criar Script</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Novo Dashboard -->
+<div class="modal fade" id="newDashboardModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Novo Dashboard</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="dashboardName" class="form-label">Nome do Dashboard</label>
+                        <input type="text" class="form-control" id="dashboardName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dashboardType" class="form-label">Tipo</label>
+                        <select class="form-select" id="dashboardType" required>
+                            <option value="">Selecione o tipo</option>
+                            <option value="shiny">Shiny (R)</option>
+                            <option value="plotly">Plotly</option>
+                            <option value="tableau">Tableau</option>
+                            <option value="powerbi">Power BI</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dashboardDataset" class="form-label">Dataset Principal</label>
+                        <select class="form-select" id="dashboardDataset">
+                            <option value="">Selecione o dataset</option>
+                            <option value="rais">RAIS</option>
+                            <option value="finbra">FINBRA</option>
+                            <option value="secex">SECEX</option>
+                            <option value="antt">ANTT</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-info">Criar Dashboard</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Upload Dataset -->
+<div class="modal fade" id="uploadDataModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload de Dataset</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="datasetName" class="form-label">Nome do Dataset</label>
+                        <input type="text" class="form-control" id="datasetName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="datasetFile" class="form-label">Arquivo</label>
+                        <input type="file" class="form-control" id="datasetFile" 
+                               accept=".csv,.xlsx,.xls,.rdata,.rds" required>
+                        <div class="form-text">Formatos: CSV, Excel, RData, RDS</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="datasetDescription" class="form-label">Descrição</label>
+                        <textarea class="form-control" id="datasetDescription" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success">Upload Dataset</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.tool-list .tool-item {
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.tool-list .tool-item:last-child {
+    border-bottom: none;
+}
+
+.utility-card {
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.utility-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.utility-icon {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.utility-card h6 {
+    margin-bottom: 10px;
+    color: #495057;
+}
+
+.utility-card p {
+    margin-bottom: 15px;
+    height: 40px;
+}
+</style>
+{% endblock %}

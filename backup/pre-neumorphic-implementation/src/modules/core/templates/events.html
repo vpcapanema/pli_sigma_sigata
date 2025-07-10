@@ -1,0 +1,20 @@
+<div class="events-container">
+  <h2>Eventos</h2>
+  <button id="addEventBtn">Adicionar Evento</button>
+  <div id="eventsList">
+    <!-- Eventos renderizados via JS -->
+  </div>
+  <!-- Modal de evento -->
+  <div id="eventModal" class="modal-hidden">
+    <form id="eventForm">
+      <label for="title">Título:</label>
+      <input type="text" name="title" id="title" required />
+      <label for="date">Data:</label>
+      <input type="date" name="date" id="date" required />
+      <label for="participants">Participantes:</label>
+      <input type="text" name="participants" id="participants" />
+      <button type="submit">Salvar</button>
+      <button type="button" id="closeEventModal">Cancelar</button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,391 @@
+{% extends "base.html" %}
+
+{% block title %}Avaliar {{ product.name }} - PLI-SP{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('products') }}">Produtos</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('product_detail', id=product.id) }}">{{ product.name }}</a></li>
+            <li class="breadcrumb-item active">Avaliação</li>
+        </ol>
+    </nav>
+    <h1 class="mb-0">Avaliação do Produto</h1>
+    <p class="text-muted">{{ product.name }} - Produto {{ product.id }}</p>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <form method="POST" class="evaluation-form">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Critérios de Avaliação</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">1. Completude do Conteúdo</label>
+                                <p class="text-muted small">Avalia se todos os elementos solicitados estão presentes</p>
+                                <div class="evaluation-options">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="completude" value="5" id="completude5">
+                                        <label class="form-check-label" for="completude5">
+                                            <span class="badge bg-success me-2">5</span>Excelente - Todos os elementos presentes
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="completude" value="4" id="completude4">
+                                        <label class="form-check-label" for="completude4">
+                                            <span class="badge bg-info me-2">4</span>Bom - Maioria dos elementos presentes
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="completude" value="3" id="completude3">
+                                        <label class="form-check-label" for="completude3">
+                                            <span class="badge bg-warning me-2">3</span>Regular - Elementos essenciais presentes
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="completude" value="2" id="completude2">
+                                        <label class="form-check-label" for="completude2">
+                                            <span class="badge bg-orange me-2">2</span>Insuficiente - Alguns elementos faltantes
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="completude" value="1" id="completude1">
+                                        <label class="form-check-label" for="completude1">
+                                            <span class="badge bg-danger me-2">1</span>Inadequado - Muitos elementos faltantes
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">2. Qualidade Técnica</label>
+                                <p class="text-muted small">Avalia a precisão e rigor técnico das análises</p>
+                                <div class="evaluation-options">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="qualidade_tecnica" value="5" id="qualidade5">
+                                        <label class="form-check-label" for="qualidade5">
+                                            <span class="badge bg-success me-2">5</span>Excelente - Metodologia rigorosa
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="qualidade_tecnica" value="4" id="qualidade4">
+                                        <label class="form-check-label" for="qualidade4">
+                                            <span class="badge bg-info me-2">4</span>Bom - Metodologia adequada
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="qualidade_tecnica" value="3" id="qualidade3">
+                                        <label class="form-check-label" for="qualidade3">
+                                            <span class="badge bg-warning me-2">3</span>Regular - Metodologia aceitável
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="qualidade_tecnica" value="2" id="qualidade2">
+                                        <label class="form-check-label" for="qualidade2">
+                                            <span class="badge bg-orange me-2">2</span>Insuficiente - Falhas metodológicas
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="qualidade_tecnica" value="1" id="qualidade1">
+                                        <label class="form-check-label" for="qualidade1">
+                                            <span class="badge bg-danger me-2">1</span>Inadequado - Metodologia incorreta
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">3. Clareza e Organização</label>
+                                <p class="text-muted small">Avalia a estrutura e apresentação do conteúdo</p>
+                                <div class="evaluation-options">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="clareza" value="5" id="clareza5">
+                                        <label class="form-check-label" for="clareza5">
+                                            <span class="badge bg-success me-2">5</span>Excelente - Muito bem estruturado
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="clareza" value="4" id="clareza4">
+                                        <label class="form-check-label" for="clareza4">
+                                            <span class="badge bg-info me-2">4</span>Bom - Bem estruturado
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="clareza" value="3" id="clareza3">
+                                        <label class="form-check-label" for="clareza3">
+                                            <span class="badge bg-warning me-2">3</span>Regular - Estrutura adequada
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="clareza" value="2" id="clareza2">
+                                        <label class="form-check-label" for="clareza2">
+                                            <span class="badge bg-orange me-2">2</span>Insuficiente - Estrutura confusa
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="clareza" value="1" id="clareza1">
+                                        <label class="form-check-label" for="clareza1">
+                                            <span class="badge bg-danger me-2">1</span>Inadequado - Muito desorganizado
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">4. Adequação aos Objetivos</label>
+                                <p class="text-muted small">Avalia se o produto atende aos objetivos do PLI</p>
+                                <div class="evaluation-options">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="adequacao" value="5" id="adequacao5">
+                                        <label class="form-check-label" for="adequacao5">
+                                            <span class="badge bg-success me-2">5</span>Excelente - Atende plenamente
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="adequacao" value="4" id="adequacao4">
+                                        <label class="form-check-label" for="adequacao4">
+                                            <span class="badge bg-info me-2">4</span>Bom - Atende bem
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="adequacao" value="3" id="adequacao3">
+                                        <label class="form-check-label" for="adequacao3">
+                                            <span class="badge bg-warning me-2">3</span>Regular - Atende parcialmente
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="adequacao" value="2" id="adequacao2">
+                                        <label class="form-check-label" for="adequacao2">
+                                            <span class="badge bg-orange me-2">2</span>Insuficiente - Atende pouco
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="adequacao" value="1" id="adequacao1">
+                                        <label class="form-check-label" for="adequacao1">
+                                            <span class="badge bg-danger me-2">1</span>Inadequado - Não atende
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Comentários e Observações</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="pontos_positivos" class="form-label fw-bold">Pontos Positivos</label>
+                        <textarea class="form-control" id="pontos_positivos" name="pontos_positivos" rows="3" 
+                                  placeholder="Descreva os principais pontos positivos do produto..."></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="pontos_melhoria" class="form-label fw-bold">Pontos para Melhoria</label>
+                        <textarea class="form-control" id="pontos_melhoria" name="pontos_melhoria" rows="3" 
+                                  placeholder="Descreva os pontos que necessitam melhoria..."></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="recomendacoes" class="form-label fw-bold">Recomendações</label>
+                        <textarea class="form-control" id="recomendacoes" name="recomendacoes" rows="3" 
+                                  placeholder="Forneça recomendações específicas para aprimoramento..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Decisão da Avaliação</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Status Final</label>
+                            <select class="form-select" name="status_final" required>
+                                <option value="">Selecione o status</option>
+                                <option value="aprovado">Aprovado</option>
+                                <option value="aprovado_com_ressalvas">Aprovado com Ressalvas</option>
+                                <option value="necessita_revisao">Necessita Revisão</option>
+                                <option value="rejeitado">Rejeitado</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Prazo para Correções (se aplicável)</label>
+                            <input type="date" class="form-control" name="prazo_correcoes">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 text-end">
+                <a href="{{ url_for('product_detail', id=product.id) }}" class="btn btn-secondary me-2">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </a>
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-check me-2"></i>Salvar Avaliação
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Informações do Produto</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-5">Produto:</dt>
+                    <dd class="col-7">{{ product.name }}</dd>
+                    
+                    <dt class="col-5">Categoria:</dt>
+                    <dd class="col-7">
+                        <span class="badge bg-primary">{{ product.category }}</span>
+                    </dd>
+                    
+                    <dt class="col-5">Status Atual:</dt>
+                    <dd class="col-7">
+                        <span class="badge 
+                            {% if product.status == 'delivered' %}bg-success
+                            {% elif product.status == 'in_analysis' %}bg-warning
+                            {% elif product.status == 'in_progress' %}bg-info
+                            {% else %}bg-secondary{% endif %}">
+                            {% if product.status == 'delivered' %}Entregue
+                            {% elif product.status == 'in_analysis' %}Em Análise
+                            {% elif product.status == 'in_progress' %}Em Progresso
+                            {% else %}Pendente{% endif %}
+                        </span>
+                    </dd>
+                    
+                    <dt class="col-5">Responsável:</dt>
+                    <dd class="col-7">{{ product.assigned_to or 'Não atribuído' }}</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Escala de Avaliação</h5>
+            </div>
+            <div class="card-body">
+                <div class="evaluation-scale">
+                    <div class="scale-item">
+                        <span class="badge bg-success me-2">5</span>
+                        <strong>Excelente</strong> - Supera expectativas
+                    </div>
+                    <div class="scale-item">
+                        <span class="badge bg-info me-2">4</span>
+                        <strong>Bom</strong> - Atende expectativas
+                    </div>
+                    <div class="scale-item">
+                        <span class="badge bg-warning me-2">3</span>
+                        <strong>Regular</strong> - Atende minimamente
+                    </div>
+                    <div class="scale-item">
+                        <span class="badge bg-orange me-2">2</span>
+                        <strong>Insuficiente</strong> - Abaixo do esperado
+                    </div>
+                    <div class="scale-item">
+                        <span class="badge bg-danger me-2">1</span>
+                        <strong>Inadequado</strong> - Muito abaixo do esperado
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Instruções</h5>
+            </div>
+            <div class="card-body">
+                <ol class="small">
+                    <li>Avalie cada critério usando a escala de 1 a 5</li>
+                    <li>Forneça comentários detalhados</li>
+                    <li>Indique o status final do produto</li>
+                    <li>Se necessário, defina prazo para correções</li>
+                    <li>Salve a avaliação para registrar no sistema</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.evaluation-options .form-check {
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.evaluation-options .form-check:hover {
+    background-color: #f8f9fa;
+}
+
+.evaluation-options .form-check-input:checked + .form-check-label {
+    font-weight: 600;
+}
+
+.bg-orange {
+    background-color: #fd7e14 !important;
+}
+
+.scale-item {
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.evaluation-scale {
+    font-size: 13px;
+}
+</style>
+
+<script>
+// Cálculo automático da nota final
+document.addEventListener('DOMContentLoaded', function() {
+    const criterios = ['completude', 'qualidade_tecnica', 'clareza', 'adequacao'];
+    
+    criterios.forEach(criterio => {
+        document.querySelectorAll(`input[name="${criterio}"]`).forEach(input => {
+            input.addEventListener('change', calcularNotaFinal);
+        });
+    });
+    
+    function calcularNotaFinal() {
+        let total = 0;
+        let count = 0;
+        
+        criterios.forEach(criterio => {
+            const selected = document.querySelector(`input[name="${criterio}"]:checked`);
+            if (selected) {
+                total += parseInt(selected.value);
+                count++;
+            }
+        });
+        
+        if (count === criterios.length) {
+            const media = (total / count).toFixed(1);
+            console.log('Nota final calculada:', media);
+            // Aqui você pode exibir a nota final em algum elemento da página
+        }
+    }
+});
+</script>
+{% endblock %}

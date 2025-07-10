@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - SIGMA PLI</title>
+    <link rel="stylesheet" href="/static/shared/css/global.css" />
+    <link rel="stylesheet" href="/static/shared/css/color-scheme.css" />
+    <link rel="stylesheet" href="/static/modules/auth/css/auth.css" />
+  </head>
+  <body class="auth-body">
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <h1>SIGMA PLI</h1>
+          <p>Sistema de Gestão Empresarial</p>
+        </div>
+
+        <form class="auth-form" id="loginForm">
+          <div class="form-group">
+            <label for="username">Usuário</label>
+            <input type="text" id="username" name="username" required />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Senha</label>
+            <input type="password" id="password" name="password" required />
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="remember" name="remember" />
+              Lembrar-me
+            </label>
+          </div>
+
+          <button type="submit" class="auth-button">Entrar</button>
+
+          <div class="auth-links">
+            <a href="#" class="forgot-password">Esqueceu sua senha?</a>
+          </div>
+        </form>
+
+        <div class="auth-footer">
+          <p>&copy; 2024 SIGMA PLI. Todos os direitos reservados.</p>
+        </div>
+      </div>
+    </div>
+
+    <script src="/static/modules/auth/js/auth.js"></script>
+  </body>
+</html>

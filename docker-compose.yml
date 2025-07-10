@@ -1,0 +1,164 @@
+version: '3.8'
+
+services:
+  # Aplicação principal
+  sigma-pli:
+    build: .
+    container_name: sigma-pli-app
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=sigma_pli
+      - DB_USER=sigma_user
+      - DB_PASSWORD=sigma_password
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=prod_jwt_secret_key_12345
+      - SESSION_SECRET=prod_session_secret_12345
+    depends_on:
+      - mysql
+      - redis
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+      - ./backups:/app/backups
+    networks:
+      - sigma-network
+    restart: unless-stopped
+
+  # Banco de dados MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: sigma-pli-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=sigma_pli
+      - MYSQL_USER=sigma_user
+      - MYSQL_PASSWORD=sigma_password
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - sigma-network
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      timeout: 20s
+      retries: 10
+
+  # Redis para cache e sessões
+  redis:
+    image: redis:7-alpine
+    container_name: sigma-pli-redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    networks:
+      - sigma-network
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Nginx como proxy reverso
+  nginx:
+    image: nginx:alpine
+    container_name: sigma-pli-nginx
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./public:/usr/share/nginx/html/public
+    depends_on:
+      - sigma-pli
+    networks:
+      - sigma-network
+    restart: unless-stopped
+
+  # Elasticsearch para logs e busca
+  elasticsearch:
+    image: elasticsearch:8.8.0
+    container_name: sigma-pli-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=false
+    ports:
+      - '9200:9200'
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - sigma-network
+    restart: unless-stopped
+
+  # Kibana para visualização de logs
+  kibana:
+    image: kibana:8.8.0
+    container_name: sigma-pli-kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - '5601:5601'
+    depends_on:
+      - elasticsearch
+    networks:
+      - sigma-network
+    restart: unless-stopped
+
+  # Prometheus para monitoramento
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: sigma-pli-prometheus
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - sigma-network
+    restart: unless-stopped
+
+  # Grafana para dashboards
+  grafana:
+    image: grafana/grafana:latest
+    container_name: sigma-pli-grafana
+    ports:
+      - '3001:3000'
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
+    networks:
+      - sigma-network
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+  elasticsearch_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+networks:
+  sigma-network:
+    driver: bridge

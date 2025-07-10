@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teste SIGMA PLI</title>
+    <link rel="stylesheet" href="/src/modules/core/css/test.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 SIGMA PLI - Teste de Funcionamento</h1>
+
+      <div class="status">✅ HTML carregado com sucesso!</div>
+
+      <p>
+        <strong>Versão:</strong>
+        1.0.0
+      </p>
+      <p>
+        <strong>Status:</strong>
+        <span id="status">Carregando...</span>
+      </p>
+      <p>
+        <strong>Uptime:</strong>
+        <span id="uptime">Carregando...</span>
+      </p>
+
+      <button class="button" onclick="testAPI()">Testar API</button>
+      <button class="button" onclick="window.location.href='/'">Voltar ao Index</button>
+
+      <div id="result" class="result-margin-top"></div>
+    </div>
+
+    <script>
+      console.log('JavaScript carregado com sucesso!');
+
+      // Teste simples
+      document.addEventListener('DOMContentLoaded', function () {
+        console.log('DOM carregado!');
+        document.getElementById('status').textContent = 'Ativo';
+        loadData();
+      });
+
+      async function loadData() {
+        try {
+          const response = await fetch('/api/health');
+          const data = await response.json();
+          console.log('Dados da API:', data);
+
+          document.getElementById('status').textContent = data.status;
+          document.getElementById('uptime').textContent = `${data.uptime}s`;
+        } catch (error) {
+          console.error('Erro ao carregar dados:', error);
+          document.getElementById('status').textContent = 'Erro';
+          document.getElementById('uptime').textContent = 'N/A';
+        }
+      }
+
+      function testAPI() {
+        fetch('/api')
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById('result').innerHTML =
+              '<h3>Resposta da API:</h3><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+          })
+          .catch(error => {
+            document.getElementById('result').innerHTML = '<h3>Erro na API:</h3><p>' + error.message + '</p>';
+          });
+      }
+    </script>
+  </body>
+</html>

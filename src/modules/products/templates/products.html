@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Produtos - SIGMA PLI</title>
+    <link rel="stylesheet" href="/static/shared/css/global.css" />
+    <link rel="stylesheet" href="/static/modules/core/css/core.css" />
+    <link rel="stylesheet" href="/static/modules/products/css/products.css" />
+  </head>
+  <body>
+    <div class="core-layout">
+      <nav class="core-sidebar neumorphic-sidebar">
+        <div class="core-sidebar-header">
+          <a href="/" class="core-sidebar-logo">
+            <i class="fas fa-rocket"></i>
+            <span>SIGMA PLI</span>
+          </a>
+        </div>
+        <nav class="core-sidebar-nav">
+          <a href="/" class="core-sidebar-nav-item">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="/products" class="core-sidebar-nav-item active">
+            <i class="fas fa-box"></i>
+            <span>Produtos</span>
+          </a>
+          <a href="/reports" class="core-sidebar-nav-item">
+            <i class="fas fa-chart-bar"></i>
+            <span>Relatórios</span>
+          </a>
+          <a href="/settings" class="core-sidebar-nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Configurações</span>
+          </a>
+          <a href="/auth/logout" class="core-sidebar-nav-item">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Sair</span>
+          </a>
+        </nav>
+      </nav>
+
+      <main class="core-main">
+        <header class="core-header neumorphic">
+          <div class="core-header-content">
+            <h1>Gestão de Produtos</h1>
+            <button class="btn neumorphic-button neumorphic-button-primary" id="addProductBtn">
+              <i class="fas fa-plus"></i>
+              Adicionar Produto
+            </button>
+          </div>
+        </header>
+
+        <div class="core-content">
+          <div class="card neumorphic">
+            <div class="card-header">
+              <h3 class="card-title">Filtros</h3>
+            </div>
+            <div class="card-body">
+              <div class="grid-3">
+                <input type="text" placeholder="Pesquisar produtos..." id="searchInput" class="neumorphic-input" />
+                <select id="categoryFilter" title="Filtrar por categoria" class="neumorphic-input">
+                  <option value="">Todas as categorias</option>
+                  <option value="electronics">Eletrônicos</option>
+                  <option value="clothing">Roupas</option>
+                  <option value="books">Livros</option>
+                  <option value="home">Casa</option>
+                </select>
+                <button class="btn neumorphic-button neumorphic-button-secondary" id="filterBtn">
+                  <i class="fas fa-search"></i>
+                  Filtrar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="products-grid" id="productsGrid">
+            <!-- Produtos serão carregados aqui via JavaScript -->
+          </div>
+
+          <div class="pagination">
+            <button class="btn btn-outline" id="prevPage">Anterior</button>
+            <span id="pageInfo">Página 1 de 1</span>
+            <button class="btn btn-outline" id="nextPage">Próxima</button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Modal para adicionar/editar produto -->
+    <div class="modal" id="productModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalTitle">Adicionar Produto</h3>
+          <button class="close-btn" id="closeModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="productForm">
+            <div class="form-group">
+              <label for="productName">Nome do Produto</label>
+              <input type="text" id="productName" name="name" required />
+            </div>
+            <div class="form-group">
+              <label for="productCategory">Categoria</label>
+              <select id="productCategory" name="category" required>
+                <option value="">Selecione uma categoria</option>
+                <option value="electronics">Eletrônicos</option>
+                <option value="clothing">Roupas</option>
+                <option value="books">Livros</option>
+                <option value="home">Casa</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="productPrice">Preço</label>
+              <input type="number" id="productPrice" name="price" step="0.01" required />
+            </div>
+            <div class="form-group">
+              <label for="productStock">Estoque</label>
+              <input type="number" id="productStock" name="stock" required />
+            </div>
+            <div class="form-group">
+              <label for="productDescription">Descrição</label>
+              <textarea id="productDescription" name="description" rows="3"></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn-secondary" id="cancelBtn">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="/modules/products/js/products.js"></script>
+  </body>
+</html>

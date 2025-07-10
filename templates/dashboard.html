@@ -1,0 +1,367 @@
+{% extends "base.html" %}
+
+{% block title %}SIGMA-PLI{% endblock %}
+
+{% block content %}
+<div class="page-header text-center">
+    <div class="container">
+        <h1 class="mb-3 float-animation">
+            <i class="fas fa-tachometer-alt me-3"></i>Dashboard SIGMA-PLI
+        </h1>
+        <p class="lead text-muted">Painel de controle inteligente do Sistema Integrado de Gestão, Monitoramento e Análise das atividades de implantação do Plano de Logística e Investimentos do Estado de São Paulo</p>
+        <p class="text-secondary">
+            <i class="fas fa-map-marker-alt me-2"></i>São Paulo, SP | 
+            <i class="fas fa-calendar-day me-2 ms-3"></i><span id="current-date"></span>
+        </p>
+    </div>
+</div>
+
+<!-- Estatísticas Principais -->
+<div class="row mb-5">
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card stats-card h-100">
+            <div class="card-body text-center p-4">
+                <div class="icon-wrapper icon-primary mx-auto float-animation">
+                    <i class="fas fa-box fa-2x"></i>
+                </div>
+                <h3 class="text-gradient-primary mb-2">{{ total_products or 21 }}</h3>
+                <h6 class="field-label mb-0">Total de Produtos</h6>
+                <p class="field-value mt-2 mb-0">Produtos registrados no sistema</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card stats-card h-100">
+            <div class="card-body text-center p-4">
+                <div class="icon-wrapper icon-success mx-auto float-animation" style="animation-delay: 0.2s;">
+                    <i class="fas fa-check-circle fa-2x"></i>
+                </div>
+                <h3 class="text-success mb-2">{{ completed_products or 0 }}</h3>
+                <h6 class="field-label mb-0">Concluídos</h6>
+                <p class="field-value mt-2 mb-0">Produtos finalizados e entregues</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card stats-card h-100">
+            <div class="card-body text-center p-4">
+                <div class="icon-wrapper icon-warning mx-auto float-animation" style="animation-delay: 0.4s;">
+                    <i class="fas fa-clock fa-2x"></i>
+                </div>
+                <h3 class="text-warning mb-2">{{ pending_products or 21 }}</h3>
+                <h6 class="field-label mb-0">Pendentes</h6>
+                <p class="field-value mt-2 mb-0">Produtos aguardando execução</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card stats-card h-100">
+            <div class="card-body text-center p-4">
+                <div class="icon-wrapper icon-secondary mx-auto float-animation" style="animation-delay: 0.6s;">
+                    <i class="fas fa-chart-line fa-2x"></i>
+                </div>
+                <h3 class="text-gradient-secondary mb-2">{{ ((completed_products or 0) / (total_products or 21) * 100)|round(1) }}%</h3>
+                <h6 class="field-label mb-0">Progresso Geral</h6>
+                <p class="field-value mt-2 mb-0">Taxa de conclusão dos produtos</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Segunda fileira de estatísticas -->
+<div class="row mb-5">
+    <div class="col-lg-4 mb-4">
+        <div class="card glassmorphism h-100">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-users text-primary me-2"></i>Equipe SEMIL
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <span class="field-label">Membros ativos</span>
+                    <span class="badge bg-primary rounded-pill">7</span>
+                </div>
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <span class="field-label">Coordenação</span>
+                    <span class="badge bg-danger rounded-pill">1</span>
+                </div>
+                <div class="d-flex align-items-center justify-content-between">
+                    <span class="field-label">Especialistas</span>
+                    <span class="badge bg-secondary rounded-pill">6</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 mb-4">
+        <div class="card glassmorphism h-100">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-calendar-alt text-warning me-2"></i>Próximos Eventos
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if upcoming_events %}
+                    {% for event in upcoming_events[:3] %}
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-wrapper icon-warning me-3" style="width: 40px; height: 40px;">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-1">{{ event.title }}</h6>
+                            <small class="text-muted">{{ event.event_date.strftime('%d/%m/%Y') }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-3">
+                        <i class="fas fa-calendar-plus fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Nenhum evento próximo</p>
+                        <a href="{{ url_for('add_event') }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-plus me-2"></i>Adicionar Evento
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 mb-4">
+        <div class="card glassmorphism h-100">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-database text-danger me-2"></i>Dicionário de Dados
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6 mb-3">
+                        <h4 class="text-danger mb-1">45</h4>
+                        <small class="field-label">Datasets</small>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h4 class="text-danger mb-1">10</h4>
+                        <small class="field-label">Categorias</small>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="text-danger mb-1">92%</h4>
+                        <small class="field-label">Completude</small>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="text-danger mb-1">18</h4>
+                        <small class="field-label">Órgãos</small>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('dictionary.index') }}" class="btn btn-outline-danger btn-sm">
+                        <i class="fas fa-search me-2"></i>Explorar Dados
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 mb-4">
+        <div class="card glassmorphism h-100">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-tools text-info me-2"></i>Ferramentas Analíticas
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6 mb-3">
+                        <h4 class="text-info mb-1">12</h4>
+                        <small class="field-label">Scripts R</small>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h4 class="text-info mb-1">8</h4>
+                        <small class="field-label">Datasets</small>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="text-info mb-1">5</h4>
+                        <small class="field-label">Dashboards</small>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="text-info mb-1">6</h4>
+                        <small class="field-label">Utilitários</small>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('tools') }}" class="btn btn-outline-info btn-sm">
+                        <i class="fas fa-external-link-alt me-2"></i>Acessar Ferramentas
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gráfico de Progresso -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-bar text-primary me-2"></i>Progresso dos Produtos SIGMA-PLI
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <canvas id="progressChart" height="100"></canvas>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="progress-legend">
+                            <div class="legend-item mb-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="legend-color bg-success me-3"></div>
+                                    <div>
+                                        <h6 class="mb-1">Concluídos</h6>
+                                        <p class="mb-0 text-muted">{{ completed_products or 0 }} produtos</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="legend-item mb-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="legend-color bg-warning me-3"></div>
+                                    <div>
+                                        <h6 class="mb-1">Pendentes</h6>
+                                        <p class="mb-0 text-muted">{{ pending_products or 21 }} produtos</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ações Rápidas -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-bolt text-warning me-2"></i>Ações Rápidas
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ url_for('products') }}" class="btn btn-outline-primary btn-lg w-100 h-100 d-flex flex-column align-items-center justify-content-center">
+                            <i class="fas fa-box fa-2x mb-2"></i>
+                            <span>Gerenciar Produtos</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ url_for('calendar') }}" class="btn btn-outline-warning btn-lg w-100 h-100 d-flex flex-column align-items-center justify-content-center">
+                            <i class="fas fa-calendar-alt fa-2x mb-2"></i>
+                            <span>Calendário</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ url_for('upload_document') }}" class="btn btn-outline-info btn-lg w-100 h-100 d-flex flex-column align-items-center justify-content-center">
+                            <i class="fas fa-upload fa-2x mb-2"></i>
+                            <span>Upload Documento</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ url_for('tools') }}" class="btn btn-outline-success btn-lg w-100 h-100 d-flex flex-column align-items-center justify-content-center">
+                            <i class="fas fa-tools fa-2x mb-2"></i>
+                            <span>Ferramentas</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .legend-color {
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+    }
+    
+    .legend-item {
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        background: rgba(255,255,255,0.5);
+    }
+</style>
+
+<!-- Definindo variáveis para o JavaScript -->
+<script type="text/javascript">
+    var completedProducts = JSON.parse('{{ completed_products|default(0)|tojson|safe }}');
+    var pendingProducts = JSON.parse('{{ pending_products|default(21)|tojson|safe }}');
+
+    // Aguardar o DOM carregar completamente
+    document.addEventListener('DOMContentLoaded', function() {
+    // Data e hora atual sincronizada com São Paulo
+    function updateDateTime() {
+        const now = new Date();
+        const spTime = new Intl.DateTimeFormat('pt-BR', {
+            timeZone: 'America/Sao_Paulo',
+            weekday: 'long',
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        const dateElement = document.getElementById('current-date');
+        if (dateElement) {
+            dateElement.textContent = spTime.format(now);
+        }
+    }
+
+    // Atualizar data/hora inicial
+    updateDateTime();
+
+    // Atualizar a hora a cada minuto
+    setInterval(updateDateTime, 60000);
+
+    // Gráfico de progresso
+    const ctx = document.getElementById('progressChart');
+    if (ctx) {
+        const progressChart = new Chart(ctx.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Concluídos', 'Pendentes'],
+                datasets: [{
+                    data: [completedProducts, pendingProducts],
+                    backgroundColor: [
+                        'rgba(5, 150, 105, 0.8)',
+                        'rgba(217, 119, 6, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(5, 150, 105, 1)',
+                        'rgba(217, 119, 6, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}

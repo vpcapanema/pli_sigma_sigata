@@ -1,0 +1,471 @@
+{% extends "base.html" %}
+
+{% block title %}Dicionário de Dados - PLI-SP{% endblock %}
+
+{% block content %}
+<style>
+    .dictionary-hero {
+        background: linear-gradient(135deg, #dc143c 0%, #1a1a1a 100%);
+        color: white;
+        padding: 3rem 0;
+        margin: -2rem -3rem 3rem -3rem;
+        border-radius: 0 0 2rem 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dictionary-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            radial-gradient(circle at 30% 40%, rgba(249, 115, 22, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+        z-index: 1;
+    }
+
+    .dictionary-hero-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .dictionary-hero-icon {
+        width: 70px;
+        height: 70px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin-right: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .stat-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 1.5rem;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+    }
+
+    .stat-card.primary { --gradient: linear-gradient(90deg, #dc143c 0%, #ff6b6b 100%); }
+    .stat-card.success { --gradient: linear-gradient(90deg, #10b981 0%, #34d399 100%); }
+    .stat-card.info { --gradient: linear-gradient(90deg, #0ea5e9 0%, #3b82f6 100%); }
+    .stat-card.warning { --gradient: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%); }
+
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 1.5rem;
+        color: white;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-icon.primary { background: linear-gradient(135deg, #dc143c 0%, #ff6b6b 100%); }
+    .stat-icon.success { background: linear-gradient(135deg, #10b981 0%, #34d399 100%); }
+    .stat-icon.info { background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%); }
+    .stat-icon.warning { background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        background: var(--gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .stat-label {
+        font-size: 1rem;
+        color: #6b7280;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .search-section {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 2rem;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-form {
+        display: grid;
+        grid-template-columns: 1fr auto auto auto;
+        gap: 1rem;
+        align-items: end;
+    }
+
+    .datasets-table {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 2rem;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+
+    .table-header {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 1.5rem 2rem;
+        border-bottom: 2px solid #dc143c;
+    }
+
+    .table-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .table-title i {
+        background: linear-gradient(135deg, #dc143c 0%, #ff6b6b 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-right: 0.75rem;
+    }
+
+    .dataset-row {
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .dataset-row:hover {
+        background: rgba(220, 20, 60, 0.02);
+        transform: translateX(5px);
+    }
+
+    .dataset-row:last-child {
+        border-bottom: none;
+    }
+
+    .dataset-name {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: #1a1a1a;
+        margin-bottom: 0.5rem;
+    }
+
+    .dataset-meta {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .meta-item {
+        font-size: 0.9rem;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+    }
+
+    .meta-item i {
+        margin-right: 0.25rem;
+        color: #dc143c;
+    }
+
+    .dataset-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .action-btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .btn-view {
+        background: rgba(14, 165, 233, 0.1);
+        color: #0ea5e9;
+        border: 1px solid rgba(14, 165, 233, 0.2);
+    }
+
+    .btn-edit {
+        background: rgba(249, 115, 22, 0.1);
+        color: #f97316;
+        border: 1px solid rgba(249, 115, 22, 0.2);
+    }
+
+    .btn-download {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .category-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .category-transport { background: linear-gradient(135deg, #dc143c 0%, #ff6b6b 100%); color: white; }
+    .category-socioeconomic { background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%); color: white; }
+    .category-geographic { background: linear-gradient(135deg, #10b981 0%, #34d399 100%); color: white; }
+    .category-financial { background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; }
+
+    .upload-button {
+        background: linear-gradient(135deg, #dc143c 0%, #ff6b6b 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 1rem 2rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .upload-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(220, 20, 60, 0.3);
+        color: white;
+        text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+        .dictionary-hero {
+            padding: 2rem 0;
+            margin: -1rem -1rem 2rem -1rem;
+        }
+        .dictionary-hero-content {
+            flex-direction: column;
+            text-align: center;
+        }
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .search-form {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<!-- Dictionary Hero Section -->
+<div class="dictionary-hero">
+    <div class="container">
+        <div class="dictionary-hero-content">
+            <div class="d-flex align-items-center">
+                <div class="dictionary-hero-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <div>
+                    <h1 class="display-6 fw-bold mb-2">Dicionário de Dados</h1>
+                    <p class="lead mb-0">Catálogo completo dos dados utilizados no PLI-SP</p>
+                </div>
+            </div>
+            <a href="{{ url_for('dictionary.upload_file') }}" class="upload-button">
+                <i class="fas fa-cloud-upload-alt"></i>
+                Adicionar Dataset
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Grid -->
+<div class="stats-grid">
+    <div class="stat-card primary">
+        <div class="stat-icon primary">
+            <i class="fas fa-file-alt"></i>
+        </div>
+        <div class="stat-number">{{ datasets|length or 24 }}</div>
+        <div class="stat-label">Datasets Catalogados</div>
+    </div>
+    <div class="stat-card success">
+        <div class="stat-icon success">
+            <i class="fas fa-tags"></i>
+        </div>
+        <div class="stat-number">8</div>
+        <div class="stat-label">Categorias</div>
+    </div>
+    <div class="stat-card info">
+        <div class="stat-icon info">
+            <i class="fas fa-building"></i>
+        </div>
+        <div class="stat-number">15</div>
+        <div class="stat-label">Órgãos Produtores</div>
+    </div>
+    <div class="stat-card warning">
+        <div class="stat-icon warning">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <div class="stat-number">98%</div>
+        <div class="stat-label">Completude Média</div>
+    </div>
+</div>
+
+<!-- Search Section -->
+<div class="search-section">
+    <h3 class="mb-3"><i class="fas fa-search me-2 text-primary"></i>Buscar Datasets</h3>
+    <form class="search-form" action="{{ url_for('dictionary.search') }}" method="GET">
+        <div>
+            <label class="form-label">Termo de busca</label>
+            <input type="text" class="form-control" name="q" placeholder="Nome, descrição, palavras-chave...">
+        </div>
+        <div>
+            <label class="form-label">Categoria</label>
+            <select class="form-select" name="category">
+                <option value="">Todas</option>
+                <option value="Transporte Rodoviário">Transporte Rodoviário</option>
+                <option value="Transporte Ferroviário">Transporte Ferroviário</option>
+                <option value="Transporte Aquaviário">Transporte Aquaviário</option>
+                <option value="Socioeconômicos">Socioeconômicos</option>
+                <option value="Produção Agropecuária">Produção Agropecuária</option>
+                <option value="Financeiros Públicos">Financeiros Públicos</option>
+                <option value="Geoespaciais">Geoespaciais</option>
+                <option value="Comércio Exterior">Comércio Exterior</option>
+            </select>
+        </div>
+        <div>
+            <label class="form-label">Órgão</label>
+            <select class="form-select" name="organ">
+                <option value="">Todos</option>
+                <option value="DNIT">DNIT</option>
+                <option value="IBGE">IBGE</option>
+                <option value="Ministério do Trabalho">Ministério do Trabalho</option>
+                <option value="SECEX">SECEX</option>
+                <option value="SEMIL">SEMIL</option>
+            </select>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search me-2"></i>Buscar
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Datasets Table -->
+<div class="datasets-table">
+    <div class="table-header">
+        <h2 class="table-title">
+            <i class="fas fa-list"></i>Datasets Catalogados
+        </h2>
+    </div>
+    
+    {% for dataset in datasets %}
+    <div class="dataset-row">
+        <div class="dataset-name">{{ dataset.nome_arquivo }}</div>
+        
+        <div class="dataset-meta">
+            <div class="meta-item">
+                <i class="fas fa-folder-open"></i>
+                <span class="category-badge category-{{ dataset.categoria_principal.lower().replace(' ', '-') }}">
+                    {{ dataset.categoria_principal }}
+                </span>
+            </div>
+            <div class="meta-item">
+                <i class="fas fa-building"></i>
+                {{ dataset.orgao_produtor }}
+            </div>
+            <div class="meta-item">
+                <i class="fas fa-calendar"></i>
+                {{ dataset.data_upload }}
+            </div>
+            <div class="meta-item">
+                <i class="fas fa-star"></i>
+                {{ dataset.relevancia_pli.title() }}
+            </div>
+        </div>
+        
+        <div class="dataset-actions">
+            <button class="action-btn btn-view" onclick="viewDataset({{ dataset.id }})">
+                <i class="fas fa-eye"></i>
+                Visualizar
+            </button>
+            <button class="action-btn btn-edit" onclick="editDataset({{ dataset.id }})">
+                <i class="fas fa-edit"></i>
+                Editar
+            </button>
+            <button class="action-btn btn-download" onclick="downloadDataset({{ dataset.id }})">
+                <i class="fas fa-download"></i>
+                Download
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+function viewDataset(id) {
+    window.location.href = `/dictionary/view/${id}`;
+}
+
+function editDataset(id) {
+    window.location.href = `/dictionary/catalog/${id}`;
+}
+
+function downloadDataset(id) {
+    window.location.href = `/dictionary/download/${id}`;
+}
+</script>
+{% endblock %}

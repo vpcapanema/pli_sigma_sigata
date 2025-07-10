@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Produtos - SIGMA PLI</title>
+    <link rel="stylesheet" href="/shared/css/global.css" />
+    <link rel="stylesheet" href="/modules/core/css/core.css" />
+    <link rel="stylesheet" href="/modules/products/css/products.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <nav class="sidebar">
+        <div class="sidebar-header">
+          <h2>SIGMA PLI</h2>
+        </div>
+        <ul class="sidebar-menu">
+          <li><a href="/">Dashboard</a></li>
+          <li><a href="/products" class="active">Produtos</a></li>
+          <li><a href="/reports">Relatórios</a></li>
+          <li><a href="/settings">Configurações</a></li>
+          <li><a href="/auth/logout">Sair</a></li>
+        </ul>
+      </nav>
+
+      <main class="main-content">
+        <div class="content-header">
+          <h1>Gestão de Produtos</h1>
+          <button class="btn btn-primary" id="addProductBtn">Adicionar Produto</button>
+        </div>
+
+        <div class="content-body">
+          <div class="filters-section">
+            <div class="filter-group">
+              <input type="text" placeholder="Pesquisar produtos..." id="searchInput" />
+              <select id="categoryFilter" title="Filtrar por categoria">
+                <option value="">Todas as categorias</option>
+                <option value="electronics">Eletrônicos</option>
+                <option value="clothing">Roupas</option>
+                <option value="books">Livros</option>
+                <option value="home">Casa</option>
+              </select>
+              <button class="btn btn-secondary" id="filterBtn">Filtrar</button>
+            </div>
+          </div>
+
+          <div class="products-grid" id="productsGrid">
+            <!-- Produtos serão carregados aqui via JavaScript -->
+          </div>
+
+          <div class="pagination">
+            <button class="btn btn-outline" id="prevPage">Anterior</button>
+            <span id="pageInfo">Página 1 de 1</span>
+            <button class="btn btn-outline" id="nextPage">Próxima</button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Modal para adicionar/editar produto -->
+    <div class="modal" id="productModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalTitle">Adicionar Produto</h3>
+          <button class="close-btn" id="closeModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="productForm">
+            <div class="form-group">
+              <label for="productName">Nome do Produto</label>
+              <input type="text" id="productName" name="name" required />
+            </div>
+            <div class="form-group">
+              <label for="productCategory">Categoria</label>
+              <select id="productCategory" name="category" required>
+                <option value="">Selecione uma categoria</option>
+                <option value="electronics">Eletrônicos</option>
+                <option value="clothing">Roupas</option>
+                <option value="books">Livros</option>
+                <option value="home">Casa</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="productPrice">Preço</label>
+              <input type="number" id="productPrice" name="price" step="0.01" required />
+            </div>
+            <div class="form-group">
+              <label for="productStock">Estoque</label>
+              <input type="number" id="productStock" name="stock" required />
+            </div>
+            <div class="form-group">
+              <label for="productDescription">Descrição</label>
+              <textarea id="productDescription" name="description" rows="3"></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn-secondary" id="cancelBtn">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="/modules/products/js/products.js"></script>
+  </body>
+</html>

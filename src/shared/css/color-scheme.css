@@ -1,0 +1,149 @@
+/* Padrão de cores global do SIGMA-PLI */
+:root {
+    /* Cores principais */
+    --bg-primary: #d8bbbb;
+    --bg-secondary: #c7c7c7;
+    --text-primary: #2d2d2d;
+    --text-secondary: #4a4a4a;
+    --accent-red: #cc0000;
+    --accent-dark-red: #660000;
+    --accent-light-red: #8b0000;
+    
+    /* Cores de fundo adicionais */
+    --bg-hero: linear-gradient(135deg, #000000 0%, #630000 100%);
+    --bg-content: #f8f5f5;
+    --bg-news: #f5f1f1;
+    --bg-card: #ffffff;
+    
+    /* Cores de sombra para efeito neumórfico */
+    --shadow-dark: rgba(0, 0, 0, 0.1);
+    --shadow-light: rgba(255, 255, 255, 0.8);
+    
+    /* Cores de estado */
+    --success: #28a745;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --info: #17a2b8;
+    
+    /* Layout */
+    --sidebar-width: 250px;
+    --sidebar-width-mobile: 60px;
+}
+
+/* Classes utilitárias para aplicação consistente das cores */
+.bg-primary { background-color: var(--bg-primary); }
+.bg-secondary { background-color: var(--bg-secondary); }
+.bg-content { background-color: var(--bg-content); }
+.bg-news { background-color: var(--bg-news); }
+.bg-card { background-color: var(--bg-card); }
+
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-accent { color: var(--accent-red); }
+.text-accent-dark { color: var(--accent-dark-red); }
+.text-accent-light { color: var(--accent-light-red); }
+
+/* Efeito neumórfico padrão */
+.neumorphic {
+    box-shadow: 
+        5px 5px 10px var(--shadow-dark),
+        -5px -5px 10px var(--shadow-light);
+}
+
+.neumorphic-inset {
+    box-shadow: 
+        inset 5px 5px 10px var(--shadow-dark),
+        inset -5px -5px 10px var(--shadow-light);
+}
+
+/* Estilo padrão para cards */
+.sigma-card {
+    background: var(--bg-card);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 
+        5px 5px 10px var(--shadow-dark),
+        -5px -5px 10px var(--shadow-light);
+    margin-bottom: 1rem;
+}
+
+/* Estilo padrão para sidebar */
+.sigma-sidebar {
+    background: var(--bg-secondary);
+    box-shadow: 9px 0 16px var(--shadow-dark), -9px 0 16px var(--shadow-light);
+}
+
+/* Estilo padrão para links de navegação */
+.sigma-nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.sigma-nav-link:hover,
+.sigma-nav-link.active {
+    background: #d4b3b3;
+    color: var(--accent-light-red);
+}
+
+/* Estilo padrão para botões */
+.sigma-btn {
+    background: var(--accent-red);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 
+        3px 3px 6px var(--shadow-dark),
+        -3px -3px 6px var(--shadow-light);
+}
+
+.sigma-btn:hover {
+    background: var(--accent-dark-red);
+    transform: translateY(-2px);
+}
+
+.sigma-btn:active {
+    transform: translateY(0);
+    box-shadow: 
+        inset 3px 3px 6px var(--shadow-dark),
+        inset -3px -3px 6px var(--shadow-light);
+}
+
+/* Estilo padrão para formulários */
+.sigma-form-control {
+    background: var(--bg-card);
+    border: 2px solid transparent;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    box-shadow: 
+        inset 3px 3px 6px var(--shadow-dark),
+        inset -3px -3px 6px var(--shadow-light);
+    transition: all 0.2s ease;
+}
+
+.sigma-form-control:focus {
+    outline: none;
+    border-color: var(--accent-red);
+    box-shadow: 
+        inset 3px 3px 6px var(--shadow-dark),
+        inset -3px -3px 6px var(--shadow-light),
+        0 0 0 3px rgba(204, 0, 0, 0.1);
+}
+
+/* Layout responsivo padrão */
+.sigma-main-content {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    margin-left: var(--sidebar-width);
+}
+
+@media (max-width: 768px) {
+    .sigma-main-content {
+        margin-left: var(--sidebar-width-mobile);
+    }
+}

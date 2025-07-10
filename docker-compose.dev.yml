@@ -1,0 +1,96 @@
+
+version: '3.8'
+
+services:
+  # Aplicação principal
+  app:
+    build: .
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=sigma_pli
+      - DB_USER=sigma_user
+      - DB_PASSWORD=sigma_password
+      - JWT_SECRET=dev_jwt_secret_key_12345
+      - SESSION_SECRET=dev_session_secret_12345
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - mysql
+      - redis
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - ./logs:/app/logs
+      - ./uploads:/app/uploads
+      - ./backups:/app/backups
+    networks:
+      - sigma_network
+    restart: unless-stopped
+    command: npm run dev
+
+  # Banco de dados MySQL
+  mysql:
+    image: mysql:8.0
+    ports:
+      - '3306:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=sigma_pli
+      - MYSQL_USER=sigma_user
+      - MYSQL_PASSWORD=sigma_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - sigma_network
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      timeout: 20s
+      retries: 10
+
+  # Redis para cache e sessões
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    networks:
+      - sigma_network
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # phpMyAdmin para administração do banco
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - '8080:80'
+    environment:
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
+      - PMA_USER=sigma_user
+      - PMA_PASSWORD=sigma_password
+    depends_on:
+      - mysql
+    networks:
+      - sigma_network
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  sigma_network:
+    driver: bridge

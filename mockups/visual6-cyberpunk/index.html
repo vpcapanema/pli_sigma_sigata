@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGMA-PLI: Cyberpunk Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="cyber-nav">
+        <a href="#" class="glitch" data-text="INÍCIO">INÍCIO</a>
+        <a href="#" class="glitch" data-text="PRODUTOS">PRODUTOS</a>
+        <a href="#" class="glitch" data-text="RELATÓRIOS">RELATÓRIOS</a>
+        <a href="#" class="glitch" data-text="CONFIGURAÇÕES">CONFIGURAÇÕES</a>
+    </nav>
+
+    <header class="cyber-header">
+        <h1 class="neon-text glitch" data-text="SIGMA-PLI">SIGMA-PLI</h1>
+        <p class="neon-text-pink">Sistema Integrado de Gestão e Monitoramento PLI v2.0</p>
+    </header>
+
+    <main class="cyber-grid">
+        <!-- Status Card -->
+        <div class="cyber-card">
+            <h2 class="neon-text">STATUS DO SISTEMA</h2>
+            <div class="status-list">
+                <div class="status-item">
+                    <span class="status-indicator status-active"></span>
+                    <span class="neon-text">Sistema Operacional</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-indicator status-warning"></span>
+                    <span class="neon-text-purple">Processamento: 75%</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-indicator status-danger"></span>
+                    <span class="neon-text-pink">Alertas: 3</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrics Card -->
+        <div class="cyber-card">
+            <h2 class="neon-text-purple">MÉTRICAS</h2>
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <span class="neon-text">21</span>
+                    <span>PRODUTOS</span>
+                </div>
+                <div class="metric-item">
+                    <span class="neon-text-pink">05</span>
+                    <span>USUÁRIOS</span>
+                </div>
+                <div class="metric-item">
+                    <span class="neon-text-purple">89%</span>
+                    <span>DESEMPENHO</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions Card -->
+        <div class="cyber-card">
+            <h2 class="neon-text">AÇÕES RÁPIDAS</h2>
+            <div class="actions-grid">
+                <button class="cyber-button">NOVO PRODUTO</button>
+                <button class="cyber-button">GERAR RELATÓRIO</button>
+                <button class="cyber-button">ANÁLISE DE DADOS</button>
+            </div>
+        </div>
+
+        <!-- Recent Activities -->
+        <div class="cyber-card">
+            <h2 class="neon-text-pink">ATIVIDADES RECENTES</h2>
+            <div class="activities-list">
+                <div class="activity-item">
+                    <span class="neon-text">[08:45]</span>
+                    <span>Novo produto cadastrado: PLI-2025-001</span>
+                </div>
+                <div class="activity-item">
+                    <span class="neon-text">[09:30]</span>
+                    <span>Atualização de status: Em Processamento</span>
+                </div>
+                <div class="activity-item">
+                    <span class="neon-text">[10:15]</span>
+                    <span>Relatório mensal gerado</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="cyber-footer">
+        <p class="neon-text">&copy; 2025 SIGMA-PLI</p>
+        <p class="neon-text-purple">SEMIL - Seção de Metodologias e Integração Logística</p>
+    </footer>
+
+    <script>
+        // Adiciona efeito de glitch nos textos
+        document.querySelectorAll('.glitch').forEach(element => {
+            element.setAttribute('data-text', element.textContent);
+        });
+    </script>
+</body>
+</html>

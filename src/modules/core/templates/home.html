@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGMA-PLI - Página Inicial</title>
+    <link rel="stylesheet" href="/static/modules/core/css/home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <img src="/public/assets/logo_sigma_pli_completa_preta_recortada1.PNG" alt="SIGMA-PLI">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" id="btn-pli"><i class="fas fa-map"></i> O PLI</a></li>
+                <li><a href="#" id="btn-instrumentos"><i class="fas fa-gavel"></i> Instrumentos</a></li>
+                <li><a href="#" id="btn-organograma"><i class="fas fa-sitemap"></i> Organograma</a></li>
+                <li><a href="#" id="btn-semil"><i class="fas fa-building"></i> A SEMIL</a></li>
+                <li><a href="#" id="btn-equipe"><i class="fas fa-users"></i> Equipe</a></li>
+                <li><a href="#" id="btn-ferramentas"><i class="fas fa-tools"></i> Ferramentas</a></li>
+                <li><a href="/auth/login" id="btn-login"><i class="fas fa-sign-in-alt"></i> Acesso</a></li>
+            </ul>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-content">
+                <div class="hero-icon">
+                    <img src="/public/assets/icone_sigma-pli_vermelho_aurea_recortada.PNG" alt="SIGMA-PLI">
+                </div>
+                <h1 class="display-4 fw-bold mb-2">SIGMA-PLI</h1>
+                <p class="text-uppercase mb-1">Sistema Integrado de Gestão, Monitoramento e Análise</p>
+                <p class="mb-0">do PLI do Estado de São Paulo</p>
+            </div>
+        </div>
+        
+        <!-- Notícias Rápidas -->
+        <div class="news-container">
+            <div class="news-header">
+                <h3><i class="fas fa-newspaper"></i> Notícias e Atualizações</h3>
+            </div>
+            <div class="news-grid" id="noticias-list">
+                <!-- Preenchido via JavaScript -->
+            </div>
+        </div>
+
+        <!-- Sobre o Projeto -->
+        <div class="full-width-section">
+            <div class="card-header-modern">
+                <h5><i class="fas fa-info-circle"></i>Sobre o Projeto</h5>
+            </div>
+            <div class="card-body">
+                <p class="lead">
+                    Iniciativa estratégica da SEMIL para revolucionar o sistema logístico e de transportes no estado de São Paulo, promovendo desenvolvimento sustentável e competitividade econômica.
+                </p>
+                
+                <!-- Os quatro cards com o conteúdo dos tópicos -->
+                <div class="objectives-grid">
+                    <div class="objective-card">
+                        <div class="objective-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3>Diagnóstico Integrado</h3>
+                        <p>Análise completa do sistema logístico estadual para identificar necessidades e oportunidades.</p>
+                    </div>
+                    <div class="objective-card">
+                        <div class="objective-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Identificação de Oportunidades</h3>
+                        <p>Mapeamento de gargalos e potenciais áreas de melhoria para o sistema logístico.</p>
+                    </div>
+                    <div class="objective-card">
+                        <div class="objective-icon">
+                            <i class="fas fa-route"></i>
+                        </div>
+                        <h3>Soluções Multimodais</h3>
+                        <p>Propostas integradas para todos os modais de transporte garantindo eficiência logística.</p>
+                    </div>
+                    <div class="objective-card">
+                        <div class="objective-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h3>Diretrizes de Investimento</h3>
+                        <p>Planejamento estratégico para infraestrutura de transportes e centros logísticos.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+                
+        <!-- Escopo do Projeto -->
+        <div class="full-width-section">
+            <div class="card-header-modern">
+                <h5><i class="fas fa-bullseye"></i>Escopo do Projeto</h5>
+            </div>
+            <div class="card-body">
+                <div class="scope-grid">
+                    <div class="scope-item">
+                        <div class="scope-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <h6 class="fw-bold">Rodoviário</h6>
+                        <p class="small text-muted mb-0">Rodovias estaduais e federais</p>
+                    </div>
+                    <div class="scope-item">
+                        <div class="scope-icon">
+                            <i class="fas fa-train"></i>
+                        </div>
+                        <h6 class="fw-bold">Ferroviário</h6>
+                        <p class="small text-muted mb-0">Malha ferroviária e terminais</p>
+                    </div>
+                    <div class="scope-item">
+                        <div class="scope-icon">
+                            <i class="fas fa-ship"></i>
+                        </div>
+                        <h6 class="fw-bold">Aquaviário</h6>
+                        <p class="small text-muted mb-0">Portos e hidrovias</p>
+                    </div>
+                    <div class="scope-item">
+                        <div class="scope-icon">
+                            <i class="fas fa-plane"></i>
+                        </div>
+                        <h6 class="fw-bold">Aéreo</h6>
+                        <p class="small text-muted mb-0">Aeroportos e carga aérea</p>
+                    </div>
+                    <div class="scope-item">
+                        <div class="scope-icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <h6 class="fw-bold">Logística</h6>
+                        <p class="small text-muted mb-0">Centros de distribuição</p>
+                    </div>
+                    <div class="scope-item">
+                        <div class="scope-icon">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <h6 class="fw-bold">Tecnologia</h6>
+                        <p class="small text-muted mb-0">Sistemas inteligentes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Cronograma -->
+        <div class="full-width-section">
+            <div class="card-header-modern">
+                <h5><i class="fas fa-calendar-alt"></i>Cronograma de Execução</h5>
+            </div>
+            <div class="card-body">
+                <div class="compact-timeline">
+                    <div class="timeline-item">
+                        <h6 class="fw-bold">Fase 1: Diagnóstico</h6>
+                        <small class="text-muted">Janeiro - Abril 2024</small>
+                    </div>
+                    <div class="timeline-item">
+                        <h6 class="fw-bold">Fase 2: Modelagem</h6>
+                        <small class="text-muted">Maio - Agosto 2024</small>
+                    </div>
+                    <div class="timeline-item">
+                        <h6 class="fw-bold">Fase 3: Propostas</h6>
+                        <small class="text-muted">Setembro - Dezembro 2024</small>
+                    </div>
+                    <div class="timeline-item">
+                        <h6 class="fw-bold">Fase 4: Implementação</h6>
+                        <small class="text-muted">Janeiro 2025 em diante</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Documentos e Contatos em dois containers lado a lado -->
+        <div class="two-column-container">
+            <div class="column">
+                <!-- Documentos -->
+                <div class="section-card">
+                    <div class="card-header-modern">
+                        <h5><i class="fas fa-file-alt"></i>Documentos</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="document-list">
+                            <li class="document-item">
+                                <div class="document-icon">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-semibold">Termo de Referência</div>
+                                    <small class="text-muted">Especificações técnicas</small>
+                                </div>
+                            </li>
+                            <li class="document-item">
+                                <div class="document-icon">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-semibold">Proposta Técnica</div>
+                                    <small class="text-muted">Metodologia e abordagem</small>
+                                </div>
+                            </li>
+                            <li class="document-item">
+                                <div class="document-icon">
+                                    <i class="fas fa-sitemap"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-semibold">Fluxo de Dados</div>
+                                    <small class="text-muted">Arquitetura da informação</small>
+                                </div>
+                            </li>
+                            <li class="document-item">
+                                <div class="document-icon">
+                                    <i class="fas fa-file-excel"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-semibold">Variáveis de Análise</div>
+                                    <small class="text-muted">Indicadores e métricas</small>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <!-- Conteúdo da segunda coluna -->
+            </div>
+        </div>
+        
+        <!-- Rodapé -->
+        <footer class="footer">
+            <div class="contact-card">
+                <div class="footer-title">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-building me-2"></i>Contato
+                    </h5>
+                </div>
+                <div class="footer-info">
+                    <div class="contact-info">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <strong>SEMIL - Secretaria de Logística e Transportes</strong>
+                            <span> | Rua Boa Vista, 170 - Centro, São Paulo/SP</span>
+                        </div>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fas fa-phone"></i>
+                        <span>(11) 3000-0000</span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fas fa-envelope"></i>
+                        <span>contato@semil.sp.gov.br</span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fas fa-globe"></i>
+                        <span>www.semil.sp.gov.br</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+    <script src="/static/modules/core/js/home.js"></script>
+</body>
+</html>

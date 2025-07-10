@@ -1,0 +1,278 @@
+# Dependências
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Arquivos de build
+dist/
+build/
+*.tgz
+*.tar.gz
+
+# Arquivos de ambiente
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Arquivos de cache
+.cache/
+.npm/
+.yarn/
+.pnp.*
+.eslintcache
+
+# Arquivos temporários
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Uploads e arquivos de usuário
+uploads/
+user-files/
+temp-files/
+
+# Backups
+backups/
+*.bak
+*.backup
+
+# Arquivos de banco de dados
+*.db
+*.sqlite
+*.sqlite3
+
+# Arquivos de sistema
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Arquivos de teste
+coverage/
+.nyc_output/
+test-results/
+
+# Arquivos de deploy
+deployments/
+*.deploy
+
+# Arquivos de configuração local
+config/local.*
+config/production.*
+config/staging.*
+
+# Arquivos de certificado
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Arquivos de monitoramento
+newrelic.js
+newrelic_agent.log
+
+# Arquivos de Docker
+docker-compose.override.yml
+.dockerignore
+
+# Arquivos de AWS
+.aws/
+
+# Arquivos de documentação gerada
+docs/generated/
+api-docs/
+
+# Arquivos de análise
+bundle-report.html
+stats.json
+webpack-stats.json
+
+# Arquivos de desenvolvimento
+.env.development
+.env.staging
+.env.production
+
+# Arquivos de sessão
+sessions/
+*.session
+
+# Arquivos de cache Redis
+dump.rdb
+
+# Arquivos de configuração de editores
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+
+# Arquivos específicos do projeto
+*.local
+local.*
+.local
+
+# Arquivos de lock (manter apenas um)
+package-lock.json
+yarn.lock
+
+# Arquivos de profiling
+*.prof
+
+# Arquivos de análise de performance
+*.trace
+*.perf
+
+# Arquivos de monitoramento
+monitors/
+*.monitor
+
+# Arquivos de relatórios
+reports/
+*.report
+
+# Arquivos de dumps
+dumps/
+*.dump
+
+# Arquivos de migração gerados
+migrations/generated/
+
+# Arquivos de seed
+seeds/development/
+seeds/production/
+
+# Arquivos de configuração de CI/CD
+.github/workflows/secrets.yml
+.gitlab-ci.local.yml
+
+# Arquivos de dependências locais
+vendor/
+lib/
+
+# Arquivos de compilação
+*.o
+*.so
+*.dylib
+*.dll
+
+# Arquivos de package
+*.deb
+*.rpm
+*.msi
+*.dmg
+
+# Arquivos de compressão
+*.zip
+*.rar
+*.7z
+*.gz
+*.bz2
+*.xz
+
+# Arquivos de banco específicos
+postgres_data/
+mysql_data/
+mongodb_data/
+
+# Arquivos de configuração específicos
+nginx.conf
+apache.conf
+docker-compose.prod.yml
+
+# Arquivos de análise de segurança
+security-report.html
+vulnerability-scan.json
+
+# Arquivos de backup automático
+auto-backup/
+scheduled-backups/
+
+# Arquivos de desenvolvimento específicos
+dev-server.js
+dev-config.js
+
+# Arquivos gerados por ferramentas
+.stylelintcache
+.postcssrc.js.swp
+
+# Arquivos de configuração de ambiente específicos
+.env.*.local
+.env.development.local
+.env.production.local
+.env.test.local
+
+# Arquivos de configuração de banco local
+database.local.json
+db.local.js
+
+# Arquivos de configuração de serviços
+redis.conf
+elasticsearch.yml
+kibana.yml
+
+# Arquivos de configuração de proxy
+proxy.conf
+reverse-proxy.conf
+
+# Arquivos de configuração de SSL
+ssl/
+certificates/
+*.csr
+
+# Arquivos de configuração de load balancer
+loadbalancer.conf
+haproxy.cfg
+
+# Arquivos de configuração de firewall
+firewall.rules
+iptables.rules
+
+# Arquivos de configuração de DNS
+named.conf
+zone.conf
+
+# Arquivos de configuração de backup
+backup.conf
+restore.conf
+
+# Arquivos de configuração de monitoramento
+prometheus.yml
+grafana.ini
+alertmanager.yml
+
+# Arquivos de configuração de logging
+logstash.conf
+fluentd.conf
+rsyslog.conf
+
+# Arquivos de configuração de cache
+memcached.conf
+varnish.vcl
+
+# Arquivos de configuração de queue
+rabbitmq.conf
+kafka.properties
+
+# Arquivos de configuração de storage
+minio.conf
+s3.conf
+
+# Arquivos de configuração de CDN
+cloudflare.conf
+cloudfront.conf
+
+# Arquivos de configuração de DNS
+route53.conf
+cloudflare-dns.conf

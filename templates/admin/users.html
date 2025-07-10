@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Administração de Usuários - PLI-SP{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="mb-0">Administração de Usuários</h1>
+            <p class="text-muted">Gerenciar equipe e permissões</p>
+        </div>
+        <div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                <i class="fas fa-plus me-2"></i>Novo Usuário
+            </button>
+            <a href="{{ url_for('admin') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Voltar
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="field-label">Username</th>
+                        <th class="field-label">Nome</th>
+                        <th class="field-label">Função</th>
+                        <th class="field-label">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for username, data in users.items() %}
+                    <tr>
+                        <td class="field-value">{{ username }}</td>
+                        <td class="field-value">{{ data.name }}</td>
+                        <td>
+                            <span class="status-badge status-{{ 'delivered' if data.role == 'Coordenação' else 'analysis' }}">
+                                {{ data.role }}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-outline-primary btn-sm" title="Editar usuário" onclick="editUser('{{ username }}', '{{ data.name }}', '{{ data.role }}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Adicionar Usuário -->
+<div class="modal fade" id="addUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Novo Usuário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" title="Fechar"></button>
+            </div>
+            <form method="POST">
+                <div class="modal-body">
+                    <input type="hidden" name="action" value="add">
+                    <div class="mb-3">
+                        <label class="form-label field-label">Username</label>
+                        <input type="text" class="form-control" name="new_username" placeholder="Ex: novo.usuario" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label field-label">Nome Completo</label>
+                        <input type="text" class="form-control" name="name" placeholder="Ex: Novo Usuário" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label field-label">Função</label>
+                        <select class="form-select" name="role" required>
+                            <option value="">Selecione uma função</option>
+                            <option value="Analista Senior">Analista Senior</option>
+                            <option value="Especialista em Logística">Especialista em Logística</option>
+                            <option value="Analista de Dados">Analista de Dados</option>
+                            <option value="Engenheiro de Transportes">Engenheiro de Transportes</option>
+                            <option value="Especialista em GIS">Especialista em GIS</option>
+                            <option value="Analista de Sistemas">Analista de Sistemas</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label field-label">Senha</label>
+                        <input type="password" class="form-control" name="password" placeholder="Senha padrão: senha123" value="senha123">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Adicionar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Usuário -->
+<div class="modal fade" id="editUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Usuário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" title="Fechar"></button>
+            </div>
+            <form method="POST">
+                <div class="modal-body">
+                    <input type="hidden" name="action" value="edit">
+                    <input type="hidden" name="username" id="edit_username">
+                    <div class="mb-3">
+                        <label class="form-label field-label">Username</label>
+                        <input type="text" class="form-control" id="edit_username_display" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label field-label">Nome Completo</label>
+                        <input type="text" class="form-control" name="name" id="edit_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label field-label">Função</label>
+                        <select class="form-select" name="role" id="edit_role" required>
+                            <option value="Coordenação">Coordenação</option>
+                            <option value="Analista Senior">Analista Senior</option>
+                            <option value="Especialista em Logística">Especialista em Logística</option>
+                            <option value="Analista de Dados">Analista de Dados</option>
+                            <option value="Engenheiro de Transportes">Engenheiro de Transportes</option>
+                            <option value="Especialista em GIS">Especialista em GIS</option>
+                            <option value="Analista de Sistemas">Analista de Sistemas</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function editUser(username, name, role) {
+    document.getElementById('edit_username').value = username;
+    document.getElementById('edit_username_display').value = username;
+    document.getElementById('edit_name').value = name;
+    document.getElementById('edit_role').value = role;
+    new bootstrap.Modal(document.getElementById('editUserModal')).show();
+}
+</script>
+{% endblock %}

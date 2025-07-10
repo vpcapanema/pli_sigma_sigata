@@ -1,0 +1,207 @@
+<!-- Dashboard Principal -->
+<div class="dashboard-container">
+  <!-- Estatísticas Principais -->
+  <div class="dashboard-stats">
+    <div class="dashboard-stat-card">
+      <div class="dashboard-stat-icon primary">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="dashboard-stat-content">
+        <h3 class="dashboard-stat-value" id="totalUsers">0</h3>
+        <p class="dashboard-stat-label">Usuários Ativos</p>
+        <p class="dashboard-stat-change positive" id="usersChange">
+          <i class="fas fa-arrow-up"></i>
+          +5.2% este mês
+        </p>
+      </div>
+    </div>
+
+    <div class="dashboard-stat-card">
+      <div class="dashboard-stat-icon success">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div class="dashboard-stat-content">
+        <h3 class="dashboard-stat-value" id="completedProducts">0</h3>
+        <p class="dashboard-stat-label">Produtos Concluídos</p>
+        <p class="dashboard-stat-change positive" id="productsChange">
+          <i class="fas fa-arrow-up"></i>
+          +12.3% este mês
+        </p>
+      </div>
+    </div>
+
+    <div class="dashboard-stat-card">
+      <div class="dashboard-stat-icon warning">
+        <i class="fas fa-clock"></i>
+      </div>
+      <div class="dashboard-stat-content">
+        <h3 class="dashboard-stat-value" id="pendingReviews">0</h3>
+        <p class="dashboard-stat-label">Avaliações Pendentes</p>
+        <p class="dashboard-stat-change negative" id="reviewsChange">
+          <i class="fas fa-arrow-down"></i>
+          -2.1% este mês
+        </p>
+      </div>
+    </div>
+
+    <div class="dashboard-stat-card">
+      <div class="dashboard-stat-icon error">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <div class="dashboard-stat-content">
+        <h3 class="dashboard-stat-value" id="overdueTasks">0</h3>
+        <p class="dashboard-stat-label">Tarefas Atrasadas</p>
+        <p class="dashboard-stat-change negative" id="tasksChange">
+          <i class="fas fa-arrow-up"></i>
+          +8.7% este mês
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Widgets do Dashboard -->
+  <div class="dashboard-widgets">
+    <!-- Gráfico de Progresso -->
+    <div class="dashboard-widget">
+      <div class="dashboard-widget-header">
+        <h3 class="dashboard-widget-title">Progresso dos Produtos</h3>
+        <a href="/reports/products" class="dashboard-widget-action">Ver Relatório</a>
+      </div>
+      <div class="dashboard-widget-content">
+        <canvas id="progressChart" width="400" height="200"></canvas>
+      </div>
+    </div>
+
+    <!-- Atividades Recentes -->
+    <div class="dashboard-widget">
+      <div class="dashboard-widget-header">
+        <h3 class="dashboard-widget-title">Atividades Recentes</h3>
+        <a href="/activities" class="dashboard-widget-action">Ver Todas</a>
+      </div>
+      <div class="dashboard-widget-content">
+        <ul class="recent-activities" id="recentActivities">
+          <!-- Será carregado dinamicamente -->
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Próximos Eventos -->
+  <div class="dashboard-widget">
+    <div class="dashboard-widget-header">
+      <h3 class="dashboard-widget-title">Próximos Eventos</h3>
+      <a href="/events" class="dashboard-widget-action">Ver Calendário</a>
+    </div>
+    <div class="dashboard-widget-content">
+      <div class="upcoming-events" id="upcomingEvents">
+        <!-- Será carregado dinamicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Produtos com Prazo Próximo -->
+  <div class="dashboard-widget">
+    <div class="dashboard-widget-header">
+      <h3 class="dashboard-widget-title">Produtos com Prazo Próximo</h3>
+      <a href="/products?filter=due-soon" class="dashboard-widget-action">Ver Todos</a>
+    </div>
+    <div class="dashboard-widget-content">
+      <div class="core-table-container">
+        <table class="core-table">
+          <thead>
+            <tr>
+              <th>Produto</th>
+              <th>Responsável</th>
+              <th>Prazo</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="dueSoonProducts">
+            <!-- Será carregado dinamicamente -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Estilos específicos do Dashboard -->
+<style>
+  .dashboard-container {
+    padding: var(--spacing-lg);
+  }
+
+  .upcoming-events {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .upcoming-event {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-md);
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--primary-color);
+  }
+
+  .upcoming-event-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: var(--spacing-md);
+    min-width: 60px;
+  }
+
+  .upcoming-event-day {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--primary-color);
+  }
+
+  .upcoming-event-month {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+  }
+
+  .upcoming-event-content {
+    flex: 1;
+  }
+
+  .upcoming-event-title {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .upcoming-event-time {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  .progress-chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+  }
+
+  #progressChart {
+    max-width: 100%;
+    height: auto;
+  }
+
+  @media (max-width: 768px) {
+    .dashboard-widgets {
+      grid-template-columns: 1fr;
+    }
+
+    .dashboard-container {
+      padding: var(--spacing-md);
+    }
+  }
+</style>

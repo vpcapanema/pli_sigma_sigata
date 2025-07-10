@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}Administração de Produtos - PLI-SP{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="mb-0">Administração de Produtos</h1>
+            <p class="text-muted">Editar e gerenciar produtos do PLI-SP</p>
+        </div>
+        <div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                <i class="fas fa-plus me-2"></i>Novo Produto
+            </button>
+            <a href="{{ url_for('admin') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Voltar
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="field-label">Código</th>
+                        <th class="field-label">Nome</th>
+                        <th class="field-label">Descrição</th>
+                        <th class="field-label">Status</th>
+                        <th class="field-label">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td class="field-value">{{ product.number }}</td>
+                        <td class="field-value">{{ product.name }}</td>
+                        <td class="field-value">{{ product.description[:50] }}{% if product.description|length > 50 %}...{% endif %}</td>
+                        <td>
+                            <span class="status-badge status-{{ 'delivered' if product.status == 'Entregue' else 'pending' if product.status == 'Pendente' else 'analysis' }}">
+                                {{ product.status or 'Aguardando' }}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-outline-primary btn-sm" onclick="editProduct({{ product.id }}, '{{ product.number }}', '{{ product.name }}', '{{ product.description }}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Adicionar Produto -->
+<div class="modal fade" id="addProductModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Novo Produto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST">
+                <div class="modal-body">
+                    <input type="hidden" name="action" value="add">
+                    <div class="mb-3">
+                        <label class="form-label field-label">Código</label>
+                        <input type="text" class="form-control" name="number" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label field-label">Nome</label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label field-label">Descrição</label>
+                        <textarea class="form-control" name="description" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Adicionar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Produto -->
+<div class="modal fade" id="editProductModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Produto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST">
+                <div class="modal-body">
+                    <input type="hidden" name="action" value="edit">
+                    <input type="hidden" name="product_id" id="edit_product_id">
+                    <div class="mb-3">
+                        <label class="form-label field-label">Código</label>
+                        <input type="text" class="form-control" name="number" id="edit_number" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label field-label">Nome</label>
+                        <input type="text" class="form-control" name="name" id="edit_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label field-label">Descrição</label>
+                        <textarea class="form-control" name="description" id="edit_description" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function editProduct(id, number, name, description) {
+    document.getElementById('edit_product_id').value = id;
+    document.getElementById('edit_number').value = number;
+    document.getElementById('edit_name').value = name;
+    document.getElementById('edit_description').value = description;
+    new bootstrap.Modal(document.getElementById('editProductModal')).show();
+}
+</script>
+{% endblock %}

@@ -1,0 +1,11 @@
+# Browserslist configuration for SIGMA PLI
+# https://github.com/browserslist/browserslist
+
+# Production browsers
+> 0.5%
+last 2 versions
+not dead
+
+# Development
+not ie <= 10
+not op_mini all

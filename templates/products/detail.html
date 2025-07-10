@@ -1,0 +1,388 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - PLI-SP{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('products') }}">Produtos</a></li>
+                    <li class="breadcrumb-item active">{{ product.name }}</li>
+                </ol>
+            </nav>
+            <h1 class="mb-0">{{ product.name }}</h1>
+            <p class="text-muted">Produto {{ product.id }} - {{ product.category }}</p>
+        </div>
+        <div>
+            <a href="{{ url_for('evaluate_product', id=product.id) }}" class="btn btn-success">
+                <i class="fas fa-clipboard-check me-2"></i>Avaliar
+            </a>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateStatusModal">
+                <i class="fas fa-edit me-2"></i>Atualizar
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Informações do Produto</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Descrição:</dt>
+                    <dd class="col-sm-9">{{ product.description or 'Não informado' }}</dd>
+                    
+                    <dt class="col-sm-3">Categoria:</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge bg-primary">{{ product.category }}</span>
+                    </dd>
+                    
+                    <dt class="col-sm-3">Status:</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge 
+                            {% if product.status == 'delivered' %}bg-success
+                            {% elif product.status == 'in_analysis' %}bg-warning
+                            {% elif product.status == 'in_progress' %}bg-info
+                            {% else %}bg-secondary{% endif %}">
+                            {% if product.status == 'delivered' %}Entregue
+                            {% elif product.status == 'in_analysis' %}Em Análise
+                            {% elif product.status == 'in_progress' %}Em Progresso
+                            {% else %}Pendente{% endif %}
+                        </span>
+                    </dd>
+                    
+                    <dt class="col-sm-3">Progresso:</dt>
+                    <dd class="col-sm-9">
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar 
+                                {% if product.progress >= 100 %}bg-success
+                                {% elif product.progress >= 75 %}bg-info
+                                {% elif product.progress >= 50 %}bg-warning
+                                {% else %}bg-danger{% endif %}" 
+                                style="width: {{ product.progress or 0 }}%">
+                                {{ product.progress or 0 }}%
+                            </div>
+                        </div>
+                    </dd>
+                    
+                    <dt class="col-sm-3">Data Limite:</dt>
+                    <dd class="col-sm-9">
+                        {% if product.due_date %}
+                            {{ product.due_date.strftime('%d/%m/%Y') }}
+                            {% set days_left = (product.due_date - moment().date()).days %}
+                            {% if days_left < 0 %}
+                                <span class="badge bg-danger ms-2">Atrasado {{ -days_left }} dias</span>
+                            {% elif days_left < 7 %}
+                                <span class="badge bg-warning ms-2">{{ days_left }} dias restantes</span>
+                            {% else %}
+                                <span class="badge bg-success ms-2">{{ days_left }} dias restantes</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="text-muted">Não definida</span>
+                        {% endif %}
+                    </dd>
+                    
+                    <dt class="col-sm-3">Responsável:</dt>
+                    <dd class="col-sm-9">{{ product.assigned_to or 'Não atribuído' }}</dd>
+                    
+                    <dt class="col-sm-3">Criado em:</dt>
+                    <dd class="col-sm-9">{{ product.created_at.strftime('%d/%m/%Y às %H:%M') if product.created_at else 'Não informado' }}</dd>
+                    
+                    <dt class="col-sm-3">Última atualização:</dt>
+                    <dd class="col-sm-9">{{ product.updated_at.strftime('%d/%m/%Y às %H:%M') if product.updated_at else 'Não informado' }}</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Documentos e Arquivos</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Documentos de Entrada</h6>
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-file-pdf text-danger me-2"></i>
+                                    Especificação técnica
+                                </div>
+                                <a href="#" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-file-excel text-success me-2"></i>
+                                    Template de dados
+                                </div>
+                                <a href="#" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Produtos Entregues</h6>
+                        <div class="list-group list-group-flush">
+                            {% if product.status == 'delivered' or product.status == 'in_analysis' %}
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-file-pdf text-danger me-2"></i>
+                                    Relatório final
+                                </div>
+                                <div>
+                                    <a href="#" class="btn btn-sm btn-outline-primary me-1">
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-sm btn-outline-success">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="text-muted text-center py-3">
+                                Nenhum produto entregue ainda
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-3">
+                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                        <i class="fas fa-upload me-2"></i>Upload de Arquivo
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Histórico de Atividades</h5>
+            </div>
+            <div class="card-body">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker bg-primary"></div>
+                        <div class="timeline-content">
+                            <h6 class="timeline-title">Produto criado</h6>
+                            <p class="timeline-text">O produto foi adicionado ao sistema</p>
+                            <small class="text-muted">{{ product.created_at.strftime('%d/%m/%Y às %H:%M') if product.created_at else 'Data não informada' }}</small>
+                        </div>
+                    </div>
+                    {% if product.status != 'pending' %}
+                    <div class="timeline-item">
+                        <div class="timeline-marker bg-info"></div>
+                        <div class="timeline-content">
+                            <h6 class="timeline-title">Iniciado desenvolvimento</h6>
+                            <p class="timeline-text">Trabalho iniciado pela equipe técnica</p>
+                            <small class="text-muted">15/01/2025 às 14:30</small>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if product.status == 'delivered' or product.status == 'in_analysis' %}
+                    <div class="timeline-item">
+                        <div class="timeline-marker bg-success"></div>
+                        <div class="timeline-content">
+                            <h6 class="timeline-title">Produto entregue</h6>
+                            <p class="timeline-text">Primeira versão do produto foi submetida</p>
+                            <small class="text-muted">30/01/2025 às 16:45</small>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Ações Rápidas</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('evaluate_product', id=product.id) }}" class="btn btn-success">
+                        <i class="fas fa-clipboard-check me-2"></i>Avaliar Produto
+                    </a>
+                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#updateStatusModal">
+                        <i class="fas fa-edit me-2"></i>Atualizar Status
+                    </button>
+                    <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                        <i class="fas fa-upload me-2"></i>Upload Arquivo
+                    </button>
+                    <button class="btn btn-outline-warning">
+                        <i class="fas fa-comment me-2"></i>Adicionar Comentário
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Estatísticas</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <h4 class="text-primary">{{ product.progress or 0 }}%</h4>
+                        <small class="text-muted">Progresso</small>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="text-info">3</h4>
+                        <small class="text-muted">Arquivos</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Produtos Relacionados</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Produto {{ product.id - 1 if product.id > 1 else product.id + 1 }}</h6>
+                            <span class="badge bg-primary">{{ product.category }}</span>
+                        </div>
+                        <p class="mb-1">Produto relacionado na mesma categoria</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Atualização de Status -->
+<div class="modal fade" id="updateStatusModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Atualizar Status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Status</label>
+                        <select class="form-select">
+                            <option value="pending" {{ 'selected' if product.status == 'pending' }}>Pendente</option>
+                            <option value="in_progress" {{ 'selected' if product.status == 'in_progress' }}>Em Progresso</option>
+                            <option value="in_analysis" {{ 'selected' if product.status == 'in_analysis' }}>Em Análise</option>
+                            <option value="delivered" {{ 'selected' if product.status == 'delivered' }}>Entregue</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Progresso (%)</label>
+                        <input type="number" class="form-control" min="0" max="100" value="{{ product.progress or 0 }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Comentário</label>
+                        <textarea class="form-control" rows="3" placeholder="Adicione um comentário sobre a atualização..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Upload -->
+<div class="modal fade" id="uploadModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload de Arquivo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Tipo de Arquivo</label>
+                        <select class="form-select">
+                            <option value="input">Documento de entrada</option>
+                            <option value="output">Produto entregue</option>
+                            <option value="support">Material de apoio</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Arquivo</label>
+                        <input type="file" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Descrição</label>
+                        <input type="text" class="form-control" placeholder="Breve descrição do arquivo">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #dee2e6;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -37px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    z-index: 1;
+}
+
+.timeline-content {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.timeline-title {
+    margin: 0 0 5px 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.timeline-text {
+    margin: 0 0 5px 0;
+    font-size: 13px;
+    color: #6c757d;
+}
+</style>
+{% endblock %}

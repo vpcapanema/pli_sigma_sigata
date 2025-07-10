@@ -1,0 +1,52 @@
+/* Estilos comuns para todos os mockups */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+img.logo-img {
+    max-width: 150px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Correções de Acessibilidade */
+button:focus,
+a:focus {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+/* Prefixos de vendor para compatibilidade */
+.glassmorphism,
+.blur-bg {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+/* Animações e Transições */
+.transition-all {
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+/* Suporte a diferentes navegadores para gradientes */
+.gradient-text {
+    background: -webkit-linear-gradient(45deg, var(--gradient-start), var(--gradient-end));
+    background: linear-gradient(45deg, var(--gradient-start), var(--gradient-end));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Melhorias de Performance */
+.hardware-accelerated {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-perspective: 1000px;
+    perspective: 1000px;
+}

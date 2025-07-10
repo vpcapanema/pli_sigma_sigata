@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editor Visual - SIGMA PLI</title>
+    <link rel="stylesheet" href="/modules/editor/css/editor.css" />
+  </head>
+  <body>
+    <div class="editor-login" id="editorLogin">
+      <h2>Login do Editor Visual</h2>
+      <form id="editorLoginForm">
+        <label for="editorUser">Usuário</label>
+        <input type="text" id="editorUser" name="editorUser" required />
+        <label for="editorPass">Senha</label>
+        <input type="password" id="editorPass" name="editorPass" required />
+        <button type="submit">Entrar</button>
+      </form>
+    </div>
+    <div class="editor-app" id="editorApp">
+      <h1>Editor Visual SIGMA PLI</h1>
+      <div id="modulesMap"></div>
+      <div id="pagesList"></div>
+      <div id="elementsTree"></div>
+      <div id="elementEditor"></div>
+    </div>
+    <script src="/modules/editor/js/editor.js"></script>
+  </body>
+</html>

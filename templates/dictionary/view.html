@@ -1,0 +1,546 @@
+{% extends "base.html" %}
+
+{% block title %}{{ dataset.nome_display }} - Dicionário PLI-SP{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dataset-header {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .dataset-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 200%;
+        background: rgba(255, 255, 255, 0.1);
+        transform: rotate(45deg);
+    }
+    
+    .metadata-section {
+        background: white;
+        border-radius: 12px;
+        border-left: 4px solid #dc3545;
+        margin-bottom: 25px;
+        transition: all 0.3s ease;
+    }
+    
+    .metadata-section:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .section-title {
+        background: #f8f9fa;
+        padding: 15px 20px;
+        margin: -1px -1px 20px -1px;
+        border-radius: 8px 8px 0 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .metadata-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        padding: 20px;
+    }
+    
+    .metadata-item {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .metadata-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .metadata-value {
+        color: #212529;
+        font-size: 1rem;
+        word-break: break-word;
+    }
+    
+    .badge-relevancia {
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .badge-alta {
+        background: #dc3545;
+        color: white;
+    }
+    
+    .badge-media {
+        background: #ffc107;
+        color: #212529;
+    }
+    
+    .badge-baixa {
+        background: #6c757d;
+        color: white;
+    }
+    
+    .badge-status {
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    .status-ativo {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    
+    .action-buttons {
+        position: sticky;
+        top: 20px;
+        z-index: 100;
+    }
+    
+    .download-card {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .stats-card {
+        text-align: center;
+        padding: 20px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        margin-bottom: 20px;
+    }
+    
+    .stats-number {
+        font-size: 2rem;
+        font-weight: bold;
+        display: block;
+    }
+    
+    .tag-cloud {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .tag {
+        background: #e9ecef;
+        color: #495057;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 0.9rem;
+        border: 1px solid #dee2e6;
+    }
+    
+    .tech-specs {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 15px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+    }
+    
+    .quality-indicator {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .quality-bar {
+        flex: 1;
+        height: 8px;
+        background: #e9ecef;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    
+    .quality-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #dc3545 0%, #28a745 100%);
+        transition: width 0.3s ease;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <!-- Dataset Header -->
+    <div class="dataset-header">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-database fa-2x me-3"></i>
+                    <div>
+                        <h1 class="h2 mb-1">{{ dataset.nome_display }}</h1>
+                        <p class="mb-0 opacity-75">
+                            <i class="fas fa-tag me-2"></i>{{ dataset.categoria_principal }}
+                            {% if dataset.subcategoria %}
+                                <i class="fas fa-chevron-right mx-2"></i>{{ dataset.subcategoria }}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="d-flex align-items-center flex-wrap gap-3">
+                    <span class="badge-relevancia badge-{{ dataset.relevancia_pli }}">
+                        <i class="fas fa-star me-1"></i>
+                        Relevância {{ dataset.relevancia_pli|title }}
+                    </span>
+                    <span class="badge-status status-{{ dataset.status_arquivo }}">
+                        <i class="fas fa-circle me-1"></i>
+                        {{ dataset.status_arquivo|title }}
+                    </span>
+                    <span class="text-white-50">
+                        <i class="fas fa-calendar me-1"></i>
+                        Criado em {{ dataset.data_upload.strftime('%d/%m/%Y') if dataset.data_upload else 'N/A' }}
+                    </span>
+                </div>
+            </div>
+            <div class="col-lg-4 text-end">
+                <div class="stats-card">
+                    <span class="stats-number">{{ "{:,.0f}".format(dataset.numero_registros) if dataset.numero_registros else 'N/A' }}</span>
+                    <small>Registros</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Conteúdo Principal -->
+        <div class="col-lg-8">
+            <!-- Descrição Geral -->
+            <div class="metadata-section card shadow border-0">
+                <div class="section-title">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle text-danger me-2"></i>
+                        Descrição Geral
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="lead">{{ dataset.descricao_geral or 'Descrição não informada' }}</p>
+                    
+                    {% if dataset.finalidade_uso %}
+                    <div class="mt-3">
+                        <strong class="text-danger">Finalidade de Uso:</strong>
+                        <p class="mb-0">{{ dataset.finalidade_uso }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if dataset.palavras_chave %}
+                    <div class="mt-3">
+                        <strong class="text-danger">Palavras-chave:</strong>
+                        <div class="tag-cloud mt-2">
+                            {% for tag in dataset.palavras_chave.split(',') %}
+                            <span class="tag">{{ tag.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Informações Técnicas -->
+            <div class="metadata-section card shadow border-0">
+                <div class="section-title">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cogs text-danger me-2"></i>
+                        Especificações Técnicas
+                    </h5>
+                </div>
+                <div class="metadata-grid">
+                    <div class="metadata-item">
+                        <span class="metadata-label">Formato</span>
+                        <span class="metadata-value">{{ dataset.formato_dados }}</span>
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label">Tamanho</span>
+                        <span class="metadata-value">{{ dataset.tamanho_arquivo_mb }} MB</span>
+                    </div>
+                    {% if dataset.numero_campos %}
+                    <div class="metadata-item">
+                        <span class="metadata-label">Número de Campos</span>
+                        <span class="metadata-value">{{ dataset.numero_campos }}</span>
+                    </div>
+                    {% endif %}
+                    {% if dataset.encoding_arquivo %}
+                    <div class="metadata-item">
+                        <span class="metadata-label">Codificação</span>
+                        <span class="metadata-value">{{ dataset.encoding_arquivo }}</span>
+                    </div>
+                    {% endif %}
+                    {% if dataset.separador_campos %}
+                    <div class="metadata-item">
+                        <span class="metadata-label">Separador</span>
+                        <span class="metadata-value">{{ dataset.separador_campos }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="metadata-item">
+                        <span class="metadata-label">Hash MD5</span>
+                        <span class="metadata-value tech-specs">{{ dataset.hash_md5[:16] }}...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Responsabilidade -->
+            <div class="metadata-section card shadow border-0">
+                <div class="section-title">
+                    <h5 class="mb-0">
+                        <i class="fas fa-users text-danger me-2"></i>
+                        Responsabilidade e Propriedade
+                    </h5>
+                </div>
+                <div class="metadata-grid">
+                    <div class="metadata-item">
+                        <span class="metadata-label">Órgão Produtor</span>
+                        <span class="metadata-value">{{ dataset.orgao_produtor }}</span>
+                    </div>
+                    {% if dataset.departamento_responsavel %}
+                    <div class="metadata-item">
+                        <span class="metadata-label">Departamento</span>
+                        <span class="metadata-value">{{ dataset.departamento_responsavel }}</span>
+                    </div>
+                    {% endif %}
+                    {% if dataset.contato_responsavel %}
+                    <div class="metadata-item">
+                        <span class="metadata-label">Responsável</span>
+                        <span class="metadata-value">{{ dataset.contato_responsavel }}</span>
+                    </div>
+                    {% endif %}
+                    {% if dataset.email_contato %}
+                    <div class="metadata-item">
+                        <span class="metadata-label">E-mail</span>
+                        <span class="metadata-value">
+                            <a href="mailto:{{ dataset.email_contato }}" class="text-danger">{{ dataset.email_contato }}</a>
+                        </span>
+                    </div>
+                    {% endif %}
+                    <div class="metadata-item">
+                        <span class="metadata-label">Nível de Acesso</span>
+                        <span class="metadata-value">{{ dataset.nivel_acesso|title }}</span>
+                    </div>
+                    {% if dataset.url_fonte_original %}
+                    <div class="metadata-item">
+                        <span class="metadata-label">Fonte Original</span>
+                        <span class="metadata-value">
+                            <a href="{{ dataset.url_fonte_original }}" target="_blank" class="text-danger">
+                                <i class="fas fa-external-link-alt me-1"></i>Acessar
+                            </a>
+                        </span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Contexto Temporal e Territorial -->
+            <div class="metadata-section card shadow border-0">
+                <div class="section-title">
+                    <h5 class="mb-0">
+                        <i class="fas fa-map-marked-alt text-danger me-2"></i>
+                        Contexto Temporal e Territorial
+                    </h5>
+                </div>
+                <div class="metadata-grid">
+                    {% if dataset.periodo_referencia_inicio %}
+                    <div class="metadata-item">
+                        <span class="metadata-label">Período - Início</span>
+                        <span class="metadata-value">{{ dataset.periodo_referencia_inicio.strftime('%d/%m/%Y') if dataset.periodo_referencia_inicio else 'N/A' }}</span>
+                    </div>
+                    {% endif %}
+                    {% if dataset.periodo_referencia_fim %}
+                    <div class="metadata-item">
+                        <span class="metadata-label">Período - Fim</span>
+                        <span class="metadata-value">{{ dataset.periodo_referencia_fim.strftime('%d/%m/%Y') if dataset.periodo_referencia_fim else 'N/A' }}</span>
+                    </div>
+                    {% endif %}
+                    {% if dataset.periodicidade_atualizacao %}
+                    <div class="metadata-item">
+                        <span class="metadata-label">Periodicidade</span>
+                        <span class="metadata-value">{{ dataset.periodicidade_atualizacao|title }}</span>
+                    </div>
+                    {% endif %}
+                    {% if dataset.abrangencia_territorial %}
+                    <div class="metadata-item">
+                        <span class="metadata-label">Abrangência</span>
+                        <span class="metadata-value">{{ dataset.abrangencia_territorial }}</span>
+                    </div>
+                    {% endif %}
+                    {% if dataset.unidade_analise %}
+                    <div class="metadata-item">
+                        <span class="metadata-label">Unidade de Análise</span>
+                        <span class="metadata-value">{{ dataset.unidade_analise }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if dataset.observacoes_gerais %}
+            <!-- Observações -->
+            <div class="metadata-section card shadow border-0">
+                <div class="section-title">
+                    <h5 class="mb-0">
+                        <i class="fas fa-comment-alt text-danger me-2"></i>
+                        Observações Gerais
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-0">{{ dataset.observacoes_gerais }}</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="action-buttons">
+                <!-- Download Card -->
+                <div class="download-card">
+                    <h5 class="mb-3">
+                        <i class="fas fa-download me-2"></i>
+                        Baixar Dataset
+                    </h5>
+                    <button class="btn btn-light btn-lg w-100 mb-2">
+                        <i class="fas fa-file-download me-2"></i>
+                        Arquivo Original
+                    </button>
+                    <button class="btn btn-outline-light btn-sm w-100">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Metadados (JSON)
+                    </button>
+                </div>
+
+                <!-- Qualidade dos Dados -->
+                {% if dataset.completude_dados %}
+                <div class="card shadow border-0 mb-3">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0">
+                            <i class="fas fa-chart-line text-danger me-2"></i>
+                            Qualidade dos Dados
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="quality-indicator">
+                            <span class="metadata-label">Completude</span>
+                            <div class="quality-bar">
+                                <div class="quality-fill" style="width: {{ dataset.completude_dados }}%"></div>
+                            </div>
+                            <span class="fw-bold">{{ dataset.completude_dados }}%</span>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Informações Adicionais -->
+                <div class="card shadow border-0 mb-3">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0">
+                            <i class="fas fa-info-circle text-danger me-2"></i>
+                            Informações Adicionais
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <small class="text-muted">
+                                <strong>Versão:</strong> {{ dataset.versao_arquivo or 'v1.0' }}
+                            </small>
+                            {% if dataset.licenca_uso %}
+                            <small class="text-muted">
+                                <strong>Licença:</strong> {{ dataset.licenca_uso }}
+                            </small>
+                            {% endif %}
+                            <small class="text-muted">
+                                <strong>MIME Type:</strong> {{ dataset.mime_type }}
+                            </small>
+                            <small class="text-muted">
+                                <strong>ID do Dataset:</strong> {{ dataset.id_arquivo }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ações de Administração -->
+                <div class="card shadow border-0">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0">
+                            <i class="fas fa-tools text-danger me-2"></i>
+                            Ações
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-edit me-2"></i>
+                                Editar Metadados
+                            </button>
+                            <button class="btn btn-outline-warning btn-sm">
+                                <i class="fas fa-upload me-2"></i>
+                                Nova Versão
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-trash me-2"></i>
+                                Arquivar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botão Voltar -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <a href="{{ url_for('dictionary.index') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>
+                Voltar ao Dicionário
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Adicionar tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+    
+    // Animação da barra de qualidade
+    const qualityFill = document.querySelector('.quality-fill');
+    if (qualityFill) {
+        setTimeout(() => {
+            const width = qualityFill.style.width;
+            qualityFill.style.width = '0%';
+            setTimeout(() => {
+                qualityFill.style.width = width;
+            }, 100);
+        }, 500);
+    }
+});
+</script>
+{% endblock %}

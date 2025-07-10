@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SIGMA PLI - Sistema Integrado de Gestão</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/src/shared/css/global.css" />
+    <link rel="stylesheet" href="/src/modules/core/css/core.css" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="core-layout">
+      <!-- Sidebar -->
+      <aside class="core-sidebar" id="sidebar">
+        <div class="core-sidebar-header">
+          <a href="/" class="core-sidebar-logo">
+            <i class="fas fa-graduation-cap"></i>
+            SIGMA PLI
+          </a>
+        </div>
+
+        <nav class="core-sidebar-nav">
+          <a href="/" class="core-sidebar-nav-item active" data-page="home">
+            <i class="fas fa-home"></i>
+            Início
+          </a>
+
+          <a href="/dashboard" class="core-sidebar-nav-item" data-page="dashboard">
+            <i class="fas fa-tachometer-alt"></i>
+            Dashboard
+          </a>
+
+          <a href="#users" class="core-sidebar-nav-item" data-page="users">
+            <i class="fas fa-users"></i>
+            Usuários
+          </a>
+
+          <a href="#products" class="core-sidebar-nav-item" data-page="products">
+            <i class="fas fa-box"></i>
+            Produtos
+          </a>
+
+          <a href="#reports" class="core-sidebar-nav-item" data-page="reports">
+            <i class="fas fa-chart-bar"></i>
+            Relatórios
+          </a>
+
+          <a href="#events" class="core-sidebar-nav-item" data-page="events">
+            <i class="fas fa-calendar"></i>
+            Eventos
+          </a>
+
+          <a href="#settings" class="core-sidebar-nav-item" data-page="settings">
+            <i class="fas fa-cog"></i>
+            Configurações
+          </a>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="core-main">
+        <!-- Header -->
+        <header class="core-header">
+          <div class="core-header-content">
+            <div>
+              <h1 class="core-header-title">Bem-vindo ao SIGMA PLI</h1>
+              <p class="core-header-subtitle">Sistema Integrado de Gestão e Monitoramento Acadêmico</p>
+            </div>
+            <div class="core-header-actions">
+              <button class="core-btn core-btn-secondary" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i>
+                Tema
+              </button>
+              <a href="/api" class="core-btn core-btn-primary">
+                <i class="fas fa-code"></i>
+                API
+              </a>
+            </div>
+          </div>
+        </header>
+
+        <!-- Content -->
+        <div class="core-content">
+          <!-- Welcome Section -->
+          <div class="core-welcome">
+            <h1>🚀 SIGMA PLI v1.0.0</h1>
+            <p>Plataforma modular para gestão acadêmica com arquitetura escalável e moderna</p>
+          </div>
+
+          <!-- Statistics -->
+          <div class="core-stats-grid">
+            <div class="core-stat-card">
+              <div class="core-stat-icon">
+                <i class="fas fa-server"></i>
+              </div>
+              <h3 class="core-stat-number" id="uptime">0s</h3>
+              <p class="core-stat-label">Tempo Online</p>
+            </div>
+
+            <div class="core-stat-card">
+              <div class="core-stat-icon">
+                <i class="fas fa-puzzle-piece"></i>
+              </div>
+              <h3 class="core-stat-number">5</h3>
+              <p class="core-stat-label">Módulos Carregados</p>
+            </div>
+
+            <div class="core-stat-card">
+              <div class="core-stat-icon">
+                <i class="fas fa-code"></i>
+              </div>
+              <h3 class="core-stat-number">Node.js</h3>
+              <p class="core-stat-label">Runtime</p>
+            </div>
+
+            <div class="core-stat-card">
+              <div class="core-stat-icon">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <h3 class="core-stat-number" id="status">Saudável</h3>
+              <p class="core-stat-label">Status do Sistema</p>
+            </div>
+          </div>
+
+          <!-- Modules -->
+          <div class="core-card">
+            <div class="core-card-header">
+              <h2 class="core-card-title">Módulos Disponíveis</h2>
+            </div>
+            <div class="core-card-body">
+              <div class="core-modules-grid">
+                <div class="core-module-card" onclick="navigateToModule('core')">
+                  <div class="core-module-icon">
+                    <i class="fas fa-tachometer-alt"></i>
+                  </div>
+                  <h3 class="core-module-title">Core</h3>
+                  <p class="core-module-description">Dashboard principal, usuários e eventos</p>
+                </div>
+
+                <div class="core-module-card" onclick="navigateToModule('products')">
+                  <div class="core-module-icon">
+                    <i class="fas fa-box"></i>
+                  </div>
+                  <h3 class="core-module-title">Products</h3>
+                  <p class="core-module-description">Gestão e análise de produtos</p>
+                </div>
+
+                <div class="core-module-card" onclick="navigateToModule('reports')">
+                  <div class="core-module-icon">
+                    <i class="fas fa-chart-bar"></i>
+                  </div>
+                  <h3 class="core-module-title">Reports</h3>
+                  <p class="core-module-description">Relatórios e visualizações</p>
+                </div>
+
+                <div class="core-module-card" onclick="navigateToModule('auth')">
+                  <div class="core-module-icon">
+                    <i class="fas fa-shield-alt"></i>
+                  </div>
+                  <h3 class="core-module-title">Auth</h3>
+                  <p class="core-module-description">Autenticação e segurança</p>
+                </div>
+
+                <div class="core-module-card" onclick="navigateToModule('settings')">
+                  <div class="core-module-icon">
+                    <i class="fas fa-cog"></i>
+                  </div>
+                  <h3 class="core-module-title">Settings</h3>
+                  <p class="core-module-description">Configurações do sistema</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- System Info -->
+          <div class="core-card core-card-margin-top">
+            <div class="core-card-header">
+              <h2 class="core-card-title">Informações do Sistema</h2>
+            </div>
+            <div class="core-card-body">
+              <div class="core-system-info-grid">
+                <div>
+                  <strong>Versão:</strong> <span id="version">1.0.0</span>
+                </div>
+                <div>
+                  <strong>Ambiente:</strong> <span id="environment">development</span>
+                </div>
+                <div>
+                  <strong>Última Atualização:</strong> <span id="timestamp">Carregando...</span>
+                </div>
+                <div>
+                  <strong>Porta:</strong> <span>3000</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="/src/modules/core/js/core.js"></script>
+    <script>
+      // Inicializar aplicação
+      document.addEventListener('DOMContentLoaded', async function() {
+        await loadSystemInfo();
+        updateUptime();
+        setInterval(updateUptime, 1000);
+      });
+
+      // Carregar informações do sistema
+      async function loadSystemInfo() {
+        try {
+          const response = await fetch('/api');
+          const data = await response.json();
+          
+          document.getElementById('version').textContent = data.version;
+          document.getElementById('environment').textContent = data.environment;
+          document.getElementById('timestamp').textContent = new Date(data.timestamp).toLocaleString('pt-BR');
+          
+          // Atualizar status
+          if (data.success) {
+            document.getElementById('status').textContent = 'Saudável';
+            document.getElementById('status').style.color = '#10b981';
+          }
+        } catch (error) {
+          console.error('Erro ao carregar informações:', error);
+          document.getElementById('status').textContent = 'Erro';
+          document.getElementById('status').style.color = '#ef4444';
+        }
+      }
+
+      // Atualizar tempo online
+      async function updateUptime() {
+        try {
+          const response = await fetch('/api/health');
+          const data = await response.json();
+          
+          const uptime = Math.floor(data.uptime);
+          const hours = Math.floor(uptime / 3600);
+          const minutes = Math.floor((uptime % 3600) / 60);
+          const seconds = uptime % 60;
+          
+          document.getElementById('uptime').textContent = 
+            `${hours}h ${minutes}m ${seconds}s`;
+        } catch (error) {
+          console.error('Erro ao atualizar uptime:', error);
+        }
+      }
+
+      // Navegar para módulo
+      function navigateToModule(module) {
+        alert(`Módulo ${module} será implementado em breve!`);
+      }
+
+      // Toggle tema
+      function toggleTheme() {
+        document.body.classList.toggle('dark-theme');
+        const isDark = document.body.classList.contains('dark-theme');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      }
+
+      // Aplicar tema salvo
+      if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-theme');
+      }
+
+      // Navegação sidebar
+      document.querySelectorAll('.core-sidebar-nav-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+          // Remove active class from all items
+          document.querySelectorAll('.core-sidebar-nav-item').forEach(i => i.classList.remove('active'));
+          // Add active class to clicked item
+          this.classList.add('active');
+        });
+      });
+    </script>
+  </body>
+</html>

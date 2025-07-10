@@ -1,0 +1,569 @@
+{% extends "base.html" %}
+
+{% block title %}Busca Avançada - Dicionário PLI-SP{% endblock %}
+
+{% block extra_css %}
+<style>
+    .search-container {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+        padding: 50px 0;
+        margin-bottom: 40px;
+        border-radius: 0 0 50px 50px;
+    }
+    
+    .search-form {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .filter-section {
+        background: white;
+        border-radius: 12px;
+        border-left: 4px solid #dc3545;
+        padding: 25px;
+        margin-bottom: 25px;
+        transition: all 0.3s ease;
+    }
+    
+    .filter-section:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .filter-title {
+        color: #dc3545;
+        font-weight: 600;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    
+    .category-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .category-pill {
+        padding: 8px 16px;
+        border: 2px solid #e9ecef;
+        border-radius: 25px;
+        background: white;
+        color: #495057;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        user-select: none;
+    }
+    
+    .category-pill:hover {
+        border-color: #dc3545;
+        color: #dc3545;
+        text-decoration: none;
+    }
+    
+    .category-pill.active {
+        background: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+    
+    .search-suggestions {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 20px;
+    }
+    
+    .suggestion-tag {
+        display: inline-block;
+        background: #e9ecef;
+        color: #495057;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 0.9rem;
+        margin: 3px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .suggestion-tag:hover {
+        background: #dc3545;
+        color: white;
+    }
+    
+    .results-container {
+        min-height: 400px;
+    }
+    
+    .result-card {
+        background: white;
+        border-radius: 12px;
+        border-left: 4px solid #dc3545;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .result-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        border-left-color: #c82333;
+    }
+    
+    .result-header {
+        padding: 20px 20px 10px 20px;
+    }
+    
+    .result-body {
+        padding: 0 20px 20px 20px;
+    }
+    
+    .result-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 10px;
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .relevance-badge {
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    .relevance-alta {
+        background: #dc3545;
+        color: white;
+    }
+    
+    .relevance-media {
+        background: #ffc107;
+        color: #212529;
+    }
+    
+    .relevance-baixa {
+        background: #6c757d;
+        color: white;
+    }
+    
+    .no-results {
+        text-align: center;
+        padding: 60px 20px;
+        color: #6c757d;
+    }
+    
+    .loading-spinner {
+        display: none;
+        text-align: center;
+        padding: 40px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Search Header -->
+<div class="search-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="text-center mb-4">
+                    <h1 class="display-5 fw-bold mb-3">
+                        <i class="fas fa-search me-3"></i>
+                        Busca Avançada
+                    </h1>
+                    <p class="lead">Encontre datasets específicos usando filtros detalhados</p>
+                </div>
+                
+                <!-- Main Search Form -->
+                <div class="search-form">
+                    <form id="searchForm">
+                        <div class="input-group input-group-lg mb-3">
+                            <span class="input-group-text bg-danger text-white border-danger">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <input type="text" class="form-control border-danger" id="searchQuery" 
+                                   placeholder="Digite sua busca (nome, descrição, palavras-chave...)">
+                            <button class="btn btn-danger" type="submit">
+                                <i class="fas fa-search me-2"></i>Buscar
+                            </button>
+                        </div>
+                        
+                        <!-- Quick Category Filter -->
+                        <div class="category-pills">
+                            <span class="category-pill active" data-category="">
+                                <i class="fas fa-th me-1"></i>Todas
+                            </span>
+                            {% for categoria in categorias %}
+                            <span class="category-pill" data-category="{{ categoria.nome_categoria }}">
+                                <i class="fas fa-tag me-1"></i>{{ categoria.nome_categoria }}
+                            </span>
+                            {% endfor %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid px-4">
+    <div class="row">
+        <!-- Filtros Avançados -->
+        <div class="col-lg-3">
+            <div class="filter-section card shadow border-0">
+                <div class="filter-title">
+                    <i class="fas fa-filter"></i>
+                    <span>Filtros Avançados</span>
+                </div>
+                
+                <!-- Filtro por Categoria -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Categoria</label>
+                    <select class="form-select" id="filterCategory">
+                        <option value="">Todas as categorias</option>
+                        {% for categoria in categorias %}
+                        <option value="{{ categoria.nome_categoria }}">{{ categoria.nome_categoria }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- Filtro por Órgão -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Órgão Produtor</label>
+                    <input type="text" class="form-control" id="filterOrgao" 
+                           placeholder="Ex: DNIT, IBGE, MT...">
+                </div>
+                
+                <!-- Filtro por Relevância -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Relevância PLI</label>
+                    <select class="form-select" id="filterRelevancia">
+                        <option value="">Todas</option>
+                        <option value="alta">Alta</option>
+                        <option value="media">Média</option>
+                        <option value="baixa">Baixa</option>
+                    </select>
+                </div>
+                
+                <!-- Filtro por Formato -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Formato</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="formatCSV" value="CSV">
+                        <label class="form-check-label" for="formatCSV">CSV</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="formatExcel" value="Excel">
+                        <label class="form-check-label" for="formatExcel">Excel</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="formatShapefile" value="Shapefile">
+                        <label class="form-check-label" for="formatShapefile">Shapefile</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="formatJSON" value="JSON">
+                        <label class="form-check-label" for="formatJSON">JSON</label>
+                    </div>
+                </div>
+                
+                <!-- Filtro por Período -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Período dos Dados</label>
+                    <div class="row">
+                        <div class="col-6">
+                            <input type="date" class="form-control form-control-sm" id="dataInicio">
+                        </div>
+                        <div class="col-6">
+                            <input type="date" class="form-control form-control-sm" id="dataFim">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Botões de Filtro -->
+                <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-danger" onclick="applyFilters()">
+                        <i class="fas fa-filter me-2"></i>Aplicar Filtros
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="clearFilters()">
+                        <i class="fas fa-times me-2"></i>Limpar
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Sugestões de Busca -->
+            <div class="search-suggestions">
+                <h6 class="fw-bold text-danger mb-3">
+                    <i class="fas fa-lightbulb me-2"></i>Sugestões
+                </h6>
+                <div>
+                    <span class="suggestion-tag" onclick="searchSuggestion('RAIS')">RAIS</span>
+                    <span class="suggestion-tag" onclick="searchSuggestion('rodovias')">Rodovias</span>
+                    <span class="suggestion-tag" onclick="searchSuggestion('portos')">Portos</span>
+                    <span class="suggestion-tag" onclick="searchSuggestion('ferrovias')">Ferrovias</span>
+                    <span class="suggestion-tag" onclick="searchSuggestion('emprego')">Emprego</span>
+                    <span class="suggestion-tag" onclick="searchSuggestion('transporte')">Transporte</span>
+                    <span class="suggestion-tag" onclick="searchSuggestion('São Paulo')">São Paulo</span>
+                    <span class="suggestion-tag" onclick="searchSuggestion('exportação')">Exportação</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Resultados -->
+        <div class="col-lg-9">
+            <!-- Estatísticas de Busca -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h5 class="mb-1">Resultados da Busca</h5>
+                    <p class="text-muted mb-0" id="searchStats">Digite algo para começar a busca</p>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <label class="form-label mb-0">Ordenar por:</label>
+                    <select class="form-select form-select-sm" id="sortBy" style="width: auto;">
+                        <option value="relevancia">Relevância</option>
+                        <option value="data">Data</option>
+                        <option value="nome">Nome</option>
+                        <option value="tamanho">Tamanho</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Loading Spinner -->
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner-border text-danger" role="status">
+                    <span class="visually-hidden">Carregando...</span>
+                </div>
+                <p class="mt-3 text-muted">Buscando datasets...</p>
+            </div>
+            
+            <!-- Resultados Container -->
+            <div class="results-container" id="resultsContainer">
+                <div class="no-results">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Faça uma busca para ver os resultados</h5>
+                    <p class="text-muted">Use os filtros à esquerda para refinar sua busca</p>
+                </div>
+            </div>
+            
+            <!-- Paginação -->
+            <div class="d-flex justify-content-center mt-4" id="paginationContainer" style="display: none !important;">
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Anterior</a>
+                        </li>
+                        <li class="page-item active">
+                            <a class="page-link" href="#">1</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">2</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">3</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Próximo</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Elements
+    const searchForm = document.getElementById('searchForm');
+    const searchQuery = document.getElementById('searchQuery');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const searchStats = document.getElementById('searchStats');
+    const categoryPills = document.querySelectorAll('.category-pill');
+    
+    // Search form submission
+    searchForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        performSearch();
+    });
+    
+    // Category pills
+    categoryPills.forEach(pill => {
+        pill.addEventListener('click', function() {
+            categoryPills.forEach(p => p.classList.remove('active'));
+            this.classList.add('active');
+            
+            const category = this.dataset.category;
+            document.getElementById('filterCategory').value = category;
+            performSearch();
+        });
+    });
+    
+    // Real-time search (debounced)
+    let searchTimeout;
+    searchQuery.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            if (this.value.length >= 3 || this.value.length === 0) {
+                performSearch();
+            }
+        }, 500);
+    });
+});
+
+function performSearch() {
+    const query = document.getElementById('searchQuery').value;
+    const category = document.getElementById('filterCategory').value;
+    const orgao = document.getElementById('filterOrgao').value;
+    const relevancia = document.getElementById('filterRelevancia').value;
+    
+    // Show loading
+    document.getElementById('loadingSpinner').style.display = 'block';
+    document.getElementById('resultsContainer').innerHTML = '';
+    
+    // Build query parameters
+    const params = new URLSearchParams();
+    if (query) params.append('busca', query);
+    if (category) params.append('categoria', category);
+    if (orgao) params.append('orgao', orgao);
+    if (relevancia) params.append('relevancia', relevancia);
+    
+    // Perform API call
+    fetch(`{{ url_for('dictionary.api_datasets') }}?${params.toString()}`)
+        .then(response => response.json())
+        .then(data => {
+            displayResults(data.data, query);
+        })
+        .catch(error => {
+            console.error('Erro na busca:', error);
+            showError();
+        })
+        .finally(() => {
+            document.getElementById('loadingSpinner').style.display = 'none';
+        });
+}
+
+function displayResults(datasets, query) {
+    const container = document.getElementById('resultsContainer');
+    const stats = document.getElementById('searchStats');
+    
+    if (datasets.length === 0) {
+        container.innerHTML = `
+            <div class="no-results">
+                <i class="fas fa-search-minus fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Nenhum resultado encontrado</h5>
+                <p class="text-muted">Tente usar termos diferentes ou remover alguns filtros</p>
+            </div>
+        `;
+        stats.textContent = 'Nenhum resultado encontrado';
+        return;
+    }
+    
+    // Update stats
+    stats.textContent = `${datasets.length} dataset(s) encontrado(s)`;
+    
+    // Generate results HTML
+    const resultsHTML = datasets.map(dataset => `
+        <div class="result-card card shadow border-0" onclick="window.location.href='{{ url_for('dictionary.view_dataset', id=0) }}'.replace('0', '${dataset.id_arquivo}')" >
+            <div class="result-header">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        <h5 class="card-title text-danger mb-2">${dataset.nome_display}</h5>
+                        <span class="badge bg-light text-dark border">${dataset.categoria_principal}</span>
+                        ${dataset.subcategoria ? `<span class="badge bg-light text-dark border ms-1">${dataset.subcategoria}</span>` : ''}
+                    </div>
+                    <span class="relevance-badge relevance-${dataset.relevancia_pli}">
+                        ${dataset.relevancia_pli.toUpperCase()}
+                    </span>
+                </div>
+            </div>
+            <div class="result-body">
+                <p class="card-text text-muted">
+                    ${dataset.descricao_geral ? dataset.descricao_geral.substring(0, 200) + '...' : 'Sem descrição'}
+                </p>
+                <div class="result-meta">
+                    <span><i class="fas fa-building me-1"></i>${dataset.orgao_produtor}</span>
+                    <span><i class="fas fa-calendar me-1"></i>${formatDate(dataset.data_upload)}</span>
+                    <span><i class="fas fa-file me-1"></i>${dataset.formato_dados}</span>
+                    ${dataset.numero_registros ? `<span><i class="fas fa-list me-1"></i>${formatNumber(dataset.numero_registros)} registros</span>` : ''}
+                </div>
+            </div>
+        </div>
+    `).join('');
+    
+    container.innerHTML = resultsHTML;
+}
+
+function showError() {
+    document.getElementById('resultsContainer').innerHTML = `
+        <div class="no-results">
+            <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+            <h5 class="text-muted">Erro na busca</h5>
+            <p class="text-muted">Ocorreu um erro ao buscar os datasets. Tente novamente.</p>
+        </div>
+    `;
+    document.getElementById('searchStats').textContent = 'Erro na busca';
+}
+
+function applyFilters() {
+    performSearch();
+}
+
+function clearFilters() {
+    document.getElementById('searchQuery').value = '';
+    document.getElementById('filterCategory').value = '';
+    document.getElementById('filterOrgao').value = '';
+    document.getElementById('filterRelevancia').value = '';
+    document.getElementById('dataInicio').value = '';
+    document.getElementById('dataFim').value = '';
+    
+    // Reset category pills
+    document.querySelectorAll('.category-pill').forEach(pill => {
+        pill.classList.remove('active');
+    });
+    document.querySelector('.category-pill[data-category=""]').classList.add('active');
+    
+    // Clear results
+    document.getElementById('resultsContainer').innerHTML = `
+        <div class="no-results">
+            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">Faça uma busca para ver os resultados</h5>
+            <p class="text-muted">Use os filtros à esquerda para refinar sua busca</p>
+        </div>
+    `;
+    document.getElementById('searchStats').textContent = 'Digite algo para começar a busca';
+}
+
+function searchSuggestion(term) {
+    document.getElementById('searchQuery').value = term;
+    performSearch();
+}
+
+function formatDate(dateString) {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-BR');
+}
+
+function formatNumber(num) {
+    return new Intl.NumberFormat('pt-BR').format(num);
+}
+</script>
+{% endblock %}

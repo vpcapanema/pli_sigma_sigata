@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SIGMA PLI - Sistema Integrado de Gestão</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          'Inter',
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          Roboto,
+          sans-serif;
+        background: #f8fafc;
+        color: #1e293b;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        color: #1e293b;
+        margin-bottom: 1rem;
+        font-weight: 700;
+      }
+
+      .header p {
+        font-size: 1.1rem;
+        color: #64748b;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+      }
+
+      .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-2px);
+      }
+
+      .stat-icon {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+      }
+
+      .stat-icon i {
+        color: white;
+        font-size: 1.5rem;
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-label {
+        color: #64748b;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .modules-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+      }
+
+      .module-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s ease;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .module-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      }
+
+      .module-icon {
+        width: 64px;
+        height: 64px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .module-icon i {
+        color: white;
+        font-size: 2rem;
+      }
+
+      .module-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+      }
+
+      .module-description {
+        color: #64748b;
+        font-size: 0.875rem;
+      }
+
+      .status-indicator {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background: #10b981;
+        border-radius: 50%;
+        margin-right: 8px;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      .info-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-top: 3rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      .info-section h2 {
+        color: #1e293b;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+
+      .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .info-item:last-child {
+        border-bottom: none;
+      }
+
+      .info-label {
+        font-weight: 500;
+        color: #64748b;
+      }
+
+      .info-value {
+        font-weight: 600;
+        color: #1e293b;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🚀 SIGMA PLI</h1>
+        <p>Sistema Integrado de Gestão - Plataforma Modular para Gestão Acadêmica</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-server"></i>
+          </div>
+          <div class="stat-number" id="uptime">Carregando...</div>
+          <div class="stat-label">Tempo Online</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-puzzle-piece"></i>
+          </div>
+          <div class="stat-number">5</div>
+          <div class="stat-label">Módulos Ativos</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-code"></i>
+          </div>
+          <div class="stat-number">Node.js</div>
+          <div class="stat-label">Runtime</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <div class="stat-number">
+            <span class="status-indicator"></span>
+            <span id="status">Ativo</span>
+          </div>
+          <div class="stat-label">Status do Sistema</div>
+        </div>
+      </div>
+
+      <div class="modules-grid">
+        <a href="/dashboard" class="module-card">
+          <div class="module-icon">
+            <i class="fas fa-tachometer-alt"></i>
+          </div>
+          <div class="module-title">Dashboard</div>
+          <div class="module-description">Painel principal com métricas e visão geral do sistema</div>
+        </a>
+
+        <a href="/products" class="module-card">
+          <div class="module-icon">
+            <i class="fas fa-box"></i>
+          </div>
+          <div class="module-title">Produtos</div>
+          <div class="module-description">Gestão completa de produtos e inventário</div>
+        </a>
+
+        <a href="/reports" class="module-card">
+          <div class="module-icon">
+            <i class="fas fa-chart-bar"></i>
+          </div>
+          <div class="module-title">Relatórios</div>
+          <div class="module-description">Relatórios detalhados e análises de dados</div>
+        </a>
+
+        <a href="/settings" class="module-card">
+          <div class="module-icon">
+            <i class="fas fa-cog"></i>
+          </div>
+          <div class="module-title">Configurações</div>
+          <div class="module-description">Configurações do sistema e preferências</div>
+        </a>
+
+        <a href="/auth/login" class="module-card">
+          <div class="module-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <div class="module-title">Autenticação</div>
+          <div class="module-description">Sistema de login e controle de acesso</div>
+        </a>
+
+        <a href="/test" class="module-card">
+          <div class="module-icon">
+            <i class="fas fa-vial"></i>
+          </div>
+          <div class="module-title">Teste</div>
+          <div class="module-description">Página de teste para validação do sistema</div>
+        </a>
+      </div>
+
+      <div class="info-section">
+        <h2>Informações do Sistema</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Versão</span>
+            <span class="info-value" id="version">1.0.0</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Ambiente</span>
+            <span class="info-value" id="environment">Development</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Porta</span>
+            <span class="info-value">3000</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Última Atualização</span>
+            <span class="info-value" id="timestamp">Carregando...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      console.log('SIGMA PLI carregado com sucesso!');
+
+      // Função para atualizar informações do sistema
+      async function updateSystemInfo() {
+        try {
+          const response = await fetch('/api');
+          const data = await response.json();
+
+          document.getElementById('version').textContent = data.version || '1.0.0';
+          document.getElementById('environment').textContent = data.environment || 'Development';
+          document.getElementById('timestamp').textContent = new Date(data.timestamp).toLocaleString('pt-BR');
+
+          console.log('Informações do sistema atualizadas:', data);
+        } catch (error) {
+          console.error('Erro ao carregar informações do sistema:', error);
+        }
+      }
+
+      // Função para atualizar uptime
+      async function updateUptime() {
+        try {
+          const response = await fetch('/api/health');
+          const data = await response.json();
+
+          const uptime = data.uptime || 0;
+          const hours = Math.floor(uptime / 3600);
+          const minutes = Math.floor((uptime % 3600) / 60);
+          const seconds = uptime % 60;
+
+          document.getElementById('uptime').textContent = `${hours}h ${minutes}m ${seconds}s`;
+
+          // Atualizar status
+          if (data.status === 'ok') {
+            document.getElementById('status').textContent = 'Ativo';
+          }
+
+          console.log('Uptime atualizado:', uptime);
+        } catch (error) {
+          console.error('Erro ao atualizar uptime:', error);
+          document.getElementById('uptime').textContent = 'Erro';
+        }
+      }
+
+      // Inicializar quando o DOM estiver carregado
+      document.addEventListener('DOMContentLoaded', function () {
+        console.log('DOM carregado, iniciando sistema...');
+        updateSystemInfo();
+        updateUptime();
+
+        // Atualizar uptime a cada 30 segundos
+        setInterval(updateUptime, 30000);
+      });
+
+      // Capturar erros
+      window.addEventListener('error', function (e) {
+        console.error('Erro JavaScript:', e.message, 'em', e.filename, 'linha', e.lineno);
+      });
+    </script>
+  </body>
+</html>

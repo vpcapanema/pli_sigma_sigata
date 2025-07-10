@@ -1,0 +1,248 @@
+/* Gradient Theme */
+:root {
+    --gradient-1: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    --gradient-2: linear-gradient(135deg, #14b8a6 0%, #3b82f6 100%);
+    --gradient-3: linear-gradient(135deg, #f43f5e 0%, #ec4899 100%);
+    --gradient-4: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    --dark-bg: #0f172a;
+    --card-bg: rgba(30, 41, 59, 0.7);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+}
+
+body {
+    margin: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--dark-bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+/* Gradient Elements */
+.gradient-border {
+    position: relative;
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 1px;
+    overflow: hidden;
+}
+
+.gradient-border::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: var(--gradient-1);
+    border-radius: 17px;
+    z-index: -1;
+}
+
+.gradient-content {
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 20px;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+/* Cards */
+.gradient-card {
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.gradient-card:hover {
+    transform: translateY(-5px);
+}
+
+.gradient-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-2);
+    opacity: 0.1;
+    transition: opacity 0.3s ease;
+}
+
+.gradient-card:hover::before {
+    opacity: 0.2;
+}
+
+/* Typography */
+.gradient-text-1 {
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: bold;
+}
+.gradient-text-2 {
+    background: var(--gradient-2);
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: bold;
+}
+
+/* Buttons */
+.gradient-button {
+    background: var(--gradient-1);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.gradient-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+}
+
+.gradient-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.gradient-button:hover::before {
+    left: 100%;
+}
+
+/* Navigation */
+.gradient-nav {
+    background: var(--card-bg);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.gradient-nav a {
+    color: var(--text-primary);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.gradient-nav a:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Grid Layout */
+.gradient-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem;
+}
+
+/* Stats */
+.stat-card {
+    padding: 1.5rem;
+    background: var(--card-bg);
+    border-radius: 16px;
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Progress Bars */
+.gradient-progress {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 1rem 0;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--gradient-2);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+/* Animations */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.animate-gradient {
+    background-size: 200% 200%;
+    animation: gradientShift 5s ease infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .gradient-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .gradient-nav {
+        padding: 0.5rem;
+    }
+    
+    .gradient-nav a {
+        display: block;
+        margin: 0.5rem 0;
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--gradient-1);
+    border-radius: 4px;
+}

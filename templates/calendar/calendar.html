@@ -1,0 +1,1116 @@
+{% extends "base.html" %}
+
+{% block title %}Calendário - PLI-SP{% endblock %}
+
+{% block content %}
+<style>
+    .calendar-hero {
+        background: linear-gradient(135deg, #dc143c 0%, #1a1a1a 100%);
+        color: white;
+        padding: 3rem 0;
+        margin: -2rem -3rem 3rem -3rem;
+        border-radius: 0 0 2rem 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .calendar-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 75% 75%, rgba(249, 115, 22, 0.1) 0%, transparent 50%);
+        z-index: 1;
+    }
+
+    .calendar-hero-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .calendar-hero-icon {
+        width: 70px;
+        height: 70px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin-right: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .current-date-display {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 1rem 1.5rem;
+        border-radius: 15px;
+        text-align: center;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    .current-day {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+    }
+
+    .current-month-year {
+        font-size: 1rem;
+        opacity: 0.9;
+    }
+
+    .calendar-main {
+        display: grid;
+        grid-template-columns: 1fr 350px;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .calendar-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 2rem;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .calendar-header {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 1.5rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #dc143c;
+    }
+
+    .calendar-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin: 0;
+    }
+
+    .calendar-nav {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .nav-btn {
+        width: 40px;
+        height: 40px;
+        border: none;
+        border-radius: 10px;
+        background: rgba(220, 20, 60, 0.1);
+        color: #dc143c;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .nav-btn:hover {
+        background: #dc143c;
+        color: white;
+        transform: scale(1.1);
+    }
+
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1px;
+        background: #e5e7eb;
+        margin: 0;
+    }
+
+    .calendar-day-header {
+        background: #f8f9fa;
+        padding: 1rem;
+        text-align: center;
+        font-weight: 600;
+        color: #374151;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .calendar-day {
+        background: white;
+        min-height: 120px;
+        padding: 0.75rem;
+        position: relative;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid transparent;
+    }
+
+    .calendar-day:hover {
+        background: rgba(220, 20, 60, 0.02);
+        border-color: rgba(220, 20, 60, 0.2);
+    }
+
+    .calendar-day.today {
+        background: linear-gradient(135deg, #dc143c 0%, #ff6b6b 100%);
+        color: white;
+    }
+
+    .calendar-day.other-month {
+        background: #f9fafb;
+        color: #9ca3af;
+    }
+
+    .day-number {
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .calendar-day.today .day-number {
+        color: white;
+    }
+
+    .event-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin: 2px;
+        display: inline-block;
+    }
+
+    .event-dot.high { background: #dc143c; }
+    .event-dot.medium { background: #f59e0b; }
+    .event-dot.low { background: #10b981; }
+
+    .events-sidebar {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 2rem;
+        padding: 2rem;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        height: fit-content;
+    }
+
+    .sidebar-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .sidebar-title i {
+        background: linear-gradient(135deg, #dc143c 0%, #ff6b6b 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-right: 0.75rem;
+    }
+
+    .event-item {
+        background: rgba(248, 249, 250, 0.8);
+        padding: 1rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        border-left: 4px solid;
+        transition: all 0.3s ease;
+    }
+
+    .event-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .event-item.high { border-left-color: #dc143c; }
+    .event-item.medium { border-left-color: #f59e0b; }
+    .event-item.low { border-left-color: #10b981; }
+
+    .event-title {
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 0.25rem;
+    }
+
+    .event-time {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-bottom: 0.5rem;
+    }
+
+    .event-description {
+        font-size: 0.9rem;
+        color: #4b5563;
+        line-height: 1.5;
+    }
+
+    .add-event-btn {
+        width: 100%;
+        background: linear-gradient(135deg, #dc143c 0%, #ff6b6b 100%);
+        border: none;
+        border-radius: 12px;
+        padding: 1rem;
+        color: white;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 0.3s ease;
+        margin-bottom: 2rem;
+    }
+
+    .add-event-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(220, 20, 60, 0.3);
+    }
+
+    .quick-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-box {
+        background: rgba(248, 249, 250, 0.8);
+        padding: 1rem;
+        border-radius: 12px;
+        text-align: center;
+        border: 2px solid rgba(220, 20, 60, 0.1);
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #dc143c;
+        display: block;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        color: #6b7280;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+        .calendar-hero {
+            padding: 2rem 0;
+            margin: -1rem -1rem 2rem -1rem;
+        }
+        .calendar-hero-content {
+            flex-direction: column;
+            text-align: center;
+        }
+        .calendar-main {
+            grid-template-columns: 1fr;
+        }
+        .calendar-day {
+            min-height: 80px;
+        }
+        .quick-stats {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<!-- Calendar Hero Section -->
+<div class="calendar-hero">
+    <div class="container">
+        <div class="calendar-hero-content">
+            <div class="d-flex align-items-center">
+                <div class="calendar-hero-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div>
+                    <h1 class="display-6 fw-bold mb-2">Calendário de Eventos</h1>
+                    <p class="lead mb-0">Cronograma e marcos importantes do PLI-SP</p>
+                </div>
+            </div>
+            <div class="current-date-display">
+                <div class="current-day" id="currentDay">02</div>
+                <div class="current-month-year" id="currentMonthYear">Julho 2025</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Statistics -->
+<div class="quick-stats">
+    <div class="stat-box">
+        <span class="stat-number">8</span>
+        <span class="stat-label">Este Mês</span>
+    </div>
+    <div class="stat-box">
+        <span class="stat-number">3</span>
+        <span class="stat-label">Esta Semana</span>
+    </div>
+    <div class="stat-box">
+        <span class="stat-number">1</span>
+        <span class="stat-label">Hoje</span>
+    </div>
+</div>
+
+<!-- Calendar Main Content -->
+<div class="calendar-main">
+    <!-- Calendar Grid -->
+    <div class="calendar-card">
+        <div class="calendar-header">
+            <h2 class="calendar-title" id="calendarTitle">Julho 2025</h2>
+            <div class="calendar-nav">
+                <button class="nav-btn" onclick="changeMonth(-1)" title="Mês anterior">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="nav-btn" onclick="goToToday()" title="Ir para hoje">
+                    <i class="fas fa-home"></i>
+                </button>
+                <button class="nav-btn" onclick="changeMonth(1)" title="Próximo mês">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="calendar-grid">
+            <!-- Day Headers -->
+            <div class="calendar-day-header">Dom</div>
+            <div class="calendar-day-header">Seg</div>
+            <div class="calendar-day-header">Ter</div>
+            <div class="calendar-day-header">Qua</div>
+            <div class="calendar-day-header">Qui</div>
+            <div class="calendar-day-header">Sex</div>
+            <div class="calendar-day-header">Sáb</div>
+            
+            <!-- Calendar Days -->
+            <div class="calendar-day other-month">
+                <div class="day-number">29</div>
+            </div>
+            <div class="calendar-day other-month">
+                <div class="day-number">30</div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">1</div>
+                <div class="event-dot high"></div>
+            </div>
+            <div class="calendar-day today">
+                <div class="day-number">2</div>
+                <div class="event-dot medium"></div>
+                <div class="event-dot low"></div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">3</div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">4</div>
+                <div class="event-dot high"></div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">5</div>
+            </div>
+            
+            <!-- Week 2 -->
+            <div class="calendar-day">
+                <div class="day-number">6</div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">7</div>
+                <div class="event-dot medium"></div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">8</div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">9</div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">10</div>
+                <div class="event-dot low"></div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">11</div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">12</div>
+            </div>
+            
+            <!-- Week 3 -->
+            <div class="calendar-day">
+                <div class="day-number">13</div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">14</div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">15</div>
+                <div class="event-dot high"></div>
+                <div class="event-dot medium"></div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">16</div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">17</div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">18</div>
+                <div class="event-dot low"></div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">19</div>
+            </div>
+            
+            <!-- Week 4 -->
+            <div class="calendar-day">
+                <div class="day-number">20</div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">21</div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">22</div>
+                <div class="event-dot medium"></div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">23</div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">24</div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">25</div>
+                <div class="event-dot high"></div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">26</div>
+            </div>
+            
+            <!-- Week 5 -->
+            <div class="calendar-day">
+                <div class="day-number">27</div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">28</div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">29</div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">30</div>
+                <div class="event-dot low"></div>
+            </div>
+            <div class="calendar-day">
+                <div class="day-number">31</div>
+            </div>
+            <div class="calendar-day other-month">
+                <div class="day-number">1</div>
+            </div>
+            <div class="calendar-day other-month">
+                <div class="day-number">2</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Events Sidebar -->
+    <div class="events-sidebar">
+        <button class="add-event-btn">
+            <i class="fas fa-plus me-2"></i>Novo Evento
+        </button>
+        
+        <h3 class="sidebar-title">
+            <i class="fas fa-list"></i>Próximos Eventos
+        </h3>
+        
+        <div class="event-item high">
+            <div class="event-title">Reunião de Coordenação</div>
+            <div class="event-time">Hoje - 14:00</div>
+            <div class="event-description">Reunião semanal de acompanhamento do projeto PLI-SP</div>
+        </div>
+        
+        <div class="event-item medium">
+            <div class="event-title">Apresentação RAIS</div>
+            <div class="event-time">04 Jul - 09:00</div>
+            <div class="event-description">Apresentação dos resultados da análise RAIS 2024</div>
+        </div>
+        
+        <div class="event-item low">
+            <div class="event-title">Workshop GIS</div>
+            <div class="event-time">07 Jul - 15:30</div>
+            <div class="event-description">Treinamento em ferramentas de análise espacial</div>
+        </div>
+        
+        <div class="event-item high">
+            <div class="event-title">Entrega Produto 15</div>
+            <div class="event-time">15 Jul - 17:00</div>
+            <div class="event-description">Prazo final para entrega do Produto 15 - Diagnóstico Modal</div>
+        </div>
+        
+        <div class="event-item medium">
+            <div class="event-title">Reunião SEMIL</div>
+            <div class="event-time">22 Jul - 10:00</div>
+            <div class="event-description">Reunião mensal com equipe técnica da SEMIL</div>
+        </div>
+        
+        <div class="event-item high">
+            <div class="event-title">Marco do Projeto</div>
+            <div class="event-time">25 Jul - 16:00</div>
+            <div class="event-description">Conclusão da Fase 2 - Diagnóstico Completo</div>
+        </div>
+        
+        <div class="event-item low">
+            <div class="event-title">Backup de Dados</div>
+            <div class="event-time">30 Jul - 18:00</div>
+            <div class="event-description">Backup mensal de todos os dados do projeto</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Update current date display
+    function updateCurrentDate() {
+        const now = new Date();
+        const options = { 
+            timeZone: 'America/Sao_Paulo',
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+        };
+        
+        const day = now.toLocaleDateString('pt-BR', { 
+            timeZone: 'America/Sao_Paulo',
+            day: '2-digit'
+        });
+        
+        const monthYear = now.toLocaleDateString('pt-BR', { 
+            timeZone: 'America/Sao_Paulo',
+            month: 'long',
+            year: 'numeric'
+        });
+        
+        document.getElementById('currentDay').textContent = day;
+        document.getElementById('currentMonthYear').textContent = monthYear;
+    }
+
+    // Calendar navigation functions
+    let currentMonth = 6; // July (0-indexed)
+    let currentYear = 2025;
+
+    function changeMonth(direction) {
+        currentMonth += direction;
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        } else if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        }
+        updateCalendar();
+    }
+
+    function goToToday() {
+        const now = new Date();
+        currentMonth = now.getMonth();
+        currentYear = now.getFullYear();
+        updateCalendar();
+    }
+
+    function updateCalendar() {
+        const months = [
+            'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+        ];
+        
+        document.getElementById('calendarTitle').textContent = `${months[currentMonth]} ${currentYear}`;
+    }
+
+    // Initialize
+    updateCurrentDate();
+    
+    // Update every minute
+    setInterval(updateCurrentDate, 60000);
+</script>
+{% endblock %}
+                        <tbody>
+                            <!-- Primeira semana -->
+                            <tr>
+                                <td class="calendar-day other-month">
+                                    <div class="day-number">26</div>
+                                </td>
+                                <td class="calendar-day other-month">
+                                    <div class="day-number">27</div>
+                                </td>
+                                <td class="calendar-day other-month">
+                                    <div class="day-number">28</div>
+                                </td>
+                                <td class="calendar-day other-month">
+                                    <div class="day-number">29</div>
+                                </td>
+                                <td class="calendar-day other-month">
+                                    <div class="day-number">30</div>
+                                </td>
+                                <td class="calendar-day other-month">
+                                    <div class="day-number">31</div>
+                                </td>
+                                <td class="calendar-day">
+                                    <div class="day-number">1</div>
+                                </td>
+                            </tr>
+                            <!-- Segunda semana -->
+                            <tr>
+                                <td class="calendar-day">
+                                    <div class="day-number">2</div>
+                                </td>
+                                <td class="calendar-day">
+                                    <div class="day-number">3</div>
+                                </td>
+                                <td class="calendar-day">
+                                    <div class="day-number">4</div>
+                                </td>
+                                <td class="calendar-day">
+                                    <div class="day-number">5</div>
+                                </td>
+                                <td class="calendar-day">
+                                    <div class="day-number">6</div>
+                                </td>
+                                <td class="calendar-day today">
+                                    <div class="day-number">7</div>
+                                    <div class="event event-info">
+                                        <small>Hoje</small>
+                                    </div>
+                                </td>
+                                <td class="calendar-day">
+                                    <div class="day-number">8</div>
+                                </td>
+                            </tr>
+                            <!-- Terceira semana -->
+                            <tr>
+                                <td class="calendar-day">
+                                    <div class="day-number">9</div>
+                                </td>
+                                <td class="calendar-day">
+                                    <div class="day-number">10</div>
+                                </td>
+                                <td class="calendar-day">
+                                    <div class="day-number">11</div>
+                                </td>
+                                <td class="calendar-day">
+                                    <div class="day-number">12</div>
+                                </td>
+                                <td class="calendar-day">
+                                    <div class="day-number">13</div>
+                                </td>
+                                <td class="calendar-day">
+                                    <div class="day-number">14</div>
+                                </td>
+                                <td class="calendar-day has-event">
+                                    <div class="day-number">15</div>
+                                    <div class="event event-primary">
+                                        <small>Reunião de Avaliação</small>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Quarta semana -->
+                            <tr>
+                                <td class="calendar-day">
+                                    <div class="day-number">16</div>
+                                </td>
+                                <td class="calendar-day">
+                                    <div class="day-number">17</div>
+                                </td>
+                                <td class="calendar-day">
+                                    <div class="day-number">18</div>
+                                </td>
+                                <td class="calendar-day">
+                                    <div class="day-number">19</div>
+                                </td>
+                                <td class="calendar-day has-event">
+                                    <div class="day-number">20</div>
+                                    <div class="event event-warning">
+                                        <small>Entrega Produto 5</small>
+                                    </div>
+                                </td>
+                                <td class="calendar-day">
+                                    <div class="day-number">21</div>
+                                </td>
+                                <td class="calendar-day">
+                                    <div class="day-number">22</div>
+                                </td>
+                            </tr>
+                            <!-- Quinta semana -->
+                            <tr>
+                                <td class="calendar-day">
+                                    <div class="day-number">23</div>
+                                </td>
+                                <td class="calendar-day">
+                                    <div class="day-number">24</div>
+                                </td>
+                                <td class="calendar-day">
+                                    <div class="day-number">25</div>
+                                </td>
+                                <td class="calendar-day">
+                                    <div class="day-number">26</div>
+                                </td>
+                                <td class="calendar-day">
+                                    <div class="day-number">27</div>
+                                </td>
+                                <td class="calendar-day has-event">
+                                    <div class="day-number">28</div>
+                                    <div class="event event-success">
+                                        <small>Relatório Final</small>
+                                    </div>
+                                </td>
+                                <td class="calendar-day other-month">
+                                    <div class="day-number">1</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Próximos Eventos</h5>
+            </div>
+            <div class="card-body">
+                <div class="upcoming-events">
+                    <div class="event-item">
+                        <div class="d-flex">
+                            <div class="event-date">
+                                <div class="date-box bg-primary">
+                                    <div class="month">FEV</div>
+                                    <div class="day">15</div>
+                                </div>
+                            </div>
+                            <div class="event-details">
+                                <h6 class="event-title">Reunião de Avaliação</h6>
+                                <p class="event-description">Análise dos produtos entregues na fase 1</p>
+                                <small class="text-muted">14:00 - 16:00</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="event-item">
+                        <div class="d-flex">
+                            <div class="event-date">
+                                <div class="date-box bg-warning">
+                                    <div class="month">FEV</div>
+                                    <div class="day">20</div>
+                                </div>
+                            </div>
+                            <div class="event-details">
+                                <h6 class="event-title">Entrega Produto 5</h6>
+                                <p class="event-description">Diagnóstico Modal Rodoviário</p>
+                                <small class="text-muted">Prazo: até 18:00</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="event-item">
+                        <div class="d-flex">
+                            <div class="event-date">
+                                <div class="date-box bg-success">
+                                    <div class="month">FEV</div>
+                                    <div class="day">28</div>
+                                </div>
+                            </div>
+                            <div class="event-details">
+                                <h6 class="event-title">Relatório Final</h6>
+                                <p class="event-description">Entrega do relatório consolidado</p>
+                                <small class="text-muted">Prazo final do mês</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Tipos de Eventos</h5>
+            </div>
+            <div class="card-body">
+                <div class="event-legend">
+                    <div class="legend-item">
+                        <span class="legend-color bg-primary"></span>
+                        <span>Reuniões</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color bg-warning"></span>
+                        <span>Prazos de Entrega</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color bg-success"></span>
+                        <span>Marcos Importantes</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color bg-info"></span>
+                        <span>Eventos Especiais</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color bg-danger"></span>
+                        <span>Alertas</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Resumo do Mês</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <h4 class="text-primary">5</h4>
+                        <small class="text-muted">Eventos</small>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="text-warning">3</h4>
+                        <small class="text-muted">Prazos</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Novo Evento -->
+<div class="modal fade" id="addEventModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Novo Evento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="eventTitle" class="form-label">Título do Evento</label>
+                        <input type="text" class="form-control" id="eventTitle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="eventDescription" class="form-label">Descrição</label>
+                        <textarea class="form-control" id="eventDescription" rows="3"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="eventDate" class="form-label">Data</label>
+                                <input type="date" class="form-control" id="eventDate" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="eventTime" class="form-label">Horário</label>
+                                <input type="time" class="form-control" id="eventTime">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="eventType" class="form-label">Tipo de Evento</label>
+                        <select class="form-select" id="eventType" required>
+                            <option value="">Selecione o tipo</option>
+                            <option value="meeting">Reunião</option>
+                            <option value="deadline">Prazo de Entrega</option>
+                            <option value="milestone">Marco Importante</option>
+                            <option value="special">Evento Especial</option>
+                            <option value="alert">Alerta</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="eventResponsible" class="form-label">Responsável</label>
+                        <select class="form-select" id="eventResponsible">
+                            <option value="">Selecione o responsável</option>
+                            <option value="coord.semil">Coordenação SEMIL</option>
+                            <option value="ana.silva">Ana Silva</option>
+                            <option value="carlos.santos">Carlos Santos</option>
+                            <option value="mariana.costa">Mariana Costa</option>
+                            <option value="pedro.oliveira">Pedro Oliveira</option>
+                            <option value="julia.pereira">Julia Pereira</option>
+                            <option value="rafael.lima">Rafael Lima</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary">Criar Evento</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.calendar-table {
+    table-layout: fixed;
+}
+
+.calendar-day {
+    height: 120px;
+    width: 14.28%;
+    padding: 8px;
+    vertical-align: top;
+    border: 1px solid #dee2e6;
+    position: relative;
+}
+
+.calendar-day:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+.calendar-day.other-month {
+    background-color: #f8f9fa;
+    color: #6c757d;
+}
+
+.calendar-day.today {
+    background-color: #e3f2fd;
+    border: 2px solid #2196f3;
+}
+
+.calendar-day.has-event {
+    background-color: #fff3cd;
+}
+
+.day-number {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.event {
+    font-size: 11px;
+    padding: 2px 4px;
+    border-radius: 3px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+}
+
+.event-primary {
+    background-color: #cfe2ff;
+    color: #084298;
+    border-left: 3px solid #0d6efd;
+}
+
+.event-warning {
+    background-color: #fff3cd;
+    color: #664d03;
+    border-left: 3px solid #ffc107;
+}
+
+.event-success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    border-left: 3px solid #198754;
+}
+
+.event-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border-left: 3px solid #17a2b8;
+}
+
+.upcoming-events .event-item {
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.upcoming-events .event-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.event-date {
+    margin-right: 15px;
+}
+
+.date-box {
+    text-align: center;
+    color: white;
+    border-radius: 8px;
+    padding: 8px;
+    min-width: 50px;
+}
+
+.date-box .month {
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.date-box .day {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.event-details {
+    flex: 1;
+}
+
+.event-title {
+    margin: 0 0 5px 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.event-description {
+    margin: 0 0 5px 0;
+    font-size: 13px;
+    color: #6c757d;
+}
+
+.event-legend .legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    margin-right: 10px;
+}
+</style>
+
+<script>
+function changeMonth(direction) {
+    // Implementar navegação de meses
+    console.log('Mudando mês:', direction);
+}
+
+function goToToday() {
+    // Implementar ir para hoje
+    console.log('Indo para hoje');
+}
+
+// Adicionar interatividade aos dias do calendário
+document.addEventListener('DOMContentLoaded', function() {
+    const calendarDays = document.querySelectorAll('.calendar-day:not(.other-month)');
+    
+    calendarDays.forEach(day => {
+        day.addEventListener('click', function() {
+            const dayNumber = this.querySelector('.day-number').textContent;
+            console.log('Dia clicado:', dayNumber);
+            // Aqui você pode implementar a lógica para mostrar eventos do dia
+        });
+    });
+});
+</script>
+{% endblock %}

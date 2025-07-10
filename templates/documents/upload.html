@@ -1,0 +1,371 @@
+{% extends "base.html" %}
+
+{% block title %}Upload de Documento - PLI-SP{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('documents') }}">Documentos</a></li>
+            <li class="breadcrumb-item active">Upload</li>
+        </ol>
+    </nav>
+    <h1 class="mb-0">Upload de Documento</h1>
+    <p class="text-muted">Adicionar novo documento ao sistema</p>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <form method="POST" enctype="multipart/form-data" id="uploadForm">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Informações do Documento</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="document_name" class="form-label">Nome do Documento</label>
+                        <input type="text" class="form-control" id="document_name" name="document_name" required
+                               placeholder="Ex: Relatório de Diagnóstico Modal">
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="category" class="form-label">Categoria</label>
+                                <select class="form-select" id="category" name="category" required>
+                                    <option value="">Selecione a categoria</option>
+                                    <option value="documentos_base">Documentos Base</option>
+                                    <option value="produtos_entregues">Produtos Entregues</option>
+                                    <option value="relatorios">Relatórios</option>
+                                    <option value="dados_planilhas">Dados e Planilhas</option>
+                                    <option value="apresentacoes">Apresentações</option>
+                                    <option value="outros">Outros</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="product_id" class="form-label">Produto Relacionado (opcional)</label>
+                                <select class="form-select" id="product_id" name="product_id">
+                                    <option value="">Nenhum produto específico</option>
+                                    <option value="1">Produto 1 - Plano de Trabalho</option>
+                                    <option value="2">Produto 2 - Metodologia</option>
+                                    <option value="3">Produto 3 - Diagnóstico Geral</option>
+                                    <option value="4">Produto 4 - Diagnóstico Modal Hidroviário</option>
+                                    <option value="5">Produto 5 - Diagnóstico Modal Rodoviário</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Descrição</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"
+                                  placeholder="Descreva brevemente o conteúdo do documento"></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="tags" class="form-label">Tags (separadas por vírgula)</label>
+                        <input type="text" class="form-control" id="tags" name="tags"
+                               placeholder="Ex: diagnóstico, rodoviário, transporte, logística">
+                        <div class="form-text">Use tags para facilitar a busca do documento</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Upload de Arquivo</h5>
+                </div>
+                <div class="card-body">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-content">
+                            <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                            <h5>Arraste arquivos aqui ou clique para selecionar</h5>
+                            <p class="text-muted">Formatos aceitos: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, CSV, TXT</p>
+                            <p class="text-muted">Tamanho máximo: 50MB por arquivo</p>
+                            <input type="file" class="form-control d-none" id="file_upload" name="file_upload" 
+                                   accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.csv,.txt" required>
+                            <button type="button" class="btn btn-primary" onclick="document.getElementById('file_upload').click()">
+                                <i class="fas fa-folder-open me-2"></i>Selecionar Arquivo
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="fileInfo" class="mt-3" style="display: none;">
+                        <div class="alert alert-info">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-file me-2"></i>
+                                    <span id="fileName"></span>
+                                    <span class="badge bg-secondary ms-2" id="fileSize"></span>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeFile()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="progress mt-2" id="uploadProgress" style="display: none;">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Configurações</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="access_level" class="form-label">Nível de Acesso</label>
+                                <select class="form-select" id="access_level" name="access_level">
+                                    <option value="team">Apenas Equipe PLI</option>
+                                    <option value="semil">Toda SEMIL</option>
+                                    <option value="public">Público</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="version" class="form-label">Versão</label>
+                                <input type="text" class="form-control" id="version" name="version" 
+                                       placeholder="Ex: 1.0, v2.1, final" value="1.0">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="notify_team" name="notify_team" checked>
+                        <label class="form-check-label" for="notify_team">
+                            Notificar equipe sobre o novo documento
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 text-end">
+                <a href="{{ url_for('documents') }}" class="btn btn-secondary me-2">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </a>
+                <button type="submit" class="btn btn-success" id="submitBtn">
+                    <i class="fas fa-upload me-2"></i>Fazer Upload
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Instruções</h5>
+            </div>
+            <div class="card-body">
+                <h6>Antes de fazer upload:</h6>
+                <ul class="small">
+                    <li>Verifique se o arquivo está completo</li>
+                    <li>Use nomes descritivos</li>
+                    <li>Selecione a categoria correta</li>
+                    <li>Adicione tags relevantes</li>
+                    <li>Relacione com o produto adequado</li>
+                </ul>
+                
+                <h6 class="mt-3">Formatos aceitos:</h6>
+                <div class="d-flex flex-wrap gap-1">
+                    <span class="badge bg-danger">PDF</span>
+                    <span class="badge bg-primary">DOC</span>
+                    <span class="badge bg-primary">DOCX</span>
+                    <span class="badge bg-success">XLS</span>
+                    <span class="badge bg-success">XLSX</span>
+                    <span class="badge bg-warning">PPT</span>
+                    <span class="badge bg-warning">PPTX</span>
+                    <span class="badge bg-info">CSV</span>
+                    <span class="badge bg-secondary">TXT</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Uploads Recentes</h5>
+            </div>
+            <div class="card-body">
+                <div class="recent-uploads">
+                    <div class="upload-item">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-file-pdf text-danger me-2"></i>
+                            <div class="flex-grow-1">
+                                <div class="small fw-bold">Produto 1 - Plano</div>
+                                <div class="small text-muted">Hoje, 14:30</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="upload-item">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-file-excel text-success me-2"></i>
+                            <div class="flex-grow-1">
+                                <div class="small fw-bold">Dados RAIS</div>
+                                <div class="small text-muted">Ontem, 16:45</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="upload-item">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-file-word text-primary me-2"></i>
+                            <div class="flex-grow-1">
+                                <div class="small fw-bold">Metodologia</div>
+                                <div class="small text-muted">25/01, 10:15</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Estatísticas</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <h4 class="text-primary">45</h4>
+                        <small class="text-muted">Total de Docs</small>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="text-success">2.1 GB</h4>
+                        <small class="text-muted">Armazenamento</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.upload-area {
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+}
+
+.upload-area:hover,
+.upload-area.dragover {
+    border-color: #0d6efd;
+    background-color: #e3f2fd;
+}
+
+.upload-content {
+    pointer-events: none;
+}
+
+.recent-uploads .upload-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.recent-uploads .upload-item:last-child {
+    border-bottom: none;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('file_upload');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    const uploadForm = document.getElementById('uploadForm');
+    
+    // Drag and drop functionality
+    uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+    
+    uploadArea.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+    });
+    
+    uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            showFileInfo(files[0]);
+        }
+    });
+    
+    // File input change
+    fileInput.addEventListener('change', function() {
+        if (this.files.length > 0) {
+            showFileInfo(this.files[0]);
+        }
+    });
+    
+    function showFileInfo(file) {
+        fileName.textContent = file.name;
+        fileSize.textContent = formatFileSize(file.size);
+        fileInfo.style.display = 'block';
+        
+        // Auto-fill document name if empty
+        const docNameInput = document.getElementById('document_name');
+        if (!docNameInput.value) {
+            docNameInput.value = file.name.replace(/\.[^/.]+$/, "");
+        }
+    }
+    
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+    
+    // Form submission with progress
+    uploadForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const progressBar = document.getElementById('uploadProgress');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        progressBar.style.display = 'block';
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Enviando...';
+        
+        // Simular upload com progress (em uma implementação real, usar XMLHttpRequest ou fetch com progress)
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 30;
+            if (progress > 100) progress = 100;
+            
+            progressBar.querySelector('.progress-bar').style.width = progress + '%';
+            
+            if (progress >= 100) {
+                clearInterval(interval);
+                setTimeout(() => {
+                    alert('Upload realizado com sucesso!');
+                    window.location.href = '/documents';
+                }, 500);
+            }
+        }, 200);
+    });
+});
+
+function removeFile() {
+    document.getElementById('file_upload').value = '';
+    document.getElementById('fileInfo').style.display = 'none';
+}
+</script>
+{% endblock %}

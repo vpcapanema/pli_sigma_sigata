@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Simples</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #E0E5EC;
+            color: #2D3748;
+            padding: 20px;
+        }
+        .card {
+            background: #E0E5EC;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 
+                9px 9px 16px #A3B1CC,
+                -9px -9px 16px #FFFFFF;
+        }
+        h1 {
+            color: #006D77;
+            text-align: center;
+        }
+        .test-button {
+            background: #E0E5EC;
+            border: none;
+            border-radius: 15px;
+            padding: 10px 20px;
+            box-shadow: 5px 5px 10px #A3B1CC, -5px -5px 10px #FFFFFF;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+        .test-button:active {
+            box-shadow: inset 2px 2px 5px #A3B1CC, inset -2px -2px 5px #FFFFFF;
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Teste Neumórfico</h1>
+        <p><strong>Timestamp:</strong> <span id="time"></span></p>
+        <button onclick="alert('Funciona!')" class="test-button">Testar Botão</button>
+    </div>
+    <script>
+        document.getElementById('time').textContent = new Date().toLocaleString('pt-BR');
+    </script>
+</body>
+</html>

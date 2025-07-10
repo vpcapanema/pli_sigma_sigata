@@ -1,0 +1,131 @@
+<!-- Dashboard Principal -->
+<div class="container">
+  <!-- Estatísticas Principais -->
+  <div class="grid-4">
+    <div class="card neumorphic">
+      <div class="card-icon bg-primary">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="card-content">
+        <h3 class="card-value" id="totalUsers">0</h3>
+        <p class="card-label">Usuários Ativos</p>
+        <p class="dashboard-stat-change positive" id="usersChange">
+          <i class="fas fa-arrow-up"></i>
+          +5.2% este mês
+        </p>
+      </div>
+    </div>
+
+    <div class="card neumorphic">
+      <div class="card-icon bg-success">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div class="card-content">
+        <h3 class="card-value" id="completedProducts">0</h3>
+        <p class="card-label">Produtos Concluídos</p>
+        <p class="dashboard-stat-change positive" id="productsChange">
+          <i class="fas fa-arrow-up"></i>
+          +12.3% este mês
+        </p>
+      </div>
+    </div>
+
+    <div class="card neumorphic">
+      <div class="card-icon bg-warning">
+        <i class="fas fa-clock"></i>
+      </div>
+      <div class="card-content">
+        <h3 class="card-value" id="pendingReviews">0</h3>
+        <p class="card-label">Avaliações Pendentes</p>
+        <p class="dashboard-stat-change negative" id="reviewsChange">
+          <i class="fas fa-arrow-down"></i>
+          -2.1% este mês
+        </p>
+      </div>
+    </div>
+
+    <div class="card neumorphic">
+      <div class="card-icon bg-error">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <div class="card-content">
+        <h3 class="card-value" id="overdueTasks">0</h3>
+        <p class="card-label">Tarefas Atrasadas</p>
+        <p class="dashboard-stat-change negative" id="tasksChange">
+          <i class="fas fa-arrow-up"></i>
+          +8.7% este mês
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Widgets do Dashboard -->
+  <div class="grid-2">
+    <!-- Gráfico de Progresso -->
+    <div class="card neumorphic">
+      <div class="card-header">
+        <h3 class="card-title">Progresso dos Produtos</h3>
+        <a href="/reports/products" class="btn btn-outline btn-sm">Ver Relatório</a>
+      </div>
+      <div class="card-body">
+        <canvas id="progressChart" width="400" height="200"></canvas>
+      </div>
+    </div>
+
+    <!-- Atividades Recentes -->
+    <div class="card neumorphic">
+      <div class="card-header">
+        <h3 class="card-title">Atividades Recentes</h3>
+        <a href="/activities" class="btn btn-outline btn-sm">Ver Todas</a>
+      </div>
+      <div class="card-body">
+        <ul class="recent-activities" id="recentActivities">
+          <!-- Será carregado dinamicamente -->
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Próximos Eventos -->
+  <div class="card neumorphic">
+    <div class="card-header">
+      <h3 class="card-title">Próximos Eventos</h3>
+      <a href="/events" class="btn btn-outline btn-sm">Ver Calendário</a>
+    </div>
+    <div class="card-body">
+      <div class="upcoming-events" id="upcomingEvents">
+        <!-- Será carregado dinamicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Produtos com Prazo Próximo -->
+  <div class="card neumorphic">
+    <div class="card-header">
+      <h3 class="card-title">Produtos com Prazo Próximo</h3>
+      <a href="/products?filter=due-soon" class="btn btn-outline btn-sm">Ver Todos</a>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Produto</th>
+              <th>Responsável</th>
+              <th>Prazo</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="dueSoonProducts">
+            <!-- Será carregado dinamicamente -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+

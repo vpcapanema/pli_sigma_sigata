@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Configurações - SIGMA PLI</title>
+    <link rel="stylesheet" href="/static/shared/css/global.css" />
+    <link rel="stylesheet" href="/static/modules/core/css/core.css" />
+    <link rel="stylesheet" href="/static/modules/settings/css/settings.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <nav class="sidebar">
+        <div class="sidebar-header">
+          <h2>SIGMA PLI</h2>
+        </div>
+        <ul class="sidebar-menu">
+          <li><a href="/">Dashboard</a></li>
+          <li><a href="/products">Produtos</a></li>
+          <li><a href="/reports">Relatórios</a></li>
+          <li><a href="/settings" class="active">Configurações</a></li>
+          <li><a href="/auth/logout">Sair</a></li>
+        </ul>
+      </nav>
+
+      <main class="main-content">
+        <div class="content-header">
+          <h1>Configurações do Sistema</h1>
+        </div>
+
+        <div class="content-body">
+          <div class="settings-tabs">
+            <button class="tab-button active" onclick="showTab('general')">Geral</button>
+            <button class="tab-button" onclick="showTab('users')">Usuários</button>
+            <button class="tab-button" onclick="showTab('security')">Segurança</button>
+            <button class="tab-button" onclick="showTab('backup')">Backup</button>
+          </div>
+
+          <!-- Aba Geral -->
+          <div class="tab-content active" id="generalTab">
+            <div class="settings-card">
+              <h3>Configurações Gerais</h3>
+              <form id="generalForm">
+                <div class="form-group">
+                  <label for="companyName">Nome da Empresa</label>
+                  <input type="text" id="companyName" name="companyName" value="SIGMA PLI" />
+                </div>
+                <div class="form-group">
+                  <label for="companyEmail">Email da Empresa</label>
+                  <input type="email" id="companyEmail" name="companyEmail" value="contato@sigmapli.com" />
+                </div>
+                <div class="form-group">
+                  <label for="timezone">Fuso Horário</label>
+                  <select id="timezone" name="timezone" title="Selecione o fuso horário">
+                    <option value="America/Sao_Paulo">São Paulo (UTC-3)</option>
+                    <option value="America/Rio_Branco">Rio Branco (UTC-5)</option>
+                    <option value="America/Manaus">Manaus (UTC-4)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="language">Idioma</label>
+                  <select id="language" name="language" title="Selecione o idioma">
+                    <option value="pt-BR">Português (Brasil)</option>
+                    <option value="en-US">English (US)</option>
+                    <option value="es-ES">Español</option>
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Salvar Configurações</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Aba Usuários -->
+          <div class="tab-content" id="usersTab">
+            <div class="settings-card">
+              <h3>Gestão de Usuários</h3>
+              <button class="btn btn-primary" id="addUserBtn">Adicionar Usuário</button>
+              <div class="users-table">
+                <table id="usersTable">
+                  <thead>
+                    <tr>
+                      <th>Nome</th>
+                      <th>Email</th>
+                      <th>Perfil</th>
+                      <th>Status</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Usuários serão carregados aqui -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Aba Segurança -->
+          <div class="tab-content" id="securityTab">
+            <div class="settings-card">
+              <h3>Configurações de Segurança</h3>
+              <form id="securityForm">
+                <div class="form-group">
+                  <label>
+                    <input type="checkbox" id="requireStrongPassword" name="requireStrongPassword" checked />
+                    Exigir senhas fortes
+                  </label>
+                </div>
+                <div class="form-group">
+                  <label>
+                    <input type="checkbox" id="enableTwoFactor" name="enableTwoFactor" />
+                    Habilitar autenticação de dois fatores
+                  </label>
+                </div>
+                <div class="form-group">
+                  <label for="sessionTimeout">Timeout de Sessão (minutos)</label>
+                  <input type="number" id="sessionTimeout" name="sessionTimeout" value="30" min="5" max="1440" />
+                </div>
+                <div class="form-group">
+                  <label for="maxLoginAttempts">Máximo de tentativas de login</label>
+                  <input type="number" id="maxLoginAttempts" name="maxLoginAttempts" value="3" min="1" max="10" />
+                </div>
+                <button type="submit" class="btn btn-primary">Salvar Configurações</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Aba Backup -->
+          <div class="tab-content" id="backupTab">
+            <div class="settings-card">
+              <h3>Configurações de Backup</h3>
+              <div class="backup-section">
+                <h4>Backup Automático</h4>
+                <form id="backupForm">
+                  <div class="form-group">
+                    <label>
+                      <input type="checkbox" id="enableAutoBackup" name="enableAutoBackup" />
+                      Habilitar backup automático
+                    </label>
+                  </div>
+                  <div class="form-group">
+                    <label for="backupFrequency">Frequência</label>
+                    <select id="backupFrequency" name="backupFrequency" title="Selecione a frequência do backup">
+                      <option value="daily">Diário</option>
+                      <option value="weekly">Semanal</option>
+                      <option value="monthly">Mensal</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="backupTime">Horário do Backup</label>
+                    <input type="time" id="backupTime" name="backupTime" value="02:00" />
+                  </div>
+                  <button type="submit" class="btn btn-primary">Salvar Configurações</button>
+                </form>
+              </div>
+
+              <div class="backup-section">
+                <h4>Backup Manual</h4>
+                <p>Faça um backup completo do sistema agora:</p>
+                <button class="btn btn-secondary" onclick="createBackup()">Criar Backup</button>
+                <button class="btn btn-outline" onclick="downloadBackup()">Baixar Último Backup</button>
+              </div>
+
+              <div class="backup-section">
+                <h4>Histórico de Backups</h4>
+                <div id="backupHistory">
+                  <!-- Histórico será carregado aqui -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Modal para adicionar usuário -->
+    <div class="modal" id="userModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Adicionar Usuário</h3>
+          <button class="close-btn" id="closeUserModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="userForm">
+            <div class="form-group">
+              <label for="userName">Nome</label>
+              <input type="text" id="userName" name="name" required />
+            </div>
+            <div class="form-group">
+              <label for="userEmail">Email</label>
+              <input type="email" id="userEmail" name="email" required />
+            </div>
+            <div class="form-group">
+              <label for="userRole">Perfil</label>
+              <select id="userRole" name="role" required title="Selecione o perfil do usuário">
+                <option value="">Selecione um perfil</option>
+                <option value="admin">Administrador</option>
+                <option value="manager">Gerente</option>
+                <option value="user">Usuário</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="userPassword">Senha</label>
+              <input type="password" id="userPassword" name="password" required />
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn-secondary" onclick="closeUserModal()">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="/modules/settings/js/settings.js"></script>
+  </body>
+</html>

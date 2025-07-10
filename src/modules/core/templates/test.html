@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teste SIGMA PLI</title>
+    <link rel="stylesheet" href="/static/shared/css/global.css" />
+    <link rel="stylesheet" href="/static/modules/core/css/core.css" />
+    <link rel="stylesheet" href="/static/modules/core/css/test.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-header text-center">
+        <h1 class="gradient-text">🚀 SIGMA PLI - Teste de Funcionamento</h1>
+      </div>
+
+      <div class="card neumorphic text-center mb-4">
+        <div class="card-body">
+          <div class="status-success">✅ HTML carregado com sucesso!</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card neumorphic">
+          <div class="card-body">
+            <h3 class="card-title">Informações do Sistema</h3>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">Versão</span>
+                <span class="info-value">1.0.0</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Status</span>
+                <span class="info-value" id="status">Carregando...</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Uptime</span>
+                <span class="info-value" id="uptime">Carregando...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card neumorphic">
+          <div class="card-body">
+            <h3 class="card-title">Ações de Teste</h3>
+            <div class="test-actions">
+              <button class="btn neumorphic-button neumorphic-button-primary" onclick="testAPI()">
+                <i class="fas fa-vial"></i>
+                Testar API
+              </button>
+              <button class="btn neumorphic-button neumorphic-button-secondary" onclick="window.location.href='/'">
+                <i class="fas fa-home"></i>
+                Voltar ao Index
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="result" class="card neumorphic test-result hidden">
+        <div class="card-body">
+          <h3 class="card-title">Resultado do Teste</h3>
+          <div id="resultContent"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      console.log('JavaScript carregado com sucesso!');
+
+      // Teste simples
+      document.addEventListener('DOMContentLoaded', function () {
+        console.log('DOM carregado!');
+        document.getElementById('status').textContent = 'Ativo';
+        loadData();
+      });
+
+      async function loadData() {
+        try {
+          const response = await fetch('/api/health');
+          const data = await response.json();
+          console.log('Dados da API:', data);
+
+          document.getElementById('status').textContent = data.status;
+          document.getElementById('uptime').textContent = `${data.uptime}s`;
+        } catch (error) {
+          console.error('Erro ao carregar dados:', error);
+          document.getElementById('status').textContent = 'Erro';
+          document.getElementById('uptime').textContent = 'N/A';
+        }
+      }
+
+      function testAPI() {
+        const resultDiv = document.getElementById('result');
+        const resultContent = document.getElementById('resultContent');
+        
+        // Mostrar o card de resultado
+        resultDiv.classList.remove('hidden');
+        resultContent.innerHTML = '<div class="loading">Testando API...</div>';
+        
+        fetch('/api')
+          .then(response => response.json())
+          .then(data => {
+            resultContent.innerHTML = `
+              <div class="alert alert-success">
+                <h4>✅ API funcionando corretamente!</h4>
+                <pre class="api-response">${JSON.stringify(data, null, 2)}</pre>
+              </div>
+            `;
+          })
+          .catch(error => {
+            resultContent.innerHTML = `
+              <div class="alert alert-error">
+                <h4>❌ Erro na API</h4>
+                <p>${error.message}</p>
+              </div>
+            `;
+          });
+      }
+    </script>
+  </body>
+</html>
