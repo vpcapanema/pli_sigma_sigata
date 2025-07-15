@@ -1,0 +1,410 @@
+/* IDENTIDADE VISUAL SIGMA-PLI - CORES INSTITUCIONAIS OFICIAIS */
+:root {
+    /* Paleta de Cores Principal - Extraída da Identidade Visual Oficial PLI */
+    --primary-color: #93374a;           /* Vermelho institucional PLI */
+    --primary-dark: #be1541;           /* Vermelho escuro */
+    --primary-light: #ca396a;          /* Vermelho claro */
+    
+    /* Cores Secundárias - Verde Institucional */
+    --secondary-color: #63dd1f;        /* Verde institucional PLI */
+    --secondary-dark: #1a773e;         /* Verde escuro */
+    --secondary-light: #76bb65;        /* Verde claro */
+    
+    /* Cores de Acento */
+    --accent-color: #9acda5;           /* Verde suave institucional */
+    --accent-dark: #5b752c;            /* Verde oliva */
+    --accent-light: #6fc16d;           /* Verde claro vibrante */
+    
+    /* Cores de Fundo */
+    --bg-primary: #FFFFFF;             /* Fundo principal */
+    --bg-secondary: #F8F9FA;           /* Fundo secundário */
+    --bg-content: #FFFFFF;             /* Fundo de conteúdo */
+    --bg-card: #FFFFFF;                /* Fundo de cards */
+    --bg-hero: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    
+    /* Cores de Texto */
+    --text-primary: #212529;           /* Texto principal */
+    --text-secondary: #495057;         /* Texto secundário */
+    --text-muted: #6C757D;             /* Texto esmaecido */
+    --text-inverse: #FFFFFF;           /* Texto inverso */
+    
+    /* Cores de Estado - Baseadas na paleta institucional */
+    --success: var(--secondary-color); /* Verde institucional para sucesso */
+    --warning: #cf472d;                /* Laranja/vermelho para avisos */
+    --danger: var(--primary-color);    /* Vermelho institucional para erros */
+    --info: var(--accent-color);       /* Verde suave para informação */
+    
+    /* Sombras e Bordas */
+    --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+    --border-color: #DEE2E6;
+    --border-radius: 0.375rem;
+    --border-radius-lg: 0.5rem;
+    
+    /* Layout */
+    --sidebar-width: 280px;
+    --sidebar-width-mobile: 60px;
+    --header-height: 60px;
+    
+    /* Tipografia */
+    --font-family-primary: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-family-secondary: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    --font-family-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+    
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 1.875rem;
+    
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    
+    --line-height-tight: 1.25;
+    --line-height-base: 1.5;
+    --line-height-relaxed: 1.75;
+    
+    /* ===================================
+       ALIASES PARA COMPATIBILIDADE
+       =================================== */
+    
+    /* Aliases para tema neumórfico (compatibilidade com módulos existentes) */
+    --surface: var(--bg-card);
+    --surface-elevated: var(--bg-secondary);
+    --background: var(--bg-primary);
+    
+    /* Aliases para elevações (compatibilidade) */
+    --elevation-1: var(--shadow-sm);
+    --elevation-2: var(--shadow);
+    --elevation-3: var(--shadow-lg);
+    --elevation-inset: inset 2px 2px 4px rgba(0, 0, 0, 0.1);
+    
+    /* Aliases para cores antigas */
+    --accent-color: var(--accent-color);
+    --accent-color-alpha: rgba(184, 134, 11, 0.1);
+    --surface-hover: var(--bg-secondary);
+    
+    /* Aliases para transições */
+    --transition-fast: 0.15s ease-in-out;
+    --transition-normal: 0.3s ease-in-out;
+    --transition-slow: 0.5s ease-in-out;
+    
+    /* Aliases para espaçamento */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+}
+
+/* ===================================
+   CLASSES UTILITÁRIAS
+   =================================== */
+
+/* Classes de Background */
+.bg-primary { background-color: var(--bg-primary); }
+.bg-secondary { background-color: var(--bg-secondary); }
+.bg-content { background-color: var(--bg-content); }
+.bg-card { background-color: var(--bg-card); }
+.bg-brand { background-color: var(--primary-color); }
+
+/* Classes de Texto */
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-muted { color: var(--text-muted); }
+.text-brand { color: var(--primary-color); }
+.text-brand-dark { color: var(--primary-dark); }
+.text-inverse { color: var(--text-inverse); }
+
+/* Classes de Estado */
+.text-success { color: var(--success); }
+.text-warning { color: var(--warning); }
+.text-danger { color: var(--danger); }
+.text-info { color: var(--info); }
+
+/* ===================================
+   COMPONENTES SIGMA-PLI
+   =================================== */
+
+/* Card Principal */
+.sigma-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.sigma-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+/* Card Header */
+.sigma-card-header {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 1.5rem;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+}
+
+/* Sidebar */
+.sigma-sidebar {
+    background: var(--bg-card);
+    border-right: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    width: var(--sidebar-width);
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+/* Navigation Links */
+.sigma-nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: var(--font-weight-medium);
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+}
+
+.sigma-nav-link:hover {
+    background: var(--bg-secondary);
+    color: var(--primary-color);
+    border-left-color: var(--primary-color);
+}
+
+.sigma-nav-link.active {
+    background: var(--bg-primary);
+    color: var(--primary-color);
+    border-left-color: var(--primary-color);
+    font-weight: var(--font-weight-semibold);
+}
+
+/* Botões */
+.sigma-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: 1;
+    border: 1px solid transparent;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    font-family: var(--font-family-primary);
+}
+
+.sigma-btn-primary {
+    background: var(--primary-color);
+    color: var(--text-inverse);
+    border-color: var(--primary-color);
+}
+
+.sigma-btn-primary:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
+}
+
+.sigma-btn-secondary {
+    background: var(--secondary-color);
+    color: var(--text-inverse);
+    border-color: var(--secondary-color);
+}
+
+.sigma-btn-outline {
+    background: transparent;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.sigma-btn-outline:hover {
+    background: var(--primary-color);
+    color: var(--text-inverse);
+}
+
+/* Form Controls */
+.sigma-form-control {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    font-size: var(--font-size-base);
+    font-family: var(--font-family-primary);
+    line-height: var(--line-height-base);
+    color: var(--text-primary);
+    background: var(--bg-content);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    transition: all 0.2s ease;
+}
+
+.sigma-form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+}
+
+/* Header Principal */
+.sigma-header {
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+    box-shadow: var(--shadow-sm);
+    position: fixed;
+    top: 0;
+    left: var(--sidebar-width);
+    right: 0;
+    z-index: 999;
+}
+
+/* Main Content */
+.sigma-main-content {
+    background: var(--bg-primary);
+    min-height: 100vh;
+    margin-left: var(--sidebar-width);
+    margin-top: var(--header-height);
+    padding: 2rem;
+}
+
+/* Layout Responsivo */
+@media (max-width: 768px) {
+    .sigma-sidebar {
+        width: var(--sidebar-width-mobile);
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .sigma-sidebar.show {
+        transform: translateX(0);
+    }
+    
+    .sigma-header {
+        left: 0;
+    }
+    
+    .sigma-main-content {
+        margin-left: 0;
+    }
+    
+    .sigma-nav-link span {
+        display: none;
+    }
+    
+    .sigma-sidebar.show .sigma-nav-link span {
+        display: inline;
+    }
+}
+
+/* Animações */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* ===================================
+   LAYOUT ESPECÍFICO DO TEMPLATE
+   =================================== */
+
+/* Container principal */
+.sigma-container {
+    display: flex;
+    min-height: 100vh;
+    background: var(--bg-primary);
+}
+
+/* Logo */
+.sigma-logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+}
+
+.sigma-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--primary-color);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-lg);
+}
+
+.sigma-logo i {
+    font-size: var(--font-size-2xl);
+}
+
+/* Navigation */
+.sigma-nav {
+    padding: 1rem 0;
+}
+
+/* Header específico */
+.sigma-header-left,
+.sigma-header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.sigma-page-title {
+    margin: 0;
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+}
+
+.sigma-sidebar-toggle {
+    padding: 0.5rem;
+    border: none;
+    background: none;
+}
+
+/* Content area */
+.sigma-content {
+    padding: 0;
+}
+
+.sigma-alerts {
+    margin-bottom: 1.5rem;
+}
+
+/* User menu */
+.sigma-user-menu .dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}

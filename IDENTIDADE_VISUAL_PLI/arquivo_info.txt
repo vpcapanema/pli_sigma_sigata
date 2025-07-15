@@ -1,0 +1,4 @@
+Arquivo: conteudo_identidade_visual_pli.jpg
+Tamanho: 53390 bytes
+Cabeçalho: ffd8ffe000104a46494600010100000100010000
+Tipo: JPEG (FFD8 detectado)

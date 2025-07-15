@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGMA-PLI - Identidade Visual Institucional Oficial</title>
+    <style>
+        /* Cores Institucionais Oficiais PLI */
+        :root {
+            --primary-color: #93374a;     /* Vermelho institucional */
+            --primary-dark: #be1541;      /* Vermelho escuro */
+            --primary-light: #ca396a;     /* Vermelho claro */
+            --secondary-color: #63dd1f;   /* Verde institucional */
+            --secondary-dark: #1a773e;    /* Verde escuro */
+            --secondary-light: #76bb65;   /* Verde claro */
+            --accent-color: #9acda5;      /* Verde suave */
+            --accent-dark: #5b752c;       /* Verde oliva */
+            --accent-light: #6fc16d;      /* Verde vibrante */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #212529;
+            background: #FFFFFF;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .color-group {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .color-group h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .color-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+
+        .color-sample {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            margin-right: 1rem;
+            border: 1px solid #dee2e6;
+        }
+
+        .color-info {
+            flex: 1;
+        }
+
+        .color-name {
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .color-code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .buttons-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 3rem 0;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary-dark);
+        }
+
+        .btn-accent {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-accent:hover {
+            background: var(--accent-dark);
+        }
+
+        .logo-area {
+            text-align: center;
+            margin: 3rem 0;
+            padding: 3rem;
+            background: linear-gradient(135deg, rgba(147, 55, 74, 0.1) 0%, rgba(99, 221, 31, 0.1) 100%);
+            border-radius: 20px;
+        }
+
+        .logo-placeholder {
+            width: 200px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            background: var(--primary-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .status-indicators {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .status-item {
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: var(--secondary-color);
+        }
+
+        .status-warning {
+            background: #cf472d;
+        }
+
+        .status-danger {
+            background: var(--primary-color);
+        }
+
+        .status-info {
+            background: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>SIGMA-PLI</h1>
+        <p>Identidade Visual Institucional Oficial</p>
+    </div>
+
+    <div class="container">
+        <h2>Paleta de Cores Institucional</h2>
+        <p>Cores extraídas do documento oficial de identidade visual PLI</p>
+
+        <div class="color-palette">
+            <div class="color-group">
+                <h3>Cores Primárias</h3>
+                <div class="color-item">
+                    <div class="color-sample" style="background: #93374a;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Vermelho Institucional</div>
+                        <div class="color-code">#93374a</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-sample" style="background: #be1541;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Vermelho Escuro</div>
+                        <div class="color-code">#be1541</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-sample" style="background: #ca396a;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Vermelho Claro</div>
+                        <div class="color-code">#ca396a</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="color-group">
+                <h3>Cores Secundárias</h3>
+                <div class="color-item">
+                    <div class="color-sample" style="background: #63dd1f;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Verde Institucional</div>
+                        <div class="color-code">#63dd1f</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-sample" style="background: #1a773e;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Verde Escuro</div>
+                        <div class="color-code">#1a773e</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-sample" style="background: #76bb65;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Verde Claro</div>
+                        <div class="color-code">#76bb65</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="color-group">
+                <h3>Cores de Acento</h3>
+                <div class="color-item">
+                    <div class="color-sample" style="background: #9acda5;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Verde Suave</div>
+                        <div class="color-code">#9acda5</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-sample" style="background: #5b752c;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Verde Oliva</div>
+                        <div class="color-code">#5b752c</div>
+                    </div>
+                </div>
+                <div class="color-item">
+                    <div class="color-sample" style="background: #6fc16d;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Verde Vibrante</div>
+                        <div class="color-code">#6fc16d</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="logo-area">
+            <div class="logo-placeholder">SIGMA-PLI</div>
+            <h3>Área de Logo</h3>
+            <p>Demonstração da aplicação das cores institucionais</p>
+        </div>
+
+        <h2>Botões e Elementos Interativos</h2>
+        <div class="buttons-demo">
+            <button class="btn btn-primary">Botão Primário</button>
+            <button class="btn btn-secondary">Botão Secundário</button>
+            <button class="btn btn-accent">Botão de Acento</button>
+        </div>
+
+        <h2>Indicadores de Status</h2>
+        <div class="status-indicators">
+            <div class="status-item status-success">Sucesso</div>
+            <div class="status-item status-warning">Aviso</div>
+            <div class="status-item status-danger">Erro</div>
+            <div class="status-item status-info">Informação</div>
+        </div>
+
+        <div style="margin-top: 3rem; padding: 2rem; background: #f8f9fa; border-radius: 12px;">
+            <h3>Informações Técnicas</h3>
+            <p><strong>Fonte:</strong> Análise automatizada do documento oficial de identidade visual PLI</p>
+            <p><strong>Total de cores analisadas:</strong> 681</p>
+            <p><strong>Cores prováveis da marca:</strong> 574</p>
+            <p><strong>Metodologia:</strong> Extração por análise de frequência de bytes e conversão RGB</p>
+        </div>
+    </div>
+</body>
+</html>

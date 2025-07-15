@@ -1,0 +1,50 @@
+ANÁLISE MANUAL DE CORES - IDENTIDADE VISUAL PLI
+==================================================
+
+Arquivo: conteudo_identidade_visual_pli.jpg
+Tamanho: 53390 bytes
+Dimensões: 867x594
+
+Bytes mais frequentes:
+Byte 00: 1001 vezes
+Byte 11: 804 vezes
+Byte 44: 780 vezes
+Byte 88: 634 vezes
+Byte 22: 605 vezes
+Byte 04: 360 vezes
+Byte 10: 359 vezes
+Byte 01: 350 vezes
+Byte 40: 327 vezes
+Byte 77: 303 vezes
+Byte 63: 293 vezes
+Byte 20: 283 vezes
+Byte 6b: 274 vezes
+Byte b7: 273 vezes
+Byte ee: 269 vezes
+Byte 08: 268 vezes
+Byte ed: 266 vezes
+Byte da: 265 vezes
+Byte 7b: 263 vezes
+Byte 3b: 260 vezes
+
+Potenciais cores (primeiras 20):
+ 1. #100444
+ 2. #401111
+ 3. #004444
+ 4. #011110
+ 5. #044440
+ 6. #111100
+ 7. #444401
+ 8. #111004
+ 9. #444011
+10. #110044
+11. #440111
+12. #567cb7
+13. #28b6e1
+14. #78ed6e
+15. #4f7764
+16. #eea3a0
+17. #6b5f28
+18. #8181cf
+19. #20b834
+20. #6c091b

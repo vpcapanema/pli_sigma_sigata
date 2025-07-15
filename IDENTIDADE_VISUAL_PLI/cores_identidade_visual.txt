@@ -1,0 +1,77 @@
+CORES DA IDENTIDADE VISUAL PLI - ANÁLISE DETALHADA
+============================================================
+
+Total de cores potenciais encontradas: 681
+Cores prováveis da marca: 574
+
+CORES MAIS PROVÁVEIS DA IDENTIDADE VISUAL:
+--------------------------------------------------
+ 1. #93374a - RGB(147,  55,  74) - Vermelho/Laranja
+ 2. #63dd1f - RGB( 99, 221,  31) - Verde institucional
+ 3. #cf472d - RGB(207,  71,  45) - Vermelho/Laranja
+ 4. #9acda5 - RGB(154, 205, 165) - Verde institucional
+ 5. #9c6a86 - RGB(156, 106, 134) - Vermelho/Laranja
+ 6. #e63cad - RGB(230,  60, 173) - Vermelho/Laranja
+ 7. #ca396a - RGB(202,  57, 106) - Vermelho/Laranja
+ 8. #be649e - RGB(190, 100, 158) - Vermelho/Laranja
+ 9. #cf26dd - RGB(207,  38, 221) - Roxo/Violeta
+10. #76bb65 - RGB(118, 187, 101) - Verde institucional
+11. #5b752c - RGB( 91, 117,  44) - Verde institucional
+12. #6fc16d - RGB(111, 193, 109) - Verde institucional
+13. #6d937e - RGB(109, 147, 126) - Verde institucional
+14. #1a773e - RGB( 26, 119,  62) - Verde institucional
+15. #be1541 - RGB(190,  21,  65) - Vermelho/Laranja
+
+
+TODAS AS CORES POTENCIAIS (primeiras 50):
+----------------------------------------
+ 1. #93374a - RGB(147,  55,  74)
+ 2. #63dd1f - RGB( 99, 221,  31)
+ 3. #8ea8a0 - RGB(142, 168, 160)
+ 4. #727d6d - RGB(114, 125, 109)
+ 5. #cf472d - RGB(207,  71,  45)
+ 6. #9acda5 - RGB(154, 205, 165)
+ 7. #51a99a - RGB( 81, 169, 154)
+ 8. #458389 - RGB( 69, 131, 137)
+ 9. #9c6a86 - RGB(156, 106, 134)
+10. #e63cad - RGB(230,  60, 173)
+11. #ca396a - RGB(202,  57, 106)
+12. #be649e - RGB(190, 100, 158)
+13. #cf26dd - RGB(207,  38, 221)
+14. #651c61 - RGB(101,  28,  97)
+15. #76bb65 - RGB(118, 187, 101)
+16. #5b752c - RGB( 91, 117,  44)
+17. #6fc16d - RGB(111, 193, 109)
+18. #6d937e - RGB(109, 147, 126)
+19. #1a773e - RGB( 26, 119,  62)
+20. #be1541 - RGB(190,  21,  65)
+21. #79cbbf - RGB(121, 203, 191)
+22. #5e67b7 - RGB( 94, 103, 183)
+23. #19efaa - RGB( 25, 239, 170)
+24. #1dc888 - RGB( 29, 200, 136)
+25. #4e31d3 - RGB( 78,  49, 211)
+26. #a7a485 - RGB(167, 164, 133)
+27. #24a68e - RGB( 36, 166, 142)
+28. #1eabbd - RGB( 30, 171, 189)
+29. #888022 - RGB(136, 128,  34)
+30. #475dc0 - RGB( 71,  93, 192)
+31. #9d15c7 - RGB(157,  21, 199)
+32. #51455b - RGB( 81,  69,  91)
+33. #d9da54 - RGB(217, 218,  84)
+34. #91d9a5 - RGB(145, 217, 165)
+35. #66d3bd - RGB(102, 211, 189)
+36. #a88dc1 - RGB(168, 141, 193)
+37. #ecc340 - RGB(236, 195,  64)
+38. #dc7a7f - RGB(220, 122, 127)
+39. #8bbda9 - RGB(139, 189, 169)
+40. #1fa9b9 - RGB( 31, 169, 185)
+41. #9a7ab7 - RGB(154, 122, 183)
+42. #c99f75 - RGB(201, 159, 117)
+43. #3a93bf - RGB( 58, 147, 191)
+44. #de7677 - RGB(222, 118, 119)
+45. #9e9e80 - RGB(158, 158, 128)
+46. #5d253d - RGB( 93,  37,  61)
+47. #69aa29 - RGB(105, 170,  41)
+48. #5a7bbc - RGB( 90, 123, 188)
+49. #b6c083 - RGB(182, 192, 131)
+50. #9e80b0 - RGB(158, 128, 176)
