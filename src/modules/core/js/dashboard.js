@@ -1,31 +1,29 @@
-// Dashboard utilities
-document.addEventListener('DOMContentLoaded', () => {
-  // Dashboard initialization
-  loadDashboardData();
-});
+// Dashboard - COMPLETAMENTE SEM VALIDAÇÃO
+console.log('Dashboard carregado - ACESSO LIVRE');
 
-function loadDashboardData() {
-  // Load dashboard data from API
-  fetch('/api/stats')
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        updateDashboardCards(data.data);
-      }
-    })
-    .catch(error => {
-      console.error('Error loading dashboard data:', error);
-    });
-}
+// NADA MAIS - SEM REDIRECIONAMENTO
 
-function updateDashboardCards(stats) {
-  // Update dashboard cards with real data
-  const cards = document.querySelectorAll('.dashboard-card');
-  cards.forEach(card => {
-    const metric = card.dataset.metric;
-    const valueElement = card.querySelector('.card-value');
-    if (valueElement && stats[metric]) {
-      valueElement.textContent = stats[metric];
+function updateStatistics() {
+    // Valores fixos para teste
+    const stats = {
+        'totalUsers': '1,247',
+        'totalProducts': '3,489', 
+        'monthlyRevenue': 'R$ 84,320',
+        'totalSales': '926'
+    };
+    
+    for (const [id, value] of Object.entries(stats)) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = value;
+        }
     }
-  });
 }
+
+// Função global de logout
+window.logout = function() {
+    localStorage.clear();
+    window.location.href = '/auth/login';
+};
+
+console.log('Dashboard JavaScript carregado com sucesso!');

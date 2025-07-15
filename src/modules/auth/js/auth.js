@@ -10,11 +10,39 @@ document.addEventListener('DOMContentLoaded', () => {
 async function handleLogin(event) {
   event.preventDefault();
 
-  // Modo de testes: aceita qualquer usuário e senha
-  showMessage('Login realizado com sucesso! (modo teste)', 'success');
-  setTimeout(() => {
-    window.location.href = '/';
-  }, 1000);
+  const formData = new FormData(event.target);
+  const username = formData.get('username');
+  const password = formData.get('password');
+  const remember = formData.get('remember');
+
+  try {
+    // Fazer requisição para o backend
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username,
+        password,
+        remember
+      })
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      showMessage('Login realizado com sucesso!', 'success');
+      
+      // Redirecionar IMEDIATAMENTE para o dashboard - SEM VALIDAÇÃO
+      window.location.href = '/dashboard';
+    } else {
+      showMessage(result.message || 'Erro no login', 'error');
+    }
+  } catch (error) {
+    console.error('Erro no login:', error);
+    showMessage('Erro de conexão. Tente novamente.', 'error');
+  }
 }
 
 function showMessage(message, type) {

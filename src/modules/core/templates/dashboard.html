@@ -1,131 +1,1429 @@
-<!-- Dashboard Principal -->
-<div class="container">
-  <!-- Estatísticas Principais -->
-  <div class="grid-4">
-    <div class="card neumorphic">
-      <div class="card-icon bg-primary">
-        <i class="fas fa-users"></i>
-      </div>
-      <div class="card-content">
-        <h3 class="card-value" id="totalUsers">0</h3>
-        <p class="card-label">Usuários Ativos</p>
-        <p class="dashboard-stat-change positive" id="usersChange">
-          <i class="fas fa-arrow-up"></i>
-          +5.2% este mês
-        </p>
-      </div>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - SIGMA PLI</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* SIGMA PLI Color Variables */
+        :root {
+            --primary-red: #cc0000;
+            --primary-black: #000000;
+            --bg-gradient-start: #667eea;
+            --bg-gradient-end: #764ba2;
+            --bg-light: #f8f9fa;
+            --bg-secondary: #e8ecef;
+            --bg-content: #ffffff;
+            --text-primary: #000000;
+            --text-secondary: #333333;
+            --text-light: #ffffff;
+            --border-radius: 15px;
+            --sidebar-width: 250px;
+            --transition-normal: all 0.3s ease;
+            --elevation-1: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --elevation-2: 0 4px 16px rgba(0, 0, 0, 0.15);
+            --elevation-3: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        /* Layout Principal */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar SIGMA PLI */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            box-shadow: var(--elevation-2);
+            border-right: 4px solid var(--primary-red);
+            min-height: 100vh;
+            position: fixed;
+            z-index: 10;
+        }
+
+        .sidebar-header {
+            padding: 0 2rem 2rem;
+            border-bottom: 2px solid var(--primary-red);
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-red);
+        }
+
+        .sidebar-brand i {
+            margin-right: 0.75rem;
+            font-size: 1.6rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .menu-item {
+            margin: 0.5rem 0;
+        }
+
+        .menu-item a {
+            display: flex;
+            align-items: center;
+            padding: 15px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition-normal);
+            border-radius: 12px 0 0 12px;
+            border-left: 4px solid transparent;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .menu-item a:hover,
+        .menu-item.active a {
+            background: rgba(204, 0, 0, 0.1);
+            color: var(--primary-red);
+            border-left-color: var(--primary-red);
+            font-weight: 600;
+        }
+
+        .menu-item i {
+            margin-right: 0.75rem;
+            width: 20px;
+            color: var(--primary-red);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* Welcome Header */
+        .welcome-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--elevation-2);
+            border-left: 5px solid var(--primary-red);
+            margin-bottom: 2rem;
+        }
+
+        .welcome-greeting {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-black);
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* Status da Equipe */
+        .team-status-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 0.5rem;
+            color: var(--primary-red);
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .team-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--elevation-1);
+            transition: var(--transition-normal);
+            border: 2px solid transparent;
+        }
+
+        .team-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--elevation-2);
+            border-color: var(--primary-red);
+        }
+
+        .team-card.presencial {
+            border-left: 5px solid #28a745;
+        }
+
+        .team-card.home-office {
+            border-left: 5px solid #ffc107;
+        }
+
+        .team-member {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .member-avatar {
+            width: 45px;
+            height: 45px;
+            background: var(--primary-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+
+        .member-info h4 {
+            color: var(--primary-black);
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .member-status {
+            font-size: 0.9rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-weight: 500;
+        }
+
+        .status-presencial {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-home-office {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        /* Estatísticas Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--elevation-1);
+            transition: var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--elevation-2);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+
+        .stat-card.primary::before {
+            background: var(--primary-red);
+        }
+
+        .stat-card.success::before {
+            background: #28a745;
+        }
+
+        .stat-card.warning::before {
+            background: #ffc107;
+        }
+
+        .stat-card.info::before {
+            background: #17a2b8;
+        }
+
+        .stat-card-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-info {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-black);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-change {
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-change.positive {
+            color: #28a745;
+        }
+
+        .stat-change.negative {
+            color: #dc3545;
+        }
+
+        .stat-change i {
+            margin-right: 0.25rem;
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            opacity: 0.3;
+            color: var(--primary-red);
+        }
+
+        /* Dashboard Grid para Gráficos */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--elevation-1);
+            transition: var(--transition-normal);
+        }
+
+        .card:hover {
+            box-shadow: var(--elevation-2);
+        }
+
+        .card-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h3 {
+            color: var(--primary-black);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-header h3 i {
+            margin-right: 0.5rem;
+            color: var(--primary-red);
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .chart-placeholder {
+            height: 300px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            border: 2px dashed #dee2e6;
+        }
+
+        .chart-placeholder i {
+            font-size: 3rem;
+            color: var(--primary-red);
+            margin-bottom: 1rem;
+        }
+
+        /* Activity Feed */
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 1rem;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            color: var(--primary-black);
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Ações Rápidas */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--primary-red);
+            color: var(--primary-red);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            text-decoration: none;
+            transition: var(--transition-normal);
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-red);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--elevation-2);
+        }
+
+        .action-btn i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar SIGMA PLI -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand">
+                    <i class="fas fa-project-diagram"></i>
+                    SIGMA PLI
+                </div>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="menu-item active">
+                    <a href="/dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/equipe">
+                        <i class="fas fa-users"></i>
+                        Gestão de Equipe
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/projetos">
+                        <i class="fas fa-project-diagram"></i>
+                        Projetos
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/tarefas">
+                        <i class="fas fa-tasks"></i>
+                        Tarefas
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/relatorios">
+                        <i class="fas fa-chart-bar"></i>
+                        Relatórios
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/configuracoes">
+                        <i class="fas fa-cog"></i>
+                        Configurações
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <!-- Welcome Header -->
+            <header class="welcome-header">
+                <div class="welcome-greeting">Bem-vindo, João Silva!</div>
+                <div class="welcome-subtitle">Segunda-feira, 14 de julho de 2025</div>
+            </header>
+
+            <!-- Status da Equipe -->
+            <section class="team-status-section">
+                <h2 class="section-title">
+                    <i class="fas fa-users"></i>
+                    Status da Equipe
+                </h2>
+                <div class="team-grid">
+                    <div class="team-card presencial">
+                        <div class="team-member">
+                            <div class="member-avatar">AL</div>
+                            <div class="member-info">
+                                <h4>Ana Lima</h4>
+                                <div class="member-status status-presencial">Presencial</div>
+                            </div>
+                        </div>
+                        <p><strong>Localização:</strong> Escritório - Sala 203</p>
+                        <p><strong>Projeto:</strong> SIGMA Módulo A</p>
+                    </div>
+
+                    <div class="team-card home-office">
+                        <div class="team-member">
+                            <div class="member-avatar">BS</div>
+                            <div class="member-info">
+                                <h4>Bruno Santos</h4>
+                                <div class="member-status status-home-office">Home Office</div>
+                            </div>
+                        </div>
+                        <p><strong>Localização:</strong> Home Office</p>
+                        <p><strong>Projeto:</strong> SIGMA Módulo B</p>
+                    </div>
+
+                    <div class="team-card presencial">
+                        <div class="team-member">
+                            <div class="member-avatar">CF</div>
+                            <div class="member-info">
+                                <h4>Carlos Ferreira</h4>
+                                <div class="member-status status-presencial">Presencial</div>
+                            </div>
+                        </div>
+                        <p><strong>Localização:</strong> Escritório - Sala 205</p>
+                        <p><strong>Projeto:</strong> SIGMA Módulo C</p>
+                    </div>
+
+                    <div class="team-card home-office">
+                        <div class="team-member">
+                            <div class="member-avatar">DR</div>
+                            <div class="member-info">
+                                <h4>Diana Rodrigues</h4>
+                                <div class="member-status status-home-office">Home Office</div>
+                            </div>
+                        </div>
+                        <p><strong>Localização:</strong> Home Office</p>
+                        <p><strong>Projeto:</strong> SIGMA Módulo D</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Estatísticas da Equipe -->
+            <div class="stats-grid">
+                <div class="stat-card primary">
+                    <div class="stat-card-content">
+                        <div class="stat-info">
+                            <div class="stat-value" id="totalTeamMembers">8</div>
+                            <div class="stat-label">Membros da Equipe</div>
+                            <div class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i> +2 este mês
+                            </div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card success">
+                    <div class="stat-card-content">
+                        <div class="stat-info">
+                            <div class="stat-value" id="activeProjects">12</div>
+                            <div class="stat-label">Projetos Ativos</div>
+                            <div class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i> +3 novos
+                            </div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card warning">
+                    <div class="stat-card-content">
+                        <div class="stat-info">
+                            <div class="stat-value" id="pendingTasks">24</div>
+                            <div class="stat-label">Tarefas Pendentes</div>
+                            <div class="stat-change negative">
+                                <i class="fas fa-arrow-down"></i> -8 concluídas
+                            </div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card info">
+                    <div class="stat-card-content">
+                        <div class="stat-info">
+                            <div class="stat-value" id="teamProductivity">87%</div>
+                            <div class="stat-label">Produtividade</div>
+                            <div class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i> +5%
+                            </div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts and Activity -->
+            <section class="dashboard-grid">
+                <!-- Performance Chart -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-area"></i> Performance da Equipe</h3>
+                        <span class="card-actions">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-placeholder">
+                            <i class="fas fa-chart-line"></i>
+                            <p>Gráfico de performance mensal<br>Dados de produtividade da equipe</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Feed -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-bell"></i> Atividades Recentes</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Novo membro adicionado</div>
+                                <div class="activity-time">há 2 horas</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Projeto SIGMA Módulo A concluído</div>
+                                <div class="activity-time">há 4 horas</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Reunião de sprint marcada</div>
+                                <div class="activity-time">há 6 horas</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Relatório mensal gerado</div>
+                                <div class="activity-time">ontem</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ações Rápidas -->
+            <section class="quick-actions-section">
+                <h2 class="section-title">
+                    <i class="fas fa-bolt"></i>
+                    Ações Rápidas
+                </h2>
+                <div class="quick-actions">
+                    <a href="/equipe/adicionar" class="action-btn">
+                        <i class="fas fa-user-plus"></i>
+                        Adicionar Membro
+                    </a>
+                    <a href="/projetos/novo" class="action-btn">
+                        <i class="fas fa-plus-circle"></i>
+                        Novo Projeto
+                    </a>
+                    <a href="/relatorios/gerar" class="action-btn">
+                        <i class="fas fa-file-download"></i>
+                        Gerar Relatório
+                    </a>
+                    <a href="/configuracoes/equipe" class="action-btn">
+                        <i class="fas fa-cogs"></i>
+                        Configurar Equipe
+                    </a>
+                    <a href="/monitoramento" class="action-btn">
+                        <i class="fas fa-monitor-waveform"></i>
+                        Monitoramento
+                    </a>
+                    <a href="/backup" class="action-btn">
+                        <i class="fas fa-download"></i>
+                        Backup
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+            gap: 1rem;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #333;
+            display: block;
+        }
+
+        .user-role {
+            font-size: 0.875rem;
+            color: #666;
+        }
+
+        .btn-logout {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Dashboard Container */
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .menu-item {
+            margin: 0.5rem 0;
+        }
+
+        .menu-item a {
+            display: flex;
+            align-items: center;
+            padding: 1rem 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item a:hover,
+        .menu-item.active a {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .menu-item i {
+            margin-right: 0.75rem;
+            width: 20px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .dashboard-header {
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-header h1 {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-card.primary::before { background: linear-gradient(90deg, #667eea, #764ba2); }
+        .stat-card.success::before { background: linear-gradient(90deg, #56ccf2, #2f80ed); }
+        .stat-card.warning::before { background: linear-gradient(90deg, #f093fb, #f5576c); }
+        .stat-card.info::before { background: linear-gradient(90deg, #4facfe, #00f2fe); }
+
+        .stat-card-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-info {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-change {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .stat-change.positive { color: #4ade80; }
+        .stat-change.negative { color: #f87171; }
+
+        .stat-icon {
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h3 {
+            color: white;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .chart-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 300px;
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center;
+        }
+
+        .chart-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Activity List */
+        .activity-list {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: white;
+        }
+
+        .activity-icon.success { background: linear-gradient(45deg, #56ccf2, #2f80ed); }
+        .activity-icon.warning { background: linear-gradient(45deg, #f093fb, #f5576c); }
+        .activity-icon.info { background: linear-gradient(45deg, #4facfe, #00f2fe); }
+
+        .activity-content p {
+            color: white;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-content small {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            margin-top: 2rem;
+        }
+
+        .quick-actions h3 {
+            color: white;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .action-btn i {
+            font-size: 2rem;
+        }
+
+        .action-btn.primary:hover { background: linear-gradient(45deg, #667eea, #764ba2); }
+        .action-btn.success:hover { background: linear-gradient(45deg, #56ccf2, #2f80ed); }
+        .action-btn.warning:hover { background: linear-gradient(45deg, #f093fb, #f5576c); }
+        .action-btn.info:hover { background: linear-gradient(45deg, #4facfe, #00f2fe); }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header/Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <i class="fas fa-chart-line"></i>
+            <span>SIGMA PLI</span>
+        </div>
+        <div class="navbar-user">
+            <div class="user-info">
+                <span class="user-name" id="userName">Carregando...</span>
+                <span class="user-role" id="userRole">...</span>
+            </div>
+            <button class="btn-logout" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="menu-item active">
+                    <a href="/dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/products">
+                        <i class="fas fa-box"></i>
+                        <span>Produtos</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/reports">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Dashboard Content -->
+        <main class="main-content">
+            <div class="dashboard-header">
+                <h1>Dashboard Principal</h1>
+                <p>Visão geral do sistema SIGMA PLI</p>
+            </div>
+
+            <!-- Estatísticas Principais -->
+            <div class="stats-grid">
+                <div class="stat-card primary">
+                    <div class="stat-card-content">
+                        <div class="stat-info">
+                            <div class="stat-value" id="totalUsers">1,247</div>
+                            <div class="stat-label">Usuários Ativos</div>
+                            <div class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i> +5.2%
+                            </div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card success">
+                    <div class="stat-card-content">
+                        <div class="stat-info">
+                            <div class="stat-value" id="totalProducts">3,489</div>
+                            <div class="stat-label">Produtos</div>
+                            <div class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i> +12.3%
+                            </div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card warning">
+                    <div class="stat-card-content">
+                        <div class="stat-info">
+                            <div class="stat-value" id="monthlyRevenue">R$ 84,320</div>
+                            <div class="stat-label">Receita Mensal</div>
+                            <div class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i> +8.7%
+                            </div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card info">
+                    <div class="stat-card-content">
+                        <div class="stat-info">
+                            <div class="stat-value" id="totalSales">926</div>
+                            <div class="stat-label">Vendas</div>
+                            <div class="stat-change negative">
+                                <i class="fas fa-arrow-down"></i> -2.1%
+                            </div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts and Tables -->
+            <div class="dashboard-grid">
+                <!-- Chart Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Vendas Mensais</h3>
+                        <span class="card-actions">
+                            <i class="fas fa-ellipsis-h" style="color: rgba(255,255,255,0.6);"></i>
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-placeholder">
+                            <i class="fas fa-chart-area"></i>
+                            <p>Gráfico de vendas interativo<br>Dados atualizados em tempo real</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Atividades Recentes</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-icon success">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p><strong>Novo produto adicionado</strong></p>
+                                    <small>2 horas atrás</small>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon warning">
+                                    <i class="fas fa-edit"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p><strong>Configurações atualizadas</strong></p>
+                                    <small>4 horas atrás</small>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon info">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p><strong>Novo usuário registrado</strong></p>
+                                    <small>6 horas atrás</small>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon success">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p><strong>Relatório concluído</strong></p>
+                                    <small>8 horas atrás</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <h3>Ações Rápidas</h3>
+                <div class="actions-grid">
+                    <button class="action-btn primary">
+                        <i class="fas fa-plus"></i>
+                        <span>Novo Produto</span>
+                    </button>
+                    <button class="action-btn success">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Ver Relatórios</span>
+                    </button>
+                    <button class="action-btn warning">
+                        <i class="fas fa-users"></i>
+                        <span>Gerenciar Usuários</span>
+                    </button>
+                    <button class="action-btn info">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                    </button>
+                </div>
+            </div>
+        </main>
     </div>
 
-    <div class="card neumorphic">
-      <div class="card-icon bg-success">
-        <i class="fas fa-check-circle"></i>
-      </div>
-      <div class="card-content">
-        <h3 class="card-value" id="completedProducts">0</h3>
-        <p class="card-label">Produtos Concluídos</p>
-        <p class="dashboard-stat-change positive" id="productsChange">
-          <i class="fas fa-arrow-up"></i>
-          +12.3% este mês
-        </p>
-      </div>
-    </div>
+    <script>
+        // Funcionalidades do Dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Atualizar data em tempo real
+            function atualizarData() {
+                const agora = new Date();
+                const opcoes = { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                };
+                const dataFormatada = agora.toLocaleDateString('pt-BR', opcoes);
+                
+                const elementoData = document.querySelector('.welcome-subtitle');
+                if (elementoData) {
+                    elementoData.textContent = dataFormatada.charAt(0).toUpperCase() + dataFormatada.slice(1);
+                }
+            }
 
-    <div class="card neumorphic">
-      <div class="card-icon bg-warning">
-        <i class="fas fa-clock"></i>
-      </div>
-      <div class="card-content">
-        <h3 class="card-value" id="pendingReviews">0</h3>
-        <p class="card-label">Avaliações Pendentes</p>
-        <p class="dashboard-stat-change negative" id="reviewsChange">
-          <i class="fas fa-arrow-down"></i>
-          -2.1% este mês
-        </p>
-      </div>
-    </div>
+            // Atualizar estatísticas (simulado)
+            function atualizarEstatisticas() {
+                // Simular atualizações dinâmicas das estatísticas
+                const membros = Math.floor(Math.random() * 3) + 7; // 7-9 membros
+                const projetos = Math.floor(Math.random() * 5) + 10; // 10-14 projetos
+                const tarefas = Math.floor(Math.random() * 20) + 15; // 15-34 tarefas
+                const produtividade = Math.floor(Math.random() * 20) + 80; // 80-99%
 
-    <div class="card neumorphic">
-      <div class="card-icon bg-error">
-        <i class="fas fa-exclamation-triangle"></i>
-      </div>
-        <i class="fas fa-exclamation-triangle"></i>
-      </div>
-      <div class="card-content">
-        <h3 class="card-value" id="overdueTasks">0</h3>
-        <p class="card-label">Tarefas Atrasadas</p>
-        <p class="dashboard-stat-change negative" id="tasksChange">
-          <i class="fas fa-arrow-up"></i>
-          +8.7% este mês
-        </p>
-      </div>
-    </div>
-  </div>
+                const totalMembersEl = document.getElementById('totalTeamMembers');
+                const activeProjectsEl = document.getElementById('activeProjects');
+                const pendingTasksEl = document.getElementById('pendingTasks');
+                const productivityEl = document.getElementById('teamProductivity');
 
-  <!-- Widgets do Dashboard -->
-  <div class="grid-2">
-    <!-- Gráfico de Progresso -->
-    <div class="card neumorphic">
-      <div class="card-header">
-        <h3 class="card-title">Progresso dos Produtos</h3>
-        <a href="/reports/products" class="btn btn-outline btn-sm">Ver Relatório</a>
-      </div>
-      <div class="card-body">
-        <canvas id="progressChart" width="400" height="200"></canvas>
-      </div>
-    </div>
+                if (totalMembersEl) totalMembersEl.textContent = membros;
+                if (activeProjectsEl) activeProjectsEl.textContent = projetos;
+                if (pendingTasksEl) pendingTasksEl.textContent = tarefas;
+                if (productivityEl) productivityEl.textContent = produtividade + '%';
+            }
 
-    <!-- Atividades Recentes -->
-    <div class="card neumorphic">
-      <div class="card-header">
-        <h3 class="card-title">Atividades Recentes</h3>
-        <a href="/activities" class="btn btn-outline btn-sm">Ver Todas</a>
-      </div>
-      <div class="card-body">
-        <ul class="recent-activities" id="recentActivities">
-          <!-- Será carregado dinamicamente -->
-        </ul>
-      </div>
-    </div>
-  </div>
+            // Adicionar efeitos de hover nos cards
+            const cards = document.querySelectorAll('.stat-card, .team-card, .card, .action-btn');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-3px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
 
-  <!-- Próximos Eventos -->
-  <div class="card neumorphic">
-    <div class="card-header">
-      <h3 class="card-title">Próximos Eventos</h3>
-      <a href="/events" class="btn btn-outline btn-sm">Ver Calendário</a>
-    </div>
-    <div class="card-body">
-      <div class="upcoming-events" id="upcomingEvents">
-        <!-- Será carregado dinamicamente -->
-      </div>
-    </div>
-  </div>
+            // Menu items navigation
+            document.querySelectorAll('.menu-item a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (this.getAttribute('href') !== '/dashboard') {
+                        e.preventDefault();
+                        const href = this.getAttribute('href');
+                        console.log(`Navegação para: ${href}`);
+                        // Aqui você pode implementar a navegação real
+                    }
+                });
+            });
 
-  <!-- Produtos com Prazo Próximo -->
-  <div class="card neumorphic">
-    <div class="card-header">
-      <h3 class="card-title">Produtos com Prazo Próximo</h3>
-      <a href="/products?filter=due-soon" class="btn btn-outline btn-sm">Ver Todos</a>
-    </div>
-    <div class="card-body">
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Produto</th>
-              <th>Responsável</th>
-              <th>Prazo</th>
-              <th>Status</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody id="dueSoonProducts">
-            <!-- Será carregado dinamicamente -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
+            // Action buttons
+            document.querySelectorAll('.action-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const action = this.textContent.trim();
+                    console.log(`Ação executada: ${action}`);
+                    // Aqui você pode implementar as ações reais
+                });
+            });
 
+            // Animar contadores na inicialização
+            function animarContadores() {
+                const contadores = [
+                    { elemento: document.getElementById('totalTeamMembers'), valor: 8 },
+                    { elemento: document.getElementById('activeProjects'), valor: 12 },
+                    { elemento: document.getElementById('pendingTasks'), valor: 24 },
+                    { elemento: document.getElementById('teamProductivity'), valor: 87, sufixo: '%' }
+                ];
 
+                contadores.forEach(contador => {
+                    if (contador.elemento) {
+                        let valorAtual = 0;
+                        const incremento = contador.valor / 30;
+                        const timer = setInterval(() => {
+                            valorAtual += incremento;
+                            if (valorAtual >= contador.valor) {
+                                valorAtual = contador.valor;
+                                clearInterval(timer);
+                            }
+                            contador.elemento.textContent = Math.floor(valorAtual) + (contador.sufixo || '');
+                        }, 50);
+                    }
+                });
+            }
+
+            // Inicializar
+            atualizarData();
+            animarContadores();
+            
+            // Atualizar dados a cada minuto
+            setInterval(atualizarData, 60000);
+            
+            // Atualizar estatísticas a cada 30 segundos (para demonstração)
+            setInterval(atualizarEstatisticas, 30000);
+        });
+    </script>
+</body>
+</html>

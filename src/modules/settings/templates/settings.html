@@ -19,7 +19,6 @@
           <li><a href="/products">Produtos</a></li>
           <li><a href="/reports">Relatórios</a></li>
           <li><a href="/settings" class="active">Configurações</a></li>
-          <li><a href="/auth/logout">Sair</a></li>
         </ul>
       </nav>
 
@@ -110,14 +109,6 @@
                     <input type="checkbox" id="enableTwoFactor" name="enableTwoFactor" />
                     Habilitar autenticação de dois fatores
                   </label>
-                </div>
-                <div class="form-group">
-                  <label for="sessionTimeout">Timeout de Sessão (minutos)</label>
-                  <input type="number" id="sessionTimeout" name="sessionTimeout" value="30" min="5" max="1440" />
-                </div>
-                <div class="form-group">
-                  <label for="maxLoginAttempts">Máximo de tentativas de login</label>
-                  <input type="number" id="maxLoginAttempts" name="maxLoginAttempts" value="3" min="1" max="10" />
                 </div>
                 <button type="submit" class="btn btn-primary">Salvar Configurações</button>
               </form>

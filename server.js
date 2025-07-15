@@ -155,8 +155,7 @@ class SigmaPliServer {
       ['/dashboard', 'src/modules/core/templates/dashboard.html'],
       ['/products', 'src/modules/products/templates/products.html'],
       ['/reports', 'src/modules/reports/templates/reports.html'],
-      ['/settings', 'src/modules/settings/templates/settings.html'],
-      ['/auth/login', 'src/modules/auth/templates/login.html']
+      ['/settings', 'src/modules/settings/templates/settings.html']
     ];
     routes.forEach(([r, f]) =>
       this.app.get(r, (req, res) =>
@@ -200,8 +199,6 @@ class SigmaPliServer {
           language: 'pt-BR',
           requireStrongPassword: true,
           enableTwoFactor: false,
-          sessionTimeout: 30,
-          maxLoginAttempts: 3,
           enableAutoBackup: true,
           backupFrequency: 'daily',
           backupTime: '02:00'
@@ -226,8 +223,6 @@ class SigmaPliServer {
           pendingOrders: 12
         }
       })],
-      ['/api/auth/me', (req, res) => res.json({ success: true, data: { id: 1, name: 'Admin', email: 'admin@sigmapli.com', role: 'admin' } })],
-      ['/api/auth/logout', (req, res) => res.json({ success: true, message: 'Logout realizado com sucesso' })],
       ['/api/core/notifications/unread', (req, res) => res.json({
         success: true,
         data: [
@@ -236,12 +231,10 @@ class SigmaPliServer {
         ]
       })]
     ];
-    routes.forEach(([r, h]) => this.app[r === '/api/auth/logout' ? 'post' : 'get'](r, h));
+    routes.forEach(([r, h]) => this.app.get(r, h));
   }
-
   registerMiscRoutes() {
     this.app.get('/favicon.ico', (req, res) => res.sendFile(path.join(__dirname, 'public/assets/favicon.svg')));
-    this.app.get('/login', (req, res) => res.redirect('/auth/login'));
     this.app.use(errorHandler);
     this.app.use('*', (req, res) => res.status(404).json({ success: false, message: 'Rota não encontrada' }));
   }
